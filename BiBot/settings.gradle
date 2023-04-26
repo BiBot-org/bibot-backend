@@ -4,4 +4,7 @@ include 'module-infra'
 include 'user'
 include 'card'
 include 'approval'
+include 'user'
+include 'approval'
+include 'card'
 
