@@ -42,6 +42,16 @@ configure(domainProjects) {
 	}
 }
 
+def commonProject = [project(':module-common'), project('module-infra')]
+configure(commonProject) {
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+}
+
 //plugins {
 //	id 'java'
 //	id 'org.springframework.boot' version '3.0.6'
