@@ -7,10 +7,8 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		dependencies {
 			classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 			classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
-		}
 	}
 }
 subprojects {
@@ -35,7 +33,7 @@ subprojects {
 		implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
 	}
 }
-def domainProjects = [project(':card'), project(':approval'),project(':user')]
+def domainProjects = [project(':card'), project(':approval'),project(':user'),project(':eureka-server'),project(':gateway-server')]
 configure(domainProjects) {
 	dependencies {
 		api project(':module-common')
