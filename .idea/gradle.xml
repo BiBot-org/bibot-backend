@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/BiBot" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/BiBot" />
+            <option value="$PROJECT_DIR$/BiBot/approval" />
+            <option value="$PROJECT_DIR$/BiBot/card" />
+            <option value="$PROJECT_DIR$/BiBot/module-common" />
+            <option value="$PROJECT_DIR$/BiBot/module-infra" />
+            <option value="$PROJECT_DIR$/BiBot/user" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
