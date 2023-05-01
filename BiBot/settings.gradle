@@ -1,9 +1,9 @@
 rootProject.name = 'BiBot'
 include 'module-common'
 include 'module-infra'
-include 'user'
-include 'approval'
-include 'card'
+include 'user-service'
+include 'approval-service'
+include 'card-service'
 include 'eureka-server'
 include 'gateway-server'
 

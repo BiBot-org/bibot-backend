@@ -12,7 +12,7 @@ buildscript {
 	}
 }
 subprojects {
-	group 'BiBot_project'
+	group 'com.coderecipe'
 	version = '0.0.1-SNAPSHOT'
 
 	apply plugin: 'java'
@@ -33,7 +33,7 @@ subprojects {
 		implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
 	}
 }
-def domainProjects = [project(':card'), project(':approval'),project(':user'),project(':eureka-server'),project(':gateway-server')]
+def domainProjects = [project(':card-service'), project(':approval-service'),project(':user-service'),project(':eureka-server'),project(':gateway-server')]
 configure(domainProjects) {
 	dependencies {
 		api project(':module-common')
