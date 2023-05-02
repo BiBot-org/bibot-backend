@@ -2,23 +2,27 @@ buildscript {
 	ext {
 		springBootVersion = '3.0.6'
 		dependencyManagementVersion = '1.1.0'
+		lombokVersion = '1.18.26'
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-			classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-			classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
+
 	}
 }
+
 subprojects {
-	group 'com.coderecipe'
+	group = 'bibot_project'
 	version = '0.0.1-SNAPSHOT'
 
 	apply plugin: 'java'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'java-library'
+	apply plugin: 'org.springframework.boot'
 
 	sourceCompatibility = 17
 	targetCompatibility = 17
@@ -28,19 +32,39 @@ subprojects {
 		mavenCentral()
 	}
 	dependencies {
-		compileOnly 'org.projectlombok:lombok:1.18.26'
-		annotationProcessor 'org.projectlombok:lombok:1.18.26'
+		compileOnly "org.projectlombok:lombok:${lombokVersion}"
+		annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+		testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+		testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
 		implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
 	}
+	bootBuildImage {
+		imageName = "junseokee"+"/bibot:${project.name}"
+		publish = true
+		docker {
+			publishRegistry {
+				username = "user"
+				password = "password"
+			}
+		}
+	}
+
 }
-def domainProjects = [project(':card-service'), project(':approval-service'),project(':user-service'),project(':eureka-server'),project(':gateway-server')]
+
+def domainProjects = [project(':card-service'), project(':approval-service'),project(':user-service')]
 configure(domainProjects) {
 	dependencies {
-		api project(':module-common')
+		implementation project(':common-module')
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-cache'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		runtimeOnly 'com.mysql:mysql-connector-j'
 	}
 }
 
-def commonProject = [project(':module-common'), project('module-infra')]
+def commonProject = [project(':common-module')]
 configure(commonProject) {
 	bootJar {
 		enabled = false
@@ -49,26 +73,3 @@ configure(commonProject) {
 		enabled = true
 	}
 }
-
-//plugins {
-//	id 'java'
-//	id 'org.springframework.boot' version '3.0.6'
-//	id 'io.spring.dependency-management' version
-//}
-//
-//group = 'BiBot_project'
-//version = '0.0.1-SNAPSHOT'
-//sourceCompatibility = '17'
-//
-//repositories {
-//	mavenCentral()
-//}
-
-//dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter'
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//}
-
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
