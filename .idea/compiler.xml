@@ -2,25 +2,38 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
         </processorPath>
         <module name="BiBot.approval-service.main" />
-        <module name="BiBot.gateway-server.main" />
         <module name="BiBot.eureka-server.main" />
-        <module name="BiBot.module-common.main" />
+        <module name="BiBot.gateway-server.test" />
         <module name="BiBot.user-service.main" />
-        <module name="BiBot.card-service.main" />
+        <module name="BiBot.eureka-server.test" />
+        <module name="BiBot.module-infra.test" />
+        <module name="BiBot.user-service.test" />
         <module name="BiBot.module-infra.main" />
+        <module name="BiBot.gateway-server.main" />
+        <module name="BiBot.approval-service.test" />
+        <module name="BiBot.module-common.test" />
+        <module name="BiBot.card-service.test" />
+        <module name="BiBot.module-common.main" />
+        <module name="BiBot.common-module.main" />
+        <module name="BiBot.card-service.main" />
+        <module name="BiBot.common-module.test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="BiBot.approval" target="17" />
       <module name="BiBot.approval.main" target="17" />
       <module name="BiBot.approval.test" target="17" />
+      <module name="BiBot.card" target="17" />
       <module name="BiBot.card.main" target="17" />
       <module name="BiBot.card.test" target="17" />
+      <module name="BiBot.user" target="17" />
       <module name="BiBot.user.main" target="17" />
       <module name="BiBot.user.test" target="17" />
     </bytecodeTargetLevel>
