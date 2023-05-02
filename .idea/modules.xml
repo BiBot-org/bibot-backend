@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/BiBot-Backend.iml" filepath="$PROJECT_DIR$/.idea/BiBot-Backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/card-service/BiBot.card-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/card-service/BiBot.card-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-module/BiBot.common-module.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-module/BiBot.common-module.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka-server/BiBot.eureka-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka-server/BiBot.eureka-server.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway-server/BiBot.gateway-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway-server/BiBot.gateway-server.main.iml" />
     </modules>

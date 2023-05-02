@@ -40,6 +40,16 @@ subprojects {
 
 		implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
 	}
+	bootBuildImage {
+		imageName = "junseokee"+"/bibot:${project.name}"
+		publish = true
+		docker {
+			publishRegistry {
+				username = "user"
+				password = "password"
+			}
+		}
+	}
 
 }
 
