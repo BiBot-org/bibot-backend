@@ -1,0 +1,61 @@
+version: "3.8"
+services:
+  coderecipe_db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/data:/var/lib/postgres/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "coderecipe_dev"
+    networks:
+      backend:
+        aliases:
+          - "database"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  coderecipe_eureka:
+    image : "junseokee/eureka-server:0.0.1-SNAPSHOT"
+    ports :
+      - "8761:8761"
+    networks:
+      backend:
+        aliases:
+          - "eurekaserver"
+  coderecipe_gateway:
+    image : "junseokee/gateway-server:0.0.1-SNAPSHOT"
+    ports :
+      - "8000:8000"
+    depends_on:
+      coderecipe_db:
+        condition: service_healthy
+      coderecipe_eureka:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "gatewayserver"
+  coderecipe_card:
+    image : "junseokee/card-service:0.0.1-SNAPSHOT"
+    depends_on:
+      coderecipe_db:
+        condition: service_healthy
+#  coderecipe_user:
+#    image : "junseokee/user-service:0.0.1-SNAPSHOT"
+#    depends_on:
+#      coderecipe_db:
+#        condition: service_healthy
+  coderecipe_expense:
+    image : "junseokee/expense-service:0.0.1-SNAPSHOT"
+    depends_on:
+      coderecipe_db:
+        condition: service_healthy
+
+networks:
+  backend:
+    driver: bridge

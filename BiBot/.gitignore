@@ -38,3 +38,6 @@ out/
 
 ### application.yml ###
 application.yml
+application-local.yml
+application-dev.yml
+./docker/db/data/
