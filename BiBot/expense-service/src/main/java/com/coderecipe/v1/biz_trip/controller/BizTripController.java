@@ -1,6 +1,6 @@
 package com.coderecipe.v1.biz_trip.controller;
 
-import com.coderecipe.global.constant.BaseRes;
+import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.biz_trip.dto.BizTripDTO;
 import com.coderecipe.v1.biz_trip.service.IBizTripService;
 import lombok.RequiredArgsConstructor;

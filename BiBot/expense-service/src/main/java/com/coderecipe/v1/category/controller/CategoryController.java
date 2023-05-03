@@ -1,6 +1,6 @@
 package com.coderecipe.v1.category.controller;
 
-import com.coderecipe.global.constant.BaseRes;
+import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.category.dto.CategoryDTO;
 import com.coderecipe.v1.category.service.ICategoryService;
 import lombok.RequiredArgsConstructor;

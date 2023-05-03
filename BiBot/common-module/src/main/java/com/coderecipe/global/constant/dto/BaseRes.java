@@ -1,6 +1,6 @@
-package com.coderecipe.global.constant;
+package com.coderecipe.global.constant.dto;
 
-import com.coderecipe.global.enums.ResCode;
+import com.coderecipe.global.constant.enums.ResCode;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 

@@ -15,7 +15,7 @@ buildscript {
 }
 
 subprojects {
-	group = 'bibot_project'
+	group = 'com.coderecipe'
 	version = '0.0.1-SNAPSHOT'
 
 	apply plugin: 'java'

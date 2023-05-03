@@ -1,6 +1,6 @@
-package com.coderecipe.global.error;
+package com.coderecipe.global.constant.error;
 
-import com.coderecipe.global.enums.ResCode;
+import com.coderecipe.global.constant.enums.ResCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

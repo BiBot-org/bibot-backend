@@ -1,6 +1,6 @@
 package com.coderecipe.v1.approval.controller;
 
-import com.coderecipe.global.constant.BaseRes;
+import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.approval.dto.ApprovalDTO;
 import com.coderecipe.v1.approval.service.IApprovalService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.coderecipe.v1.limitation.controller;
 
-import com.coderecipe.global.constant.BaseRes;
+import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.limitation.dto.LimitDTO;
 import com.coderecipe.v1.limitation.service.ILimitService;
 import lombok.RequiredArgsConstructor;

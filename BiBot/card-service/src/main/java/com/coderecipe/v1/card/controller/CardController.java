@@ -1,6 +1,6 @@
 package com.coderecipe.v1.card.controller;
 
-import com.coderecipe.global.constant.BaseRes;
+import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.card.dto.CardDTO;
 import com.coderecipe.v1.card.service.ICardService;
 import lombok.RequiredArgsConstructor;

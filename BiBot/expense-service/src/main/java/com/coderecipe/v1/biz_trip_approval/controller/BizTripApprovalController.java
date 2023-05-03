@@ -1,6 +1,6 @@
 package com.coderecipe.v1.biz_trip_approval.controller;
 
-import com.coderecipe.global.constant.BaseRes;
+import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.biz_trip_approval.dto.BizTripApprovalDTO;
 import com.coderecipe.v1.biz_trip_approval.service.IBizTripApprovalService;
 import lombok.RequiredArgsConstructor;

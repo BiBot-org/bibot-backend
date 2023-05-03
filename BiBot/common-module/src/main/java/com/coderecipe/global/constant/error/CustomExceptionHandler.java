@@ -1,7 +1,7 @@
-package com.coderecipe.global.error;
+package com.coderecipe.global.constant.error;
 
-import com.coderecipe.global.constant.BaseRes;
-import com.coderecipe.global.enums.ResCode;
+import com.coderecipe.global.constant.dto.BaseRes;
+import com.coderecipe.global.constant.enums.ResCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class CustomExceptionHandler {
-
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<BaseRes<String>> handleCustomException(CustomException e) {
+    protected ResponseEntity<BaseRes<String>> handleCustomException(CustomException e){
         log.error(e.errorCode.getMessage());
         return ResponseEntity.status(e.errorCode.getHttpStatus())
             .body(BaseRes.fail(e.errorCode));
