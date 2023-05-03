@@ -15,7 +15,7 @@ buildscript {
 }
 
 subprojects {
-	group = 'bibot_project'
+	group = 'com.coderecipe'
 	version = '0.0.1-SNAPSHOT'
 
 	apply plugin: 'java'
@@ -53,7 +53,7 @@ subprojects {
 
 }
 
-def domainProjects = [project(':card-service'), project(':approval-service'),project(':user-service')]
+def domainProjects = [project(':card-service'), project(':expense-service'),project(':user-service')]
 configure(domainProjects) {
 	dependencies {
 		implementation project(':common-module')
