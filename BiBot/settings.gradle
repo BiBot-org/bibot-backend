@@ -5,4 +5,5 @@ include 'card-service'
 include 'eureka-server'
 include 'gateway-server'
 include 'common-module'
+include 'config-server'
 

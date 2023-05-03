@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: ${SPRING_PROFILE_ACTIVE}
+  cloud:
+    config:
+      name: user-service
+      profile: ${SPRING_PROFILE_ACTIVE}
