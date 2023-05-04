@@ -3,15 +3,16 @@ services:
   database:
     image: postgres:latest
     container_name: code_recipe_db
-    domainname: database
     ports:
       - "5432:5432"
     volumes:
       - ./db/data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: "coderecipe_dev"
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -24,8 +25,11 @@ services:
 
   configserver:
     image : "junseokee/config-server:0.0.1-SNAPSHOT"
-    domainname: configserver
     container_name: code_recipe_config_server
+    environment:
+      CONFIG_SERVER_ENCRYPT_KEY: ${CONFIG_SERVER_ENCRYPT_KEY}
+    env_file:
+      - .env
     ports:
       - "8071:8071"
     networks:
@@ -35,7 +39,6 @@ services:
 
   eurekaserver:
     image : "junseokee/eureka-server:0.0.1-SNAPSHOT"
-    domainname: eurekaserver
     container_name: code_recipe_eureka_server
     ports :
       - "8761:8761"
@@ -54,7 +57,6 @@ services:
 
   gatewayserver:
     image : "junseokee/gateway-server:0.0.1-SNAPSHOT"
-    domainname: gatewayserver
     container_name: code_recipe_gateway_server
     ports :
       - "8000:8000"
@@ -75,7 +77,6 @@ services:
 
   cardservice:
     image : "junseokee/card-service:0.0.1-SNAPSHOT"
-    domainname: cardservice
     container_name: code_recipe_card_service
     environment:
       SPRING_PROFILE_ACTIVE: dev
@@ -86,7 +87,21 @@ services:
       configserver:
         condition: service_started
     networks:
-      code_recipe:
+      - code_recipe
+
+  expenseservice:
+    image : "junseokee/expense-service:0.0.1-SNAPSHOT"
+    container_name: code_recipe_expense_service
+    environment:
+      SPRING_PROFILE_ACTIVE: dev
+      CONFIG_SERVER_URL: http://configserver:8071
+    depends_on:
+      database:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    networks:
+      - code_recipe
 
 
 

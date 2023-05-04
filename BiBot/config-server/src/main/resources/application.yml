@@ -2,25 +2,22 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native #, git, vault
+    active: git
   cloud:
     config:
       server:
-        encrypt.enabled: false
+        encrypt.enabled: true
         native:
           search-locations: classpath:/config
-#        git:
-#          uri: https://github.com/klimtever/config.git
-#          searchPaths: licensingservice
-#        vault:
-#          port: 8200
-#          host: 127.0.0.1
-#          kvVersion: 2
-#          profile-separator: /
-#          backend: licensing-service
+        git:
+          uri: https://github.com/BiBot-org/BiBot-config-server.git
+          default-label: main
+          search-paths: config_file
 server:
   port: 8071
 
+encrypt:
+  key : ${CONFIG_SERVER_ENCRYPT_KEY}
 
 #Enable all Spring Boot Actuator endpoints.
 management:

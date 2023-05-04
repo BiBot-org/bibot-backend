@@ -69,4 +69,7 @@ configure(commonProject) {
 	jar {
 		enabled = true
 	}
+	bootBuildImage {
+		enabled = false
+	}
 }
