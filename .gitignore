@@ -1,5 +1,5 @@
 HELP.md
-.gradle
+BiBot/.gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -37,4 +37,9 @@ out/
 .vscode/
 
 ### application.yml ###
-application.yml
+/BiBot/config-server/src/main/resources/application.yml
+
+### resource data ###
+/Bibot/docker/db/data/
+.env
+/BiBot/config-server/src/main/resources/config/

@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        encrypt.enabled: true
+        native:
+          search-locations: classpath:/config
+        git:
+          uri: https://github.com/BiBot-org/BiBot-config-server.git
+          default-label: main
+          search-paths: config_file
+server:
+  port: 8071
+
+encrypt:
+  key : ${CONFIG_SERVER_ENCRYPT_KEY}
+
+#Enable all Spring Boot Actuator endpoints.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
