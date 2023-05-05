@@ -37,8 +37,8 @@ subprojects {
 
 		testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
 		testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
 		implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
+		implementation 'org.modelmapper:modelmapper:3.1.0'
 	}
 
 	bootBuildImage {
@@ -48,7 +48,22 @@ subprojects {
 
 }
 
-def domainProjects = [project(':card-service'), project(':expense-service'),project(':user-service')]
+def commonProject = [project(':common-module')]
+configure(commonProject) {
+
+	bootJar {
+		enabled = false
+	}
+	jar {
+		enabled = true
+	}
+	bootBuildImage {
+		enabled = false
+	}
+}
+
+
+def domainProjects = [project(':card-service'), project(':expense-service'),project(':user-service'),project(':receipt-service')]
 configure(domainProjects) {
 	dependencies {
 		implementation project(':common-module')
@@ -61,15 +76,3 @@ configure(domainProjects) {
 
 }
 
-def commonProject = [project(':common-module')]
-configure(commonProject) {
-	bootJar {
-		enabled = false
-	}
-	jar {
-		enabled = true
-	}
-	bootBuildImage {
-		enabled = false
-	}
-}

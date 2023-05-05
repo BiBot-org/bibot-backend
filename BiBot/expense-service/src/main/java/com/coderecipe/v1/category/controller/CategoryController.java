@@ -22,7 +22,7 @@ public class CategoryController {
 
     @PostMapping("/add")
     public ResponseEntity<BaseRes<List<Integer>>> addCategory(
-        @RequestBody List<CategoryDTO> categoryData) {
+            @RequestBody List<CategoryDTO> categoryData) {
         List<Integer> result = iCategoryService.addCategory(categoryData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }

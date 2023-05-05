@@ -27,10 +27,10 @@ public class Category {
 
     public static Category of(CategoryDTO dto) {
         return Category.builder()
-            .id(dto.getId())
-            .categoryName(dto.getCategoryName())
-            .resetCycle(dto.getResetCycle())
-            .build();
+                .id(dto.getId())
+                .categoryName(dto.getCategoryName())
+                .resetCycle(dto.getResetCycle())
+                .build();
     }
 
 }

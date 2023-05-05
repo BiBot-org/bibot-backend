@@ -42,13 +42,13 @@ public class Approval {
 
     public static Approval of(ApprovalDTO dto) {
         return Approval.builder()
-            .id(dto.getId())
-            .managerId(dto.getManagerId())
-            .requesterId(dto.getRequesterId())
-            .status(dto.getStatus())
-            .comment(dto.getComment())
-            .isAutomated(dto.isAutomated())
-            .build();
+                .id(dto.getId())
+                .managerId(dto.getManagerId())
+                .requesterId(dto.getRequesterId())
+                .status(dto.getStatus())
+                .comment(dto.getComment())
+                .isAutomated(dto.isAutomated())
+                .build();
     }
 
 }

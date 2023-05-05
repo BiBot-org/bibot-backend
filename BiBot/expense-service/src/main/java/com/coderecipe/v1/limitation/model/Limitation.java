@@ -31,11 +31,11 @@ public class Limitation {
 
     public static Limitation of(LimitDTO dto) {
         return Limitation.builder()
-            .id(dto.getId())
-            .categoryId(dto.getCategoryId())
-            .rankId(dto.getRankId())
-            .automatedCost(dto.getAutomatedCost())
-            .build();
+                .id(dto.getId())
+                .categoryId(dto.getCategoryId())
+                .rankId(dto.getRankId())
+                .automatedCost(dto.getAutomatedCost())
+                .build();
     }
 
 }

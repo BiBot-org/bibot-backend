@@ -21,7 +21,7 @@ public class CardController {
     private final ICardService iCardService;
 
     @PostMapping("/add")
-    public ResponseEntity<BaseRes<List<Long>>> addCard(@RequestBody List<CardDTO> cardData){
+    public ResponseEntity<BaseRes<List<Long>>> addCard(@RequestBody List<CardDTO> cardData) {
         List<Long> result = iCardService.addCard(cardData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }

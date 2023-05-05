@@ -34,11 +34,11 @@ public class BizTrip {
 
     public static BizTrip of(BizTripDTO dto) {
         return BizTrip.builder()
-            .id(dto.getId())
-            .userId(dto.getUserId())
-            .date(dto.getDate())
-            .amount(dto.getAmount())
-            .build();
+                .id(dto.getId())
+                .userId(dto.getUserId())
+                .date(dto.getDate())
+                .amount(dto.getAmount())
+                .build();
     }
 
 }

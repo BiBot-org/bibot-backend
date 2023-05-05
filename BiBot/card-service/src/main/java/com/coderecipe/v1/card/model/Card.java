@@ -28,7 +28,7 @@ public class Card {
     @Column(name = "card_valid")
     private String cardValid;
 
-    public static Card of (CardDTO dto) {
+    public static Card of(CardDTO dto) {
         return Card.builder()
                 .id(dto.getId())
                 .cardNo(dto.getCardNo())

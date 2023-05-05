@@ -28,9 +28,9 @@ public class BizTripApproval {
 
     public static BizTripApproval of(BizTripApprovalDTO dto) {
         return BizTripApproval.builder()
-            .id(dto.getId())
-            .tripId(dto.getTripId())
-            .approvalId(dto.getApprovalId())
-            .build();
+                .id(dto.getId())
+                .tripId(dto.getTripId())
+                .approvalId(dto.getApprovalId())
+                .build();
     }
 }

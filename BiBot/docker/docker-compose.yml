@@ -22,6 +22,18 @@ services:
       code_recipe:
         aliases:
           - "database"
+  keycloak:
+    image: jboss/keycloak
+    restart: always
+    environment:
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      code_recipe:
+        aliases:
+          - "keycloak"
 
   configserver:
     image : "junseokee/config-server:0.0.1-SNAPSHOT"

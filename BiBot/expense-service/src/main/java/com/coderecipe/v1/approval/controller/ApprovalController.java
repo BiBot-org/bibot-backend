@@ -22,7 +22,7 @@ public class ApprovalController {
 
     @PostMapping("/add")
     public ResponseEntity<BaseRes<List<Long>>> addApproval(
-        @RequestBody List<ApprovalDTO> approvalData) {
+            @RequestBody List<ApprovalDTO> approvalData) {
         List<Long> result = iApprovalService.addApproval(approvalData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
