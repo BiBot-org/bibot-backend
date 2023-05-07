@@ -11,6 +11,7 @@
         <module name="BiBot.config-server.main" />
         <module name="BiBot.expense-service.test" />
         <module name="BiBot.eureka-server.main" />
+        <module name="BiBot.receipt-service.test" />
         <module name="BiBot.gateway-server.test" />
         <module name="BiBot.config-server.test" />
         <module name="BiBot.user-service.main" />
@@ -23,6 +24,14 @@
         <module name="BiBot.common-module.test" />
         <module name="BiBot.expense-service.main" />
       </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.26/8f8cf0372abf564913e9796623aac4c8ea44025a/lombok-1.18.26.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/3.0.6/40ac53fa1e5c53d15c7058603e26dd03a99223ae/spring-boot-configuration-processor-3.0.6.jar" />
+        </processorPath>
+        <module name="BiBot.receipt-service.main" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="BiBot.approval" target="17" />
@@ -31,9 +40,18 @@
       <module name="BiBot.card" target="17" />
       <module name="BiBot.card.main" target="17" />
       <module name="BiBot.card.test" target="17" />
+      <module name="BiBot.test-service" target="17" />
+      <module name="BiBot.test-service.main" target="17" />
+      <module name="BiBot.test-service.test" target="17" />
       <module name="BiBot.user" target="17" />
       <module name="BiBot.user.main" target="17" />
       <module name="BiBot.user.test" target="17" />
+      <module name="receipt-service" target="17" />
+      <module name="receipt-service.main" target="17" />
+      <module name="receipt-service.test" target="17" />
+      <module name="test-service" target="17" />
+      <module name="test-service.main" target="17" />
+      <module name="test-service.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

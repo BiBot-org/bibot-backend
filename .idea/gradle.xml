@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/BiBot/eureka-server" />
             <option value="$PROJECT_DIR$/BiBot/expense-service" />
             <option value="$PROJECT_DIR$/BiBot/gateway-server" />
+            <option value="$PROJECT_DIR$/BiBot/receipt-service" />
             <option value="$PROJECT_DIR$/BiBot/user-service" />
           </set>
         </option>
