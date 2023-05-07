@@ -4,8 +4,12 @@ import com.coderecipe.global.constant.entity.BaseImmutableEntity;
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.receiptservice.v1.receipt.dto.ReceiptDTO;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,23 +19,24 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "receipt")
 public class Receipt extends BaseImmutableEntity {
     @Id
     @Column(name = "id")
-    String receiptId = StringUtils.generateReceiptCode();
+    private String receiptId = StringUtils.generateReceiptCode();
 
     @Column(name = "user_id")
-    UUID userId;
+    private UUID userId;
 
     @Column(name = "approve_id")
-    String approveId;
+    private String approveId;
 
     @Column(name = "payment_id")
-    String paymentId;
+    private String paymentId;
 
     @Column(name = "image_url")
-    String imageUrl;
+    private String imageUrl;
 
     public static Receipt of(ReceiptDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, Receipt.class);

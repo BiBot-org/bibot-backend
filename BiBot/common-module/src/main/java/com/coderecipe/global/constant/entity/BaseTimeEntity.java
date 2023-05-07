@@ -21,6 +21,6 @@ public class BaseTimeEntity {
     private LocalDateTime regTime;
     @LastModifiedDate
     private LocalDateTime updateTime;
-    @Column(name = "is_deleted", columnDefinition = "bit(1) default 0")
+    @Column(name = "is_deleted")
     private boolean isDeleted;
 }

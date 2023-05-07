@@ -1,5 +1,6 @@
 package com.coderecipe.v1.card.model;
 
+import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.card.dto.CardDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,29 +13,24 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "Card")
+@Table(name = "card")
 public class Card {
     @Id
     @Column(name = "card_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name = "card_no")
+    @Column(name = "card_no", columnDefinition = "VARCHAR(30) NOT NULL")
     private String cardNo;
 
-    @Column(name = "card_company")
+    @Column(name = "card_company", columnDefinition = "VARCHAR(20) NOT NULL")
     private String cardCompany;
 
-    @Column(name = "card_valid")
+    @Column(name = "card_valid", columnDefinition = "VARCHAR(20) NOT NULL")
     private String cardValid;
 
     public static Card of(CardDTO dto) {
-        return Card.builder()
-                .id(dto.getId())
-                .cardNo(dto.getCardNo())
-                .cardCompany(dto.getCardCompany())
-                .cardValid(dto.getCardValid())
-                .build();
+        return ModelMapperUtils.getModelMapper().map(dto, Card.class);
     }
 
 }

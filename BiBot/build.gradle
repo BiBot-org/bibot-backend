@@ -1,77 +1,77 @@
 buildscript {
-	ext {
-		springBootVersion = '3.0.6'
-		dependencyManagementVersion = '1.1.0'
-		lombokVersion = '1.18.26'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
+    ext {
+        springBootVersion = '3.0.6'
+        dependencyManagementVersion = '1.1.0'
+        lombokVersion = '1.18.26'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}"
 
-	}
+    }
 }
 
 subprojects {
-	group = 'com.coderecipe'
-	version = '0.0.1-SNAPSHOT'
+    group = 'com.coderecipe'
+    version = '0.0.1-SNAPSHOT'
 
-	apply plugin: 'java'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
-	apply plugin: 'java-library'
-	apply plugin: 'org.springframework.boot'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
 
-	sourceCompatibility = 17
-	targetCompatibility = 17
-	compileJava.options.encoding = 'UTF-8'
+    sourceCompatibility = 17
+    targetCompatibility = 17
+    compileJava.options.encoding = 'UTF-8'
 
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		compileOnly "org.projectlombok:lombok:${lombokVersion}"
-		annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-		testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-		testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-		implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
-		implementation 'org.modelmapper:modelmapper:3.1.0'
-	}
+        testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+        testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        implementation 'org.springframework.boot:spring-boot-starter-test:2.7.9'
+        implementation 'org.modelmapper:modelmapper:3.1.0'
+    }
 
-	bootBuildImage {
-		imageName = "junseokee"+"/${project.name}:${project.version}"
-		publish = false
-	}
+    bootBuildImage {
+        imageName = "junseokee" + "/${project.name}:${project.version}"
+        publish = false
+    }
 
 }
 
 def commonProject = [project(':common-module')]
 configure(commonProject) {
 
-	bootJar {
-		enabled = false
-	}
-	jar {
-		enabled = true
-	}
-	bootBuildImage {
-		enabled = false
-	}
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+    }
+    bootBuildImage {
+        enabled = false
+    }
 }
 
 
-def domainProjects = [project(':card-service'), project(':expense-service'),project(':user-service'),project(':receipt-service')]
+def domainProjects = [project(':card-service'), project(':expense-service'), project(':user-service'), project(':receipt-service')]
 configure(domainProjects) {
-	dependencies {
-		implementation project(':common-module')
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		implementation 'org.springframework.boot:spring-boot-starter-cache'
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		runtimeOnly 'org.postgresql:postgresql'
-	}
+    dependencies {
+        implementation project(':common-module')
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-cache'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        runtimeOnly 'org.postgresql:postgresql'
+    }
 
 
 }

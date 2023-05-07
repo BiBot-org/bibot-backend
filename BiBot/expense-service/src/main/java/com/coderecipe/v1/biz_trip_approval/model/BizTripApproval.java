@@ -1,5 +1,7 @@
 package com.coderecipe.v1.biz_trip_approval.model;
 
+import com.coderecipe.v1.approval.model.Approval;
+import com.coderecipe.v1.biz_trip.model.BizTrip;
 import com.coderecipe.v1.biz_trip_approval.dto.BizTripApprovalDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,17 +22,18 @@ public class BizTripApproval {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "trip_id")
-    private int tripId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "biztrip_id", nullable = false)
+    private BizTrip bizTrip;
 
-    @Column(name = "approval_id")
-    private int approvalId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approval_id", nullable = false)
+    private Approval approval;
+
 
     public static BizTripApproval of(BizTripApprovalDTO dto) {
         return BizTripApproval.builder()
                 .id(dto.getId())
-                .tripId(dto.getTripId())
-                .approvalId(dto.getApprovalId())
                 .build();
     }
 }

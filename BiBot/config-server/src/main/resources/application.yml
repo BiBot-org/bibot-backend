@@ -17,7 +17,7 @@ server:
   port: 8071
 
 encrypt:
-  key : ${CONFIG_SERVER_ENCRYPT_KEY}
+  key: ${CONFIG_SERVER_ENCRYPT_KEY}
 
 #Enable all Spring Boot Actuator endpoints.
 management:

@@ -3,7 +3,10 @@ package com.coderecipe.v1.category.model;
 import com.coderecipe.v1.category.dto.CategoryDTO;
 import com.coderecipe.v1.category.enums.ResetCycle;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,8 +21,14 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
 
-    @Column(name = "category_name")
+    @Column(name = "category_name", columnDefinition = "VARCHAR(20) NOT NULL")
     public String categoryName;
+
+    @Column(name = "limitaion", columnDefinition = "INT4")
+    public Integer limitation;
+
+    @Column(name = "automated_cost", columnDefinition = "INT4")
+    private Integer automatedCost;
 
     @Column(name = "reset_cycle")
     @Enumerated(EnumType.STRING)

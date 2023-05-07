@@ -3,6 +3,8 @@ spring:
     name: user-service
   profiles:
     active: ${SPRING_PROFILE_ACTIVE}
+  config:
+    import: "optional:configserver:${CONFIG_SERVER_URL}"
   cloud:
     config:
       name: user-service

@@ -87,35 +87,6 @@ services:
         aliases:
           - "gateway"
 
-  cardservice:
-    image: "junseokee/card-service:0.0.1-SNAPSHOT"
-    container_name: code_recipe_card_service
-    environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-    networks:
-      - code_recipe
-
-  expenseservice:
-    image: "junseokee/expense-service:0.0.1-SNAPSHOT"
-    container_name: code_recipe_expense_service
-    environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-    networks:
-      - code_recipe
-
-
 
 networks:
   code_recipe:

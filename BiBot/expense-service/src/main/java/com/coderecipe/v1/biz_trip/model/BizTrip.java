@@ -15,11 +15,11 @@ import java.util.UUID;
 @Builder
 @Getter
 @Entity
-@Table(name = "Biz_trip")
+@Table(name = "biz_trip")
 public class BizTrip {
 
     @Id
-    @Column(name = "biz_trip_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
