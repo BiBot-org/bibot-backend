@@ -2,6 +2,7 @@ package com.coderecipe.v1.approval.model;
 
 import com.coderecipe.v1.approval.dto.ApprovalDTO;
 import com.coderecipe.v1.approval.enums.ApprovalStatus;
+import com.coderecipe.v1.category.model.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Entity
-@Table(name = "Approval")
+@Table(name = "approval")
 public class Approval {
 
     @Id
@@ -27,8 +28,9 @@ public class Approval {
     @Column(name = "requester_id")
     private String requesterId;
 
-    @Column(name = "category_id")
-    private int categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -42,13 +44,13 @@ public class Approval {
 
     public static Approval of(ApprovalDTO dto) {
         return Approval.builder()
-            .id(dto.getId())
-            .managerId(dto.getManagerId())
-            .requesterId(dto.getRequesterId())
-            .status(dto.getStatus())
-            .comment(dto.getComment())
-            .isAutomated(dto.isAutomated())
-            .build();
+                .id(dto.getId())
+                .managerId(dto.getManagerId())
+                .requesterId(dto.getRequesterId())
+                .status(dto.getStatus())
+                .comment(dto.getComment())
+                .isAutomated(dto.isAutomated())
+                .build();
     }
 
 }

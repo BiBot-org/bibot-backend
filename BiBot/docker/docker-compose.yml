@@ -14,7 +14,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,9 +22,21 @@ services:
       code_recipe:
         aliases:
           - "database"
+  keycloak:
+    image: jboss/keycloak
+    restart: always
+    environment:
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      code_recipe:
+        aliases:
+          - "keycloak"
 
   configserver:
-    image : "junseokee/config-server:0.0.1-SNAPSHOT"
+    image: "junseokee/config-server:0.0.1-SNAPSHOT"
     container_name: code_recipe_config_server
     environment:
       CONFIG_SERVER_ENCRYPT_KEY: ${CONFIG_SERVER_ENCRYPT_KEY}
@@ -38,9 +50,9 @@ services:
           - "configserver"
 
   eurekaserver:
-    image : "junseokee/eureka-server:0.0.1-SNAPSHOT"
+    image: "junseokee/eureka-server:0.0.1-SNAPSHOT"
     container_name: code_recipe_eureka_server
-    ports :
+    ports:
       - "8761:8761"
     environment:
       SPRING_PROFILE_ACTIVE: dev
@@ -56,9 +68,9 @@ services:
           - "eurekaserver"
 
   gatewayserver:
-    image : "junseokee/gateway-server:0.0.1-SNAPSHOT"
+    image: "junseokee/gateway-server:0.0.1-SNAPSHOT"
     container_name: code_recipe_gateway_server
-    ports :
+    ports:
       - "8000:8000"
     environment:
       SPRING_PROFILE_ACTIVE: dev
@@ -76,7 +88,7 @@ services:
           - "gateway"
 
   cardservice:
-    image : "junseokee/card-service:0.0.1-SNAPSHOT"
+    image: "junseokee/card-service:0.0.1-SNAPSHOT"
     container_name: code_recipe_card_service
     environment:
       SPRING_PROFILE_ACTIVE: dev
@@ -90,7 +102,7 @@ services:
       - code_recipe
 
   expenseservice:
-    image : "junseokee/expense-service:0.0.1-SNAPSHOT"
+    image: "junseokee/expense-service:0.0.1-SNAPSHOT"
     container_name: code_recipe_expense_service
     environment:
       SPRING_PROFILE_ACTIVE: dev

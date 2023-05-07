@@ -1,7 +1,7 @@
 package com.coderecipe.v1.card.service.impl;
 
-import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.dto.CardDTO;
+import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
 import lombok.Data;
@@ -25,5 +25,12 @@ public class CardServiceImpl implements ICardService {
             iCardRepository.save(card);
             return card.getId();
         }).toList();
+    }
+
+    @Override
+    public CardDTO getCard(Long cardId) {
+        return new CardDTO(
+                1L, "1234-1234-1234-****", "국민카드", "사용가능"
+        );
     }
 }

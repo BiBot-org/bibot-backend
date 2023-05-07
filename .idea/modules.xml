@@ -10,6 +10,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka-server/BiBot.eureka-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka-server/BiBot.eureka-server.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/expense-service/BiBot.expense-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/expense-service/BiBot.expense-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway-server/BiBot.gateway-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway-server/BiBot.gateway-server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/receipt-service/BiBot.receipt-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/receipt-service/BiBot.receipt-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/receipt-service/BiBot.receipt-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/receipt-service/BiBot.receipt-service.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/BiBot.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/BiBot.user-service.main.iml" />
     </modules>
   </component>
