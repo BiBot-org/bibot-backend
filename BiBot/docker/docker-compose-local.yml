@@ -1,0 +1,93 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:latest
+    container_name: code_recipe_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: "coderecipe_dev"
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      code_recipe:
+        aliases:
+          - "database"
+  keycloak:
+    image: jboss/keycloak
+    restart: always
+    environment:
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      code_recipe:
+        aliases:
+          - "keycloak"
+
+  configserver:
+    image: "junseokee/config-server:0.0.1-SNAPSHOT"
+    container_name: code_recipe_config_server
+    environment:
+      CONFIG_SERVER_ENCRYPT_KEY: ${CONFIG_SERVER_ENCRYPT_KEY}
+    env_file:
+      - .env
+    ports:
+      - "8071:8071"
+    networks:
+      code_recipe:
+        aliases:
+          - "configserver"
+
+  eurekaserver:
+    image: "junseokee/eureka-server:0.0.1-SNAPSHOT"
+    container_name: code_recipe_eureka_server
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILE_ACTIVE: dev
+      CONFIG_SERVER_URL: http://configserver:8071
+    depends_on:
+      database:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    networks:
+      code_recipe:
+        aliases:
+          - "eurekaserver"
+
+  gatewayserver:
+    image: "junseokee/gateway-server:0.0.1-SNAPSHOT"
+    container_name: code_recipe_gateway_server
+    ports:
+      - "8000:8000"
+    environment:
+      SPRING_PROFILE_ACTIVE: dev
+      CONFIG_SERVER_URL: http://configserver:8071
+    depends_on:
+      database:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+      eurekaserver:
+        condition: service_started
+    networks:
+      code_recipe:
+        aliases:
+          - "gateway"
+
+
+networks:
+  code_recipe:
+    driver: bridge
