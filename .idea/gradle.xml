@@ -9,14 +9,22 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/BiBot" />
-            <option value="$PROJECT_DIR$/BiBot/approval-service" />
             <option value="$PROJECT_DIR$/BiBot/card-service" />
             <option value="$PROJECT_DIR$/BiBot/common-module" />
+            <option value="$PROJECT_DIR$/BiBot/config-server" />
             <option value="$PROJECT_DIR$/BiBot/eureka-server" />
+            <option value="$PROJECT_DIR$/BiBot/expense-service" />
             <option value="$PROJECT_DIR$/BiBot/gateway-server" />
-            <option value="$PROJECT_DIR$/BiBot/module-common" />
-            <option value="$PROJECT_DIR$/BiBot/module-infra" />
+            <option value="$PROJECT_DIR$/BiBot/receipt-service" />
             <option value="$PROJECT_DIR$/BiBot/user-service" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/BiBot/config-server" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/BiBot/config-server" />
           </set>
         </option>
       </GradleProjectSettings>

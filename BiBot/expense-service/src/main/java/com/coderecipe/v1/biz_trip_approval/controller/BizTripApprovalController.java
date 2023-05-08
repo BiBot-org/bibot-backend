@@ -22,7 +22,7 @@ public class BizTripApprovalController {
 
     @PostMapping("/add")
     public ResponseEntity<BaseRes<List<Integer>>> addBizTripApproval(
-        @RequestBody List<BizTripApprovalDTO> req) {
+            @RequestBody List<BizTripApprovalDTO> req) {
         List<Integer> result = iBizTripApprovalService.addBizTripApproval(req);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }

@@ -15,11 +15,11 @@ import java.util.UUID;
 @Builder
 @Getter
 @Entity
-@Table(name = "Biz_trip")
+@Table(name = "biz_trip")
 public class BizTrip {
 
     @Id
-    @Column(name = "biz_trip_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -34,11 +34,11 @@ public class BizTrip {
 
     public static BizTrip of(BizTripDTO dto) {
         return BizTrip.builder()
-            .id(dto.getId())
-            .userId(dto.getUserId())
-            .date(dto.getDate())
-            .amount(dto.getAmount())
-            .build();
+                .id(dto.getId())
+                .userId(dto.getUserId())
+                .date(dto.getDate())
+                .amount(dto.getAmount())
+                .build();
     }
 
 }

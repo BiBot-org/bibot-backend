@@ -5,7 +5,7 @@ import lombok.Data;
 
 public class CardReq {
 
-    private CardReq () {
+    private CardReq() {
         throw new IllegalStateException("VO Class");
     }
 

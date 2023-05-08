@@ -1,8 +1,14 @@
 rootProject.name = 'BiBot'
+
+// 서비스 모
 include 'user-service'
 include 'expense-service'
 include 'card-service'
+include 'receipt-service'
+include 'common-module'
+
+// 인프라 모듈
 include 'eureka-server'
 include 'gateway-server'
-include 'common-module'
+include 'config-server'
 
