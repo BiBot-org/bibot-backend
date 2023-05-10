@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentHistoryDTO {
+
     private Long id;
     private Long cardId;
     private String paymentDestination;

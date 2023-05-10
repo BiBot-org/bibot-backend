@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CardServiceImpl implements ICardService {
+
     private final ICardRepository iCardRepository;
 
     @Override
@@ -30,7 +31,7 @@ public class CardServiceImpl implements ICardService {
     @Override
     public CardDTO getCard(Long cardId) {
         return new CardDTO(
-                1L, "1234-1234-1234-****", "국민카드", "사용가능"
+            1L, "1234-1234-1234-****", "국민카드", "사용가능"
         );
     }
 }

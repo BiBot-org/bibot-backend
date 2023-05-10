@@ -23,6 +23,7 @@ public enum ResCode {
     TOKEN_INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, "시그니쳐 키가 잘못 되었습니다.", "ERROR-UA-005"),
     //NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND, "해당 요청 정보를 찾을 수 없습니다.", "ERROR-NF-000"),
+    CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다.", "ERROR-NF-001"),
 
     //FORBIDDEN
     FORBIDDEN(HttpStatus.FORBIDDEN, "금지된 요청입니다.", "ERROR-FB-000"),
