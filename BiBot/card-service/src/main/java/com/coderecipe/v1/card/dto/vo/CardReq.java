@@ -12,6 +12,7 @@ public class CardReq {
     @Data
     @AllArgsConstructor
     public static class RequestCard {
+
         private Long id;
         private String cardNo;
         private String cardCompany;

@@ -27,7 +27,8 @@ public class CardController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseRes<CardDTO>> getCard(@RequestParam(name = "cardId", defaultValue = "") Long cardId) {
+    public ResponseEntity<BaseRes<CardDTO>> getCard(
+        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
         CardDTO result = iCardService.getCard(cardId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
