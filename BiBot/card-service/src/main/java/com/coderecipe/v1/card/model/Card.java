@@ -3,6 +3,7 @@ package com.coderecipe.v1.card.model;
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.card.dto.CardDTO;
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,17 +22,31 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
+    private UUID userId;
+
     @Column(name = "card_no", columnDefinition = "VARCHAR(30) NOT NULL")
     private String cardNo;
 
     @Column(name = "card_company", columnDefinition = "VARCHAR(20) NOT NULL")
     private String cardCompany;
 
-//    @Column(name = "card_valid", columnDefinition = "VARCHAR(20) NOT NULL")
-//    private String cardValid;
+    @Column(name = "card_cvc", columnDefinition = "VARCHAR(10) NOT NULL")
+    private String cardCvc;
+
+    @Column(name = "card_valid", columnDefinition = "VARCHAR(20) NOT NULL")
+    private String cardValid;
 
     public static Card of(CardDTO dto) {
-        return ModelMapperUtils.getModelMapper().map(dto, Card.class);
+//        return ModelMapperUtils.getModelMapper().map(dto, Card.class);
+        return Card.builder()
+            .id(dto.getId())
+            .userId(dto.getUserId())
+            .cardCompany(dto.getCardCompany())
+            .cardNo(dto.getCardNo())
+            .cardCvc(dto.getCardCvc())
+            .cardValid(dto.getCardValid())
+            .build();
     }
 
 }

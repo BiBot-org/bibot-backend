@@ -11,6 +11,7 @@ import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 import com.coderecipe.v1.payment.service.IPaymentHistoryService;
 import com.coderecipe.v1.receipt.worker.ReceiptWorker;
+import java.util.UUID;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,10 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
 //            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
         Card card = Card.builder()
             .id(1L)
-            .cardCompany("국민")
+            .userId(UUID.randomUUID())
+            .cardCvc("000")
             .cardNo("1234")
+            .cardValid("123")
             .build();
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
 //        iPaymentHistoryRepository.save(paymentHistory);
