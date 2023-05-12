@@ -1,6 +1,6 @@
 rootProject.name = 'BiBot'
 
-// 서비스 모
+// 서비스 모듈
 include 'user-service'
 include 'expense-service'
 include 'card-service'

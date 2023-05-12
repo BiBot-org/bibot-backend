@@ -18,18 +18,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+#    command:
+#      - "psql --username=postgres --dbname=postgres"
     networks:
       code_recipe:
         aliases:
           - "database"
   keycloak:
-    image: jboss/keycloak
+    image: quay.io/keycloak/keycloak
     restart: always
     environment:
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
     ports:
       - "8080:8080"
+    command: start-dev
+    volumes:
+      - ./keycloak/data:/opt/keycloak/data
+    healthcheck:
+        test: "curl -f http://localhost:8080/admin || exit 1"
     networks:
       code_recipe:
         aliases:

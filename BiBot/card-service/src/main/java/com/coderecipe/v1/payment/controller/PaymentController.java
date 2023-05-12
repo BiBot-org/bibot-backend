@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/card/v1/payment")
+@RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentController {

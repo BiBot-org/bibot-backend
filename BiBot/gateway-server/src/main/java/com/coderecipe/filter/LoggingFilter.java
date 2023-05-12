@@ -20,28 +20,24 @@ public class LoggingFilter extends AbstractGatewayFilterFactory<LoggingFilter.Co
 
     @Override
     public GatewayFilter apply(Config config) {
-        GatewayFilter filter = new OrderedGatewayFilter((exchange, chain) -> {
+        return new OrderedGatewayFilter((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
 
-            log.info("로깅로깅로깅 Filter baseMessage: {}", config.getBaseMessage());
+            log.info("logging Filter baseMessage: {}", config.getBaseMessage());
 
             if (config.isPreLogger()) {
-                log.info("로깅로깅로깅 필터 시작: request id -> {}", request.getId());
+                log.info("logging filter start: request id -> {}", request.getId());
             }
 
             //Custom Post Filter
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 if (config.isPostLogger()) {
-                    log.info("로깅로깅로깅 필터 종료: request id -> {}", response.getStatusCode());
+                    log.info("logging filter end: request id -> {}", response.getStatusCode());
                 }
             }));
         }, Ordered.HIGHEST_PRECEDENCE);
-
-        return filter;
     }
-
-    ;
 
     @Data
     public static class Config {

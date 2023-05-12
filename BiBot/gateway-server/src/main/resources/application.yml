@@ -9,6 +9,7 @@ spring:
   config:
     import: "optional:configserver:${CONFIG_SERVER_URL}"
 
+
 logging:
   level:
     com.netflix: WARN
