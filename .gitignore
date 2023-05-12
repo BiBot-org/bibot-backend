@@ -42,5 +42,6 @@ out/
 
 ### resource data ###
 /Bibot/docker/db/data/
+/Bibot/docker/keycloak/data/
 .env
 /BiBot/config-server/src/main/resources/config/

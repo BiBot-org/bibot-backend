@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<BaseRes<String>> handleCustomException(CustomException e) {
-        log.error(e.errorCode.getMessage());
-        return ResponseEntity.status(e.errorCode.getHttpStatus())
-                .body(BaseRes.fail(e.errorCode));
+        log.error(e.getErrorCode().getMessage());
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                .body(BaseRes.fail(e.getErrorCode()));
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<BaseRes<String>> handleException(Exception e) {
         log.error(e.getMessage());
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseRes.fail(ResCode.INTERNAL_SERVER_ERROR));
     }

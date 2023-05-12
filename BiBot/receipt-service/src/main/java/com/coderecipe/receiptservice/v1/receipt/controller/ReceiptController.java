@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/rcp/v1/receipt")
+@RequestMapping("/api/v1/receipt")
 public class ReceiptController {
 
     @GetMapping()

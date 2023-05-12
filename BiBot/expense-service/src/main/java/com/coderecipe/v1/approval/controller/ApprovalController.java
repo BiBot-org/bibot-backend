@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/expense-service/api/expense/v1/approval")
+@RequestMapping("/api/v1/approval")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
 public class ApprovalController {
 
     private final IApprovalService iApprovalService;
