@@ -17,10 +17,10 @@ public class ReceiptController {
     @GetMapping()
     public ResponseEntity<BaseRes<ReceiptDTO>> getReceiptInfo() {
         return ResponseEntity.ok().body(BaseRes.success(new ReceiptDTO(
-                StringUtils.generateReceiptCode(),
+                StringUtils.generateDateTimeCode(StringUtils.CODE_RECEIPT),
                 UUID.randomUUID(),
-                StringUtils.generateApproveCode(),
-                StringUtils.generatePaymentCode(),
+                StringUtils.generateDateTimeCode(StringUtils.CODE_APPROVE),
+                StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT),
                 "test"
         )));
     }

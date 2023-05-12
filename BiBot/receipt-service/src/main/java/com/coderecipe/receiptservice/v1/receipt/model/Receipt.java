@@ -24,7 +24,7 @@ import java.util.UUID;
 public class Receipt extends BaseImmutableEntity {
     @Id
     @Column(name = "id")
-    private String receiptId = StringUtils.generateReceiptCode();
+    private String receiptId = StringUtils.generateDateTimeCode(StringUtils.CODE_RECEIPT);
 
     @Column(name = "user_id")
     private UUID userId;
