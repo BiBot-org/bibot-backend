@@ -48,7 +48,9 @@ subprojects {
 
 }
 
-def commonProject = [project(':common-module')]
+def commonProject =
+        [project(':common-module'), project('eureka-server'),
+         project('config-server'), project('gateway-server')]
 configure(commonProject) {
 
     bootJar {
