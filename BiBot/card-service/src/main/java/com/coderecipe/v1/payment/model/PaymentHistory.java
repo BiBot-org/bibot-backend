@@ -2,8 +2,11 @@ package com.coderecipe.v1.payment.model;
 
 import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
 import com.coderecipe.global.utils.ModelMapperUtils;
+import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq.MockPaymentReq;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq.ProductOrderList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +20,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PaymentHistory extends BaseImmutableTimeEntity {
+
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT);
 
     @ManyToOne
     @JoinColumn(name = "card_id")
@@ -34,5 +37,13 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
 
     public static PaymentHistory of(PaymentHistoryDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, PaymentHistory.class);
+    }
+
+    public static PaymentHistory of(MockPaymentReq req, Card card) {
+        return PaymentHistory.builder()
+            .card(card)
+            .paymentDestination(req.getPaymentDestination())
+            .amount(req.getProductOrderList().stream().mapToInt(ProductOrderList::getAmount).sum())
+            .build();
     }
 }
