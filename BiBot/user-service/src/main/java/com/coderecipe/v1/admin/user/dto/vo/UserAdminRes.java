@@ -1,4 +1,4 @@
-package com.coderecipe.v1.user.dto.vo;
+package com.coderecipe.v1.admin.user.dto.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-public class BibotUserRes {
-    private BibotUserRes() {
+public class UserAdminRes {
+
+    private UserAdminRes() {
         throw new IllegalStateException("VO Class");
     }
 

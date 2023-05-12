@@ -1,11 +1,12 @@
-package com.coderecipe.v1.user.dto.vo;
+package com.coderecipe.v1.admin.user.dto.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class BibotUserReq {
-    private BibotUserReq() {
+public class UserAdminReq {
+
+    private UserAdminReq () {
         throw new IllegalStateException("VO Class");
     }
 

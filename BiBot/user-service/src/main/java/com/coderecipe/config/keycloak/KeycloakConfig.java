@@ -27,7 +27,6 @@ public class KeycloakConfig {
     public KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
     }
-
     @Bean
     public Keycloak keycloak() {
 
@@ -37,8 +36,6 @@ public class KeycloakConfig {
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .username("coderecipe")
-                .password("codekunst")
                 .build();
     }
 

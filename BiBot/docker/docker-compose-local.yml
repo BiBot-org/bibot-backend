@@ -18,8 +18,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-#    command:
-#      - "psql --username=postgres --dbname=postgres"
     networks:
       code_recipe:
         aliases:
@@ -41,58 +39,6 @@ services:
       code_recipe:
         aliases:
           - "keycloak"
-
-  configserver:
-    image: "junseokee/config-server:0.0.1-SNAPSHOT"
-    container_name: code_recipe_config_server
-    environment:
-      CONFIG_SERVER_ENCRYPT_KEY: ${CONFIG_SERVER_ENCRYPT_KEY}
-    env_file:
-      - .env
-    ports:
-      - "8071:8071"
-    networks:
-      code_recipe:
-        aliases:
-          - "configserver"
-
-  eurekaserver:
-    image: "junseokee/eureka-server:0.0.1-SNAPSHOT"
-    container_name: code_recipe_eureka_server
-    ports:
-      - "8761:8761"
-    environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-    networks:
-      code_recipe:
-        aliases:
-          - "eurekaserver"
-
-  gatewayserver:
-    image: "junseokee/gateway-server:0.0.1-SNAPSHOT"
-    container_name: code_recipe_gateway_server
-    ports:
-      - "8000:8000"
-    environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-      eurekaserver:
-        condition: service_started
-    networks:
-      code_recipe:
-        aliases:
-          - "gateway"
 
 
 networks:

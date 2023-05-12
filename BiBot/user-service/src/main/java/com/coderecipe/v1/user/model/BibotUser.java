@@ -1,10 +1,9 @@
 package com.coderecipe.v1.user.model;
 
 import com.coderecipe.global.constant.entity.BaseTimeEntity;
-import com.coderecipe.v1.department.model.Department;
+import com.coderecipe.v1.admin.user.dto.vo.UserAdminReq.CreateUserReq;
 import com.coderecipe.v1.rank.model.Rank;
 import com.coderecipe.v1.team.model.Team;
-import com.coderecipe.v1.user.dto.vo.BibotUserReq;
 import com.coderecipe.v1.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,6 @@ public class BibotUser extends BaseTimeEntity {
     @Column(name = "id")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @JdbcTypeCode(java.sql.Types.VARCHAR)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "firstName", columnDefinition = "VARCHAR(10) NOT NULL")
@@ -57,7 +55,7 @@ public class BibotUser extends BaseTimeEntity {
     @JoinColumn(name = "rank_id")
     private Rank rank;
 
-    public static BibotUser of(BibotUserReq.CreateUserReq req, UUID userId) {
+    public static BibotUser of(CreateUserReq req, UUID userId) {
         return BibotUser.builder()
                 .id(userId)
                 .firstName(req.getFirstName())
