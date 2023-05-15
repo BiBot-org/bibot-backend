@@ -12,10 +12,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.keycloak:keycloak-spring-boot-starter:21.1.1'
     implementation 'org.keycloak:keycloak-admin-client:21.1.1'
     implementation 'org.keycloak.bom:keycloak-adapter-bom:21.1.1'
