@@ -1,6 +1,6 @@
 FROM openjdk:17-alpine
 
-WORKDIR /app
+WORKDIR /app/BiBot
 
 COPY card-service/build/libs/card-service-0.0.1-SNAPSHOT.jar .
 COPY user-service/build/libs/user-service-0.0.1-SNAPSHOT.jar .
