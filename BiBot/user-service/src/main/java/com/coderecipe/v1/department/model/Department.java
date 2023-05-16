@@ -33,4 +33,14 @@ public class Department {
             .name(dto.getName())
             .build();
     }
+
+    public static Department of (String departmentName) {
+        return Department.builder()
+                .name(departmentName)
+                .build();
+    }
+
+    public void updateDepartmentInfo(DepartmentDTO dto) {
+        this.name = dto.getName();
+    }
 }

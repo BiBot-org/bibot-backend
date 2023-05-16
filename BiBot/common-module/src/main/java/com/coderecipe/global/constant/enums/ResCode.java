@@ -24,6 +24,9 @@ public enum ResCode {
     //NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND, "해당 요청 정보를 찾을 수 없습니다.", "ERROR-NF-000"),
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다.", "ERROR-NF-001"),
+    DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 부서 정보를 찾을 수 없습니다.", "ERROR-NF-002"),
+    TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀 정보를 찾을 수 없습니다.", "ERROR-NF-003"),
+    RANK_NOT_FOUND(HttpStatus.NOT_FOUND, "직급 정보를 찾을 수 없습니다.", "ERROR-NF-004"),
 
     //FORBIDDEN
     FORBIDDEN(HttpStatus.FORBIDDEN, "금지된 요청입니다.", "ERROR-FB-000"),

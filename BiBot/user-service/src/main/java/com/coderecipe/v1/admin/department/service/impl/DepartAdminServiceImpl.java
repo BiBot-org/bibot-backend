@@ -1,7 +1,10 @@
 package com.coderecipe.v1.admin.department.service.impl;
 
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.admin.department.service.IDepartmentAdminService;
 import com.coderecipe.v1.department.dto.DepartmentDTO;
+import com.coderecipe.v1.department.dto.vo.DepartmentReq.AddDepartmentReq;
 import com.coderecipe.v1.department.model.Department;
 import com.coderecipe.v1.department.model.repository.DepartmentRepository;
 import com.coderecipe.v1.team.dto.TeamDTO;
@@ -23,8 +26,10 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
     @Override
-    public DepartmentDTO addDepartment(DepartmentDTO req) {
-        return DepartmentDTO.of(departmentRepository.save(Department.of(req)));
+    public Long addDepartment(AddDepartmentReq req) {
+        Department department = Department.of(req.getName());
+        departmentRepository.save(department);
+        return department.getId();
     }
 
     @Override
@@ -33,21 +38,25 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
     }
 
     @Override
-    public DepartmentDTO updateDepartment(DepartmentDTO req) {
-        return DepartmentDTO.of(departmentRepository.save(Department.of(req)));
+    public Long updateDepartment(DepartmentDTO req) {
+        Department department = departmentRepository.findById(req.getId())
+                .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
+
+        department.updateDepartmentInfo(req);
+        departmentRepository.save(department);
+        return department.getId();
     }
 
     @Override
-    public DepartmentDTO deleteDepartment(Long departmentId) {
-        DepartmentDTO departmentDTO = DepartmentDTO.of(departmentRepository.getReferenceById(departmentId));
+    public Long deleteDepartment(Long departmentId) {
         departmentRepository.deleteById(departmentId);
-        return departmentDTO;
+        return departmentId;
     }
 
     @Override
     public List<TeamDTO> getTeamList(Long departmentId) {
         List<Team> teams = teamRepository.findByDepartmentId(departmentId);
-        return teams.stream().map(TeamDTO::of).collect(Collectors.toList());
+        return teams.stream().map(TeamDTO::of).toList();
     }
 
 }
