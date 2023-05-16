@@ -2,7 +2,7 @@ package com.coderecipe.v1.admin.rank.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.rank.service.IRankAdminService;
-import com.coderecipe.v1.rank.dto.RankDTO;
+import com.coderecipe.v1.user.rank.dto.RankDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

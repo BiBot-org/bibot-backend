@@ -1,6 +1,6 @@
 package com.coderecipe.v1.admin.team.service;
 
-import com.coderecipe.v1.team.dto.TeamDTO;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
 
 public interface ITeamAdminService {
 

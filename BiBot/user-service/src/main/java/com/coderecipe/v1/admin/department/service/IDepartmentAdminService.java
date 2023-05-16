@@ -1,8 +1,8 @@
 package com.coderecipe.v1.admin.department.service;
 
-import com.coderecipe.v1.department.dto.DepartmentDTO;
-import com.coderecipe.v1.department.dto.vo.DepartmentReq.AddDepartmentReq;
-import com.coderecipe.v1.team.dto.TeamDTO;
+import com.coderecipe.v1.user.department.dto.DepartmentDTO;
+import com.coderecipe.v1.user.department.dto.vo.DepartmentReq.AddDepartmentReq;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
 import java.util.List;
 
 public interface IDepartmentAdminService {

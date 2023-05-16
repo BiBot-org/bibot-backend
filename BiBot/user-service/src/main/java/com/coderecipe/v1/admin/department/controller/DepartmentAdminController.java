@@ -2,9 +2,9 @@ package com.coderecipe.v1.admin.department.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.department.service.IDepartmentAdminService;
-import com.coderecipe.v1.department.dto.DepartmentDTO;
-import com.coderecipe.v1.department.dto.vo.DepartmentReq.AddDepartmentReq;
-import com.coderecipe.v1.team.dto.TeamDTO;
+import com.coderecipe.v1.user.department.dto.DepartmentDTO;
+import com.coderecipe.v1.user.department.dto.vo.DepartmentReq.AddDepartmentReq;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
