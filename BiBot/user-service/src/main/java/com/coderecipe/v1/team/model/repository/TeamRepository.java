@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findByDepartmentId(Long departmentId);
+    boolean existsByName(String name);
 }

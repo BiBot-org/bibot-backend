@@ -21,9 +21,13 @@ public class RankAdminServiceImpl implements IRankAdminService {
 
     @Override
     public Long addRank(RankDTO req) {
-        Rank rank = Rank.of(req);
-        rankRepository.save(rank);
-        return rank.getId();
+        if(rankRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_RANK_NAME);
+        } else {
+            Rank rank = Rank.of(req);
+            rankRepository.save(rank);
+            return rank.getId();
+        }
     }
 
     @Override
@@ -36,11 +40,15 @@ public class RankAdminServiceImpl implements IRankAdminService {
 
     @Override
     public Long updateRank(RankDTO req) {
-        Rank rank = rankRepository.findById(req.getId())
-                .orElseThrow(() -> new CustomException(ResCode.RANK_NOT_FOUND));
-        rank.updateRank(req);
-        rankRepository.save(rank);
-        return rank.getId();
+        if(rankRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_RANK_NAME);
+        } else {
+            Rank rank = rankRepository.findById(req.getId())
+                    .orElseThrow(() -> new CustomException(ResCode.RANK_NOT_FOUND));
+            rank.updateRank(req);
+            rankRepository.save(rank);
+            return rank.getId();
+        }
     }
 
     @Override

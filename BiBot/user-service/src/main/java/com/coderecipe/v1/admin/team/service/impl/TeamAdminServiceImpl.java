@@ -21,9 +21,13 @@ public class TeamAdminServiceImpl implements ITeamAdminService {
 
     @Override
     public Long addTeam(TeamDTO req) {
-        Team team = Team.of(req);
-        teamRepository.save(team);
-        return team.getId();
+        if (teamRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_TEAM_NAME);
+        } else {
+            Team team = Team.of(req);
+            teamRepository.save(team);
+            return team.getId();
+        }
     }
 
     @Override
@@ -36,11 +40,15 @@ public class TeamAdminServiceImpl implements ITeamAdminService {
 
     @Override
     public Long updateTeam(TeamDTO req) {
-        Team team = teamRepository.findById(req.getId())
-                .orElseThrow(() -> new CustomException(ResCode.TEAM_NOT_FOUND));
-        team.updateTeamName(req);
-        teamRepository.save(team);
-        return team.getId();
+        if (teamRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_TEAM_NAME);
+        } else {
+            Team team = teamRepository.findById(req.getId())
+                    .orElseThrow(() -> new CustomException(ResCode.TEAM_NOT_FOUND));
+            team.updateTeamName(req);
+            teamRepository.save(team);
+            return team.getId();
+        }
     }
 
     @Override

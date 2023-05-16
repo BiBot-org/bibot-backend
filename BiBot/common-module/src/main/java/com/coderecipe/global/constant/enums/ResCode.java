@@ -13,6 +13,9 @@ public enum ResCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "요청이 올바르지 않습니다.", "ERROR-BR-000"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 올바르지 않습니다.", "ERROR-BR-001"),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "올바르지 않은 토큰 요청입니다.", "ERROR-BR-002"),
+    DUPLICATE_DEPARTMENT_NAME(HttpStatus.BAD_REQUEST, "해당 부서 이름이 존재합니다.", "ERROR-BR-003"),
+    DUPLICATE_TEAM_NAME(HttpStatus.BAD_REQUEST, "해당 팀 이름이 존재합니다.", "ERROR-BR-004"),
+    DUPLICATE_RANK_NAME(HttpStatus.BAD_REQUEST, "해당 직급 이름이 존재합니다.", "ERROR-BR-005"),
 
     //UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다.", "ERROR-UA-000"),

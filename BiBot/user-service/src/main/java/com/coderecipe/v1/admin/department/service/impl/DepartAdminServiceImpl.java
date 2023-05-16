@@ -11,7 +11,6 @@ import com.coderecipe.v1.team.dto.TeamDTO;
 import com.coderecipe.v1.team.model.Team;
 import com.coderecipe.v1.team.model.repository.TeamRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,24 +26,33 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
     private final TeamRepository teamRepository;
     @Override
     public Long addDepartment(AddDepartmentReq req) {
-        Department department = Department.of(req.getName());
-        departmentRepository.save(department);
-        return department.getId();
+        if (departmentRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_DEPARTMENT_NAME);
+        } else {
+            Department department = Department.of(req.getName());
+            departmentRepository.save(department);
+            return department.getId();
+        }
     }
 
     @Override
     public DepartmentDTO getDepartment(Long departmentId) {
-        return DepartmentDTO.of(departmentRepository.getReferenceById(departmentId));
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
+        return DepartmentDTO.of(department);
     }
 
     @Override
     public Long updateDepartment(DepartmentDTO req) {
-        Department department = departmentRepository.findById(req.getId())
-                .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
-
-        department.updateDepartmentInfo(req);
-        departmentRepository.save(department);
-        return department.getId();
+        if(departmentRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_DEPARTMENT_NAME);
+        } else {
+            Department department = departmentRepository.findById(req.getId())
+                    .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
+            department.updateDepartmentInfo(req);
+            departmentRepository.save(department);
+            return department.getId();
+        }
     }
 
     @Override
