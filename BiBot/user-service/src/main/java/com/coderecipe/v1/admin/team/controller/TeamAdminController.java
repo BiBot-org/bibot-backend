@@ -25,8 +25,8 @@ public class TeamAdminController {
     private final ITeamAdminService iTeamAdminService;
 
     @PostMapping
-    public ResponseEntity<BaseRes<TeamDTO>> addTeam(@RequestBody TeamDTO TeamData) {
-        TeamDTO result = iTeamAdminService.addTeam(TeamData);
+    public ResponseEntity<BaseRes<Long>> addTeam(@RequestBody TeamDTO TeamData) {
+        Long result = iTeamAdminService.addTeam(TeamData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
@@ -38,15 +38,15 @@ public class TeamAdminController {
     }
 
     @PutMapping
-    public ResponseEntity<BaseRes<TeamDTO>> updateTeam(@RequestBody TeamDTO TeamData) {
-        TeamDTO result = iTeamAdminService.updateTeam(TeamData);
+    public ResponseEntity<BaseRes<Long>> updateTeam(@RequestBody TeamDTO TeamData) {
+        Long result = iTeamAdminService.updateTeam(TeamData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<TeamDTO>> deleteTeam(
+    public ResponseEntity<BaseRes<Long>> deleteTeam(
         @RequestParam(name = "teamId", defaultValue = "") Long teamId) {
-        TeamDTO result = iTeamAdminService.deleteTeam(teamId);
+        Long result = iTeamAdminService.deleteTeam(teamId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 }

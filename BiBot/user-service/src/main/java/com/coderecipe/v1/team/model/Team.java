@@ -31,4 +31,8 @@ public class Team {
     public static Team of(TeamDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, Team.class);
     }
+
+    public void updateTeamName(TeamDTO dto) {
+        this.name = dto.getName();
+    }
 }
