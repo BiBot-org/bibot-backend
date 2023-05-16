@@ -29,4 +29,8 @@ public class Rank {
             .name(dto.getName())
             .build();
     }
+
+    public void updateRank(RankDTO dto) {
+        this.name = dto.getName();
+    }
 }

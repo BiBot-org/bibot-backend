@@ -25,8 +25,8 @@ public class RankAdminController {
     private final IRankAdminService iRankAdminService;
 
     @PostMapping
-    public ResponseEntity<BaseRes<RankDTO>> addRank(@RequestBody RankDTO rankData) {
-        RankDTO result = iRankAdminService.addRank(rankData);
+    public ResponseEntity<BaseRes<Long>> addRank(@RequestBody RankDTO rankData) {
+        Long result = iRankAdminService.addRank(rankData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
@@ -38,15 +38,15 @@ public class RankAdminController {
     }
 
     @PutMapping
-    public ResponseEntity<BaseRes<RankDTO>> updateRank(@RequestBody RankDTO rankData) {
-        RankDTO result = iRankAdminService.updateRank(rankData);
+    public ResponseEntity<BaseRes<Long>> updateRank(@RequestBody RankDTO rankData) {
+        Long result = iRankAdminService.updateRank(rankData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<RankDTO>> deleteRank(
+    public ResponseEntity<BaseRes<Long>> deleteRank(
         @RequestParam(name = "rankId", defaultValue = "") Long rankId) {
-        RankDTO result = iRankAdminService.deleteRank(rankId);
+        Long result = iRankAdminService.deleteRank(rankId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
 
     }
