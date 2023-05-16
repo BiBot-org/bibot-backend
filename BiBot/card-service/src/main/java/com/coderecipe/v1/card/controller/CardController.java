@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/card/v1/card")
+@RequestMapping("/api/v1/card")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
 public class CardController {
 
     private final ICardService iCardService;
@@ -27,7 +26,8 @@ public class CardController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseRes<CardDTO>> getCard(@RequestParam(name = "cardId", defaultValue = "") Long cardId) {
+    public ResponseEntity<BaseRes<CardDTO>> getCard(
+        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
         CardDTO result = iCardService.getCard(cardId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }

@@ -4,6 +4,7 @@ import com.coderecipe.v1.card.dto.CardDTO;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
+import java.util.UUID;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CardServiceImpl implements ICardService {
+
     private final ICardRepository iCardRepository;
 
     @Override
@@ -30,7 +32,7 @@ public class CardServiceImpl implements ICardService {
     @Override
     public CardDTO getCard(Long cardId) {
         return new CardDTO(
-                1L, "1234-1234-1234-****", "국민카드", "사용가능"
+            1L, UUID.randomUUID(),"1234-1234-1234-****","국민", "000", "02/03"
         );
     }
 }

@@ -1,7 +1,11 @@
 package com.coderecipe.v1.department.model;
 
+import com.coderecipe.v1.department.dto.DepartmentDTO;
+import com.coderecipe.v1.team.model.Team;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "department")
+@Builder
 public class Department {
     @Id
     @Column(name = "id")
@@ -19,4 +24,13 @@ public class Department {
     @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL")
     private String name;
 
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Team> teams;
+
+    public static Department of(DepartmentDTO dto) {
+        return Department.builder()
+            .id(dto.getId())
+            .name(dto.getName())
+            .build();
+    }
 }

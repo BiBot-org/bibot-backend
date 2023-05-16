@@ -1,7 +1,7 @@
 package com.coderecipe.v1.user.model;
 
 import com.coderecipe.global.constant.entity.BaseTimeEntity;
-import com.coderecipe.v1.department.model.Department;
+import com.coderecipe.v1.admin.user.dto.vo.UserAdminReq.CreateUserReq;
 import com.coderecipe.v1.rank.model.Rank;
 import com.coderecipe.v1.team.model.Team;
 import com.coderecipe.v1.user.enums.UserRole;
@@ -26,13 +26,15 @@ public class BibotUser extends BaseTimeEntity {
     @Column(name = "id")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @JdbcTypeCode(java.sql.Types.VARCHAR)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL")
-    private String name;
+    @Column(name = "firstName", columnDefinition = "VARCHAR(10) NOT NULL")
+    private String firstName;
 
-    @Column(name = "role", columnDefinition = "VARCHAR(10) NOT NULL")
+    @Column(name = "lastName", columnDefinition = "VARCHAR(10) NOT NULL")
+    private String lastName;
+
+    @Column(name = "role", columnDefinition = "VARCHAR(15) NOT NULL")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -46,10 +48,6 @@ public class BibotUser extends BaseTimeEntity {
     private String duty;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
@@ -57,4 +55,15 @@ public class BibotUser extends BaseTimeEntity {
     @JoinColumn(name = "rank_id")
     private Rank rank;
 
+    public static BibotUser of(CreateUserReq req, UUID userId) {
+        return BibotUser.builder()
+                .id(userId)
+                .firstName(req.getFirstName())
+                .lastName(req.getLastName())
+                .email(req.getEmail())
+                .profileUrl(req.getProfileUrl())
+                .duty(req.getDuty())
+                .userRole(UserRole.BIBOT_USER)
+                .build();
+    }
 }

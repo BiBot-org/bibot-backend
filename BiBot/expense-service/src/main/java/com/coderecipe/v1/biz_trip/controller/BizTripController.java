@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/expense/v1/biz_trip")
+@RequestMapping("/api/v1/biz_trip")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class BizTripController {
 
     private final IBizTripService iBizTripService;

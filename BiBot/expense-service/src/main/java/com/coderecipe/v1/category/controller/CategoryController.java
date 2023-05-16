@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/expense/v1/category")
+@RequestMapping("/api/v1/category")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
 public class CategoryController {
 
     private final ICategoryService iCategoryService;

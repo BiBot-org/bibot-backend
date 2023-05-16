@@ -48,7 +48,9 @@ subprojects {
 
 }
 
-def commonProject = [project(':common-module')]
+def commonProject =
+        [project(':common-module'), project('eureka-server'),
+         project('config-server'), project('gateway-server')]
 configure(commonProject) {
 
     bootJar {
@@ -70,6 +72,7 @@ configure(domainProjects) {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-cache'
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
         runtimeOnly 'org.postgresql:postgresql'
     }
 
