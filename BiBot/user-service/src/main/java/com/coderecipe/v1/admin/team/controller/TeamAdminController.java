@@ -2,7 +2,7 @@ package com.coderecipe.v1.admin.team.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.team.service.ITeamAdminService;
-import com.coderecipe.v1.team.dto.TeamDTO;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,8 +25,8 @@ public class TeamAdminController {
     private final ITeamAdminService iTeamAdminService;
 
     @PostMapping
-    public ResponseEntity<BaseRes<TeamDTO>> addTeam(@RequestBody TeamDTO TeamData) {
-        TeamDTO result = iTeamAdminService.addTeam(TeamData);
+    public ResponseEntity<BaseRes<Long>> addTeam(@RequestBody TeamDTO teamData) {
+        Long result = iTeamAdminService.addTeam(teamData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
@@ -38,15 +38,15 @@ public class TeamAdminController {
     }
 
     @PutMapping
-    public ResponseEntity<BaseRes<TeamDTO>> updateTeam(@RequestBody TeamDTO TeamData) {
-        TeamDTO result = iTeamAdminService.updateTeam(TeamData);
+    public ResponseEntity<BaseRes<Long>> updateTeam(@RequestBody TeamDTO teamDTO) {
+        Long result = iTeamAdminService.updateTeam(teamDTO);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<TeamDTO>> deleteTeam(
+    public ResponseEntity<BaseRes<Long>> deleteTeam(
         @RequestParam(name = "teamId", defaultValue = "") Long teamId) {
-        TeamDTO result = iTeamAdminService.deleteTeam(teamId);
+        Long result = iTeamAdminService.deleteTeam(teamId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 }

@@ -35,14 +35,14 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
 //        Card card = iCardRepository.findById(req.getCardId())
 //            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
         Card card = Card.builder()
-            .id(1L)
+            .id(req.getCardId())
             .userId(UUID.randomUUID())
             .cardCvc("000")
             .cardNo("1234")
             .cardValid("123")
             .build();
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
-//        iPaymentHistoryRepository.save(paymentHistory);
+        iPaymentHistoryRepository.save(paymentHistory);
 
         if (receiptWorker.createReceiptImage(
             CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req))) {

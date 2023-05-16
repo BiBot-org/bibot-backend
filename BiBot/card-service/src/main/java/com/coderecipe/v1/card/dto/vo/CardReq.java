@@ -3,6 +3,7 @@ package com.coderecipe.v1.card.dto.vo;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 public class CardReq {
 
@@ -20,6 +21,13 @@ public class CardReq {
         private String cardCompany;
         private String cardCvc;
         private String cardValid;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CardId {
+        private Long id;
     }
 
 }

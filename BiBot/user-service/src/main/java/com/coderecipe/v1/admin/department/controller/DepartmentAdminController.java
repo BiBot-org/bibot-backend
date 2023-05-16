@@ -2,8 +2,9 @@ package com.coderecipe.v1.admin.department.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.department.service.IDepartmentAdminService;
-import com.coderecipe.v1.department.dto.DepartmentDTO;
-import com.coderecipe.v1.team.dto.TeamDTO;
+import com.coderecipe.v1.user.department.dto.DepartmentDTO;
+import com.coderecipe.v1.user.department.dto.vo.DepartmentReq.AddDepartmentReq;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class DepartmentAdminController {
 
     private final IDepartmentAdminService iDepartmentAdminService;
+
     @PostMapping
-    public ResponseEntity<BaseRes<DepartmentDTO>> addDepartment(@RequestBody DepartmentDTO departmentData) {
-        DepartmentDTO result = iDepartmentAdminService.addDepartment(departmentData);
+    public ResponseEntity<BaseRes<Long>> addDepartment(@RequestBody AddDepartmentReq departmentData) {
+        Long result = iDepartmentAdminService.addDepartment(departmentData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
@@ -38,14 +40,14 @@ public class DepartmentAdminController {
     }
 
     @PutMapping
-    public ResponseEntity<BaseRes<DepartmentDTO>> updateDepartment(@RequestBody DepartmentDTO departmentData) {
-        DepartmentDTO result = iDepartmentAdminService.updateDepartment(departmentData);
+    public ResponseEntity<BaseRes<Long>> updateDepartment(@RequestBody DepartmentDTO departmentData) {
+        Long result = iDepartmentAdminService.updateDepartment(departmentData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<DepartmentDTO>> deleteDepartment(@RequestParam(name = "departmentId", defaultValue = "") Long departmentId) {
-        DepartmentDTO result = iDepartmentAdminService.deleteDepartment(departmentId);
+    public ResponseEntity<BaseRes<Long>> deleteDepartment(@RequestParam(name = "departmentId", defaultValue = "") Long departmentId) {
+        Long result = iDepartmentAdminService.deleteDepartment(departmentId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 

@@ -1,9 +1,11 @@
 package com.coderecipe.v1.admin.team.service.impl;
 
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.admin.team.service.ITeamAdminService;
-import com.coderecipe.v1.team.dto.TeamDTO;
-import com.coderecipe.v1.team.model.Team;
-import com.coderecipe.v1.team.model.repository.TeamRepository;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
+import com.coderecipe.v1.user.team.model.Team;
+import com.coderecipe.v1.user.team.model.repository.TeamRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,24 +20,40 @@ public class TeamAdminServiceImpl implements ITeamAdminService {
     private final TeamRepository teamRepository;
 
     @Override
-    public TeamDTO addTeam(TeamDTO req) {
-        return TeamDTO.of(teamRepository.save(Team.of(req)));
+    public Long addTeam(TeamDTO req) {
+        if (teamRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_TEAM_NAME);
+        } else {
+            Team team = Team.of(req);
+            teamRepository.save(team);
+            return team.getId();
+        }
     }
 
     @Override
     public TeamDTO getTeam(Long teamId) {
-        return TeamDTO.of(teamRepository.getReferenceById(teamId));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ResCode.TEAM_NOT_FOUND));
+
+        return TeamDTO.of(team);
     }
 
     @Override
-    public TeamDTO updateTeam(TeamDTO req) {
-        return TeamDTO.of(teamRepository.save(Team.of(req)));
+    public Long updateTeam(TeamDTO req) {
+        if (teamRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_TEAM_NAME);
+        } else {
+            Team team = teamRepository.findById(req.getId())
+                    .orElseThrow(() -> new CustomException(ResCode.TEAM_NOT_FOUND));
+            team.updateTeamName(req);
+            teamRepository.save(team);
+            return team.getId();
+        }
     }
 
     @Override
-    public TeamDTO deleteTeam(Long teamId) {
-        TeamDTO teamDTO = TeamDTO.of(teamRepository.getReferenceById(teamId));
+    public Long deleteTeam(Long teamId) {
         teamRepository.deleteById(teamId);
-        return teamDTO;
+        return teamId;
     }
 }
