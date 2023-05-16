@@ -26,7 +26,7 @@ public class PaymentController {
     public ResponseEntity<BaseRes<PaymentHistoryDTO>> getPaymentHistory(
         @RequestParam(name = "historyId", defaultValue = "") Long historyId) {
         return ResponseEntity.ok().body(BaseRes.success(new PaymentHistoryDTO(
-            1L,
+            "tras",
             2L,
             "{paymentDestination}",
             12000
