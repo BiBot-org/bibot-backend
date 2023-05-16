@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RankAdminServiceImpl implements IRankAdminService {
 
-    private RankRepository rankRepository;
+    private final RankRepository rankRepository;
 
     @Override
     public RankDTO addRank(RankDTO req) {

@@ -24,7 +24,7 @@ public class Department {
     @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL")
     private String name;
 
-    @OneToMany(mappedBy = "department", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Team> teams;
 
     public static Department of(DepartmentDTO dto) {
