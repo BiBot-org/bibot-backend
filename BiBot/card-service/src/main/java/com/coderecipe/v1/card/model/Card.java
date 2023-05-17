@@ -1,9 +1,11 @@
 package com.coderecipe.v1.card.model;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
-import com.coderecipe.v1.card.dto.CardDTO;
+import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import jakarta.persistence.*;
+
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,16 +39,8 @@ public class Card {
     @Column(name = "card_valid", columnDefinition = "VARCHAR(20) NOT NULL")
     private String cardValid;
 
-    public static Card of(CardDTO dto) {
-//        return ModelMapperUtils.getModelMapper().map(dto, Card.class);
-        return Card.builder()
-            .id(dto.getId())
-            .userId(dto.getUserId())
-            .cardCompany(dto.getCardCompany())
-            .cardNo(dto.getCardNo())
-            .cardCvc(dto.getCardCvc())
-            .cardValid(dto.getCardValid())
-            .build();
+    public static Card of(CreateCard res) {
+        return ModelMapperUtils.getModelMapper().map(res, Card.class);
     }
 
 }

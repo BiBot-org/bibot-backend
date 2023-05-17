@@ -24,12 +24,12 @@ public class PaymentController {
 
     @GetMapping
     public ResponseEntity<BaseRes<PaymentHistoryDTO>> getPaymentHistory(
-        @RequestParam(name = "historyId", defaultValue = "") Long historyId) {
+            @RequestParam(name = "historyId", defaultValue = "") Long historyId) {
         return ResponseEntity.ok().body(BaseRes.success(new PaymentHistoryDTO(
-            "tras",
-            2L,
-            "{paymentDestination}",
-            12000
+                "tras",
+                2L,
+                "{paymentDestination}",
+                12000
         )));
     }
 

@@ -1,16 +1,18 @@
 package com.coderecipe.v1.card.service.impl;
 
-import com.coderecipe.v1.card.dto.AllCardDTO;
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.card.dto.CardDTO;
-import com.coderecipe.v1.card.dto.vo.CardReq.CardId;
+import com.coderecipe.v1.card.dto.vo.CardReq.*;
+import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
-import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
-import com.coderecipe.v1.payment.model.PaymentHistory;
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
+
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,46 +30,34 @@ public class CardServiceImpl implements ICardService {
     private final IPaymentHistoryRepository iPaymentHistoryRepository;
 
     @Override
-    public Long addCard(CardDTO req) {
-        return (iCardRepository.save(Card.of(req))).getId();
+    public Long addCard(CreateCard req) {
+        Card card = Card.of(req);
+        iCardRepository.save(card);
+        return card.getId();
     }
 
     @Override
     public CardDTO getCard(Long cardId) {
-        return CardDTO.of(iCardRepository.findById(cardId).get());
+        Card card = iCardRepository.findById(cardId)
+                .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
+        return CardDTO.of(card);
     }
 
     @Override
-    public List<AllCardDTO> getAllCard(UUID userId) {
-        List<Card> cards = iCardRepository.getByUserId(userId);
-        return cards.stream().map(card -> {
-                AllCardDTO allCardDTO = new AllCardDTO();
-                allCardDTO.setId(card.getId());
-                allCardDTO.setCardNo(card.getCardNo());
-                allCardDTO.setCardCompany(card.getCardCompany());
-                allCardDTO.setCardVaild(card.getCardValid());
-                return allCardDTO;
-            })
-            .collect(Collectors.toList());
+    public List<CardInfoRes> getAllCard(UUID userId) {
+        return iCardRepository.findAllByUserIdOrderById(userId)
+                .stream().map(CardInfoRes::of).toList();
     }
 
     @Override
-    public String deleteCard(Long cardId) {
-        String cardNo = iCardRepository.getById(cardId).getCardNo();
+    public Long deleteCard(Long cardId) {
         iCardRepository.deleteById(cardId);
-        return cardNo;
+        return cardId;
     }
 
     @Override
-    public List<PaymentHistoryDTO> getPayments(Long cardId) {
-        List<PaymentHistory> payments = iPaymentHistoryRepository.getByCardId(cardId);
-        return payments.stream().map( payment -> {
-            PaymentHistoryDTO paymentHistoryDTO = new PaymentHistoryDTO();
-            paymentHistoryDTO.setId(payment.getId());
-            paymentHistoryDTO.setCardId(payment.getCard().getId());
-            paymentHistoryDTO.setPaymentDestination(payment.getPaymentDestination());
-            paymentHistoryDTO.setAmount(paymentHistoryDTO.getAmount());
-            return paymentHistoryDTO;
-        }).collect(Collectors.toList());
+    public List<PaymentInfo> getPayments(Long cardId) {
+        return iPaymentHistoryRepository.findAllByCardId(cardId)
+                .stream().map(PaymentInfo::of).toList();
     }
 }
