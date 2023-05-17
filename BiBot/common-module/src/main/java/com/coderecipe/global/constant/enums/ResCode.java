@@ -32,6 +32,7 @@ public enum ResCode {
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀 정보를 찾을 수 없습니다.", "ERROR-NF-003"),
     RANK_NOT_FOUND(HttpStatus.NOT_FOUND, "직급 정보를 찾을 수 없습니다.", "ERROR-NF-004"),
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공지를 찾을 수 없습니다.", "ERROR-NF-005"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다.", "ERROR-NF-006"),
 
     //FORBIDDEN
     FORBIDDEN(HttpStatus.FORBIDDEN, "금지된 요청입니다.", "ERROR-FB-000"),

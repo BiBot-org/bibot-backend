@@ -1,20 +1,19 @@
 package com.coderecipe.v1.user.bibotuser.model;
 
 import com.coderecipe.global.constant.entity.BaseTimeEntity;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.CreateUserReq;
 import com.coderecipe.v1.user.rank.model.Rank;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "bibot_user")
@@ -65,5 +64,12 @@ public class BibotUser extends BaseTimeEntity {
                 .duty(req.getDuty())
                 .userRole(UserRole.BIBOT_USER)
                 .build();
+    }
+
+    public void updateEntityColumns(UserAdminReq.UpdateUserReq req) {
+        this.firstName = req.getFirstName();
+        this.lastName = req.getLastName();
+        this.profileUrl = req.getEmail();
+        this.duty = req.getDuty();
     }
 }
