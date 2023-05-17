@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 @Data
 @Entity
@@ -25,7 +26,7 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
     @Column(name = "id")
     private String id = StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT);
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
 
@@ -41,9 +42,9 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
 
     public static PaymentHistory of(MockPaymentReq req, Card card) {
         return PaymentHistory.builder()
-            .card(card)
-            .paymentDestination(req.getPaymentDestination())
-            .amount(req.getProductOrderList().stream().mapToInt(ProductOrderList::getAmount).sum())
-            .build();
+                .card(card)
+                .paymentDestination(req.getPaymentDestination())
+                .amount(req.getProductOrderList().stream().mapToInt(ProductOrderList::getAmount).sum())
+                .build();
     }
 }

@@ -3,8 +3,10 @@ package com.coderecipe.v1.payment.dto.vo;
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,9 +47,9 @@ public class PaymentReq {
         private String paymentCardCompany;
 
         public static CreateMockReceiptReq of(String paymentCode, String paymentCardCompany,
-            MockPaymentReq req) {
+                                              MockPaymentReq req) {
             CreateMockReceiptReq result = ModelMapperUtils.getModelMapper()
-                .map(req, CreateMockReceiptReq.class);
+                    .map(req, CreateMockReceiptReq.class);
             result.setPaymentCode(paymentCode);
             result.setPaymentDateStr(StringUtils.generateDateStringRandom());
             result.setPaymentCardCompany(paymentCardCompany);

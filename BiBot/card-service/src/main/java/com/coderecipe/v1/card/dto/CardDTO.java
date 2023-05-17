@@ -2,7 +2,9 @@ package com.coderecipe.v1.card.dto;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.card.model.Card;
+
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
