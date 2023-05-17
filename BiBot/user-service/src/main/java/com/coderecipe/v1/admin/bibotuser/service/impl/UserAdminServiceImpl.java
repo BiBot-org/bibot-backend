@@ -2,15 +2,21 @@ package com.coderecipe.v1.admin.bibotuser.service.impl;
 
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.UpdateUserReq;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.ChangeUserRole;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.GetAdminInfo;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.CreateUserRes;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.CreateUserReq;
 import com.coderecipe.v1.admin.bibotuser.service.IUserAdminService;
+import com.coderecipe.v1.user.bibotuser.dto.BibotUserDTO;
+import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import com.coderecipe.v1.user.rank.model.Rank;
 import com.coderecipe.v1.user.rank.model.repository.RankRepository;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.team.model.repository.TeamRepository;
 import com.coderecipe.v1.user.bibotuser.model.BibotUser;
 import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
@@ -75,5 +81,64 @@ public class UserAdminServiceImpl implements IUserAdminService {
         bibotUserRepository.save(bibotUser);
 
         return new CreateUserRes(bibotUser.getId());
+    }
+
+    @Override
+    public BibotUserDTO getUser(UUID userId) {
+        BibotUser user = bibotUserRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
+        return BibotUserDTO.of(user);
+    }
+
+    @Override
+    public List<GetAdminInfo> getAdminInfoList() {
+        return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.BIBOT_ADMIN, UserRole.BIBOT_SUPER_ADMIN))
+                .stream().map(GetAdminInfo::of).toList();
+    }
+
+    @Override
+    public UUID updateUserInfo(UpdateUserReq req) {
+        BibotUser user = bibotUserRepository.findById(req.getUserId())
+                .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
+
+        user.updateEntityColumns(req);
+
+        if (req.getRankId() != null) {
+            Rank rank = rankRepository.findById(req.getRankId())
+                    .orElseThrow(() -> new CustomException(ResCode.RANK_NOT_FOUND));
+            user.setRank(rank);
+        }
+
+        if (req.getTeamId() != null) {
+            Team team = teamRepository.findById(req.getTeamId())
+                    .orElseThrow(() -> new CustomException(ResCode.TEAM_NOT_FOUND));
+            user.setTeam(team);
+        }
+
+        bibotUserRepository.save(user);
+        return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public UUID changeUserRole(ChangeUserRole req) {
+
+        RealmResource realmResource = keycloak.realm(realm);
+        UserRepresentation userRep = realmResource.users().get(req.getUserId().toString()).toRepresentation();
+        userRep.setRealmRoles(List.of(req.getUserRole().toString()));
+        keycloak.realm(realm).users().get(req.getUserId().toString()).update(userRep);
+
+        BibotUser user = bibotUserRepository.findById(req.getUserId())
+                .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
+        user.setUserRole(req.getUserRole());
+        bibotUserRepository.save(user);
+        return user.getId();
+
+    }
+
+    @Override
+    public UUID deleteUser(UUID userId) {
+        bibotUserRepository.deleteById(userId);
+        return userId;
     }
 }
