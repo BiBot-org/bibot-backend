@@ -1,11 +1,38 @@
+server:
+  port: 8090
+
 spring:
   application:
     name: card-service
-  profiles:
-    active: ${SPRING_PROFILE_ACTIVE}
-  config:
-    import: "optional:configserver:${CONFIG_SERVER_URL}"
-  cloud:
-    config:
-      name: card-service
-      profile: ${SPRING_PROFILE_ACTIVE}
+  datasource:
+    url: jdbc:postgresql://localhost:5432/coderecipe_dev
+    username: "coderecipe"
+    password: "codekunst"
+    validationQuery: SELECT 1
+    testWhileIdle: true
+  database:
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: create
+    show-sql: 'true'
+  sql:
+    init:
+      platform: postgres
+  output:
+    ansi:
+      enabled: always
+  ## fetch-registry : Eureka
+  ## service-url defaultZone :
+  greeting:
+    message: hi
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
