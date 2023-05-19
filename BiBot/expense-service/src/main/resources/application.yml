@@ -5,8 +5,6 @@ spring:
     url: jdbc:postgresql://34.64.101.34:5432/bibot
     username: "coderecipe"
     password: "codekunst"
-    validationQuery: SELECT 1
-    testWhileIdle: true
   database:
     driverClassName: org.postgresql.Driver
   jpa:
@@ -23,13 +21,3 @@ spring:
   output:
     ansi:
       enabled: always
-  ## fetch-registry : Eureka
-  ## service-url defaultZone :
-  greeting:
-    message: hi
-
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
