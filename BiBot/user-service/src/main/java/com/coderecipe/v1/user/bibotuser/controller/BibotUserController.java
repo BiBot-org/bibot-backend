@@ -29,7 +29,7 @@ public class BibotUserController {
                 .build()));
     }
 
-    @GetMapping
+    @GetMapping("/isInit")
     public ResponseEntity<BaseRes<Boolean>> isInit() {
         Boolean res = bibotUserService.isInit();
         return ResponseEntity.ok().body(BaseRes.success(res));

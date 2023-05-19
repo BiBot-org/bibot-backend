@@ -25,25 +25,25 @@ public class UserAdminController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<BaseRes<CreateUserRes>> addUser(@RequestBody CreateUserReq req) {
         CreateUserRes res = userAdminService.createUser(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @GetMapping()
+    @GetMapping("/admin/all")
     public ResponseEntity<BaseRes<List<GetAdminInfo>>> getAdminInfoList() {
         List<GetAdminInfo> res = userAdminService.getAdminInfoList();
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @PostMapping()
+    @PutMapping
     public ResponseEntity<BaseRes<UUID>> updateUserInfo(@RequestBody UpdateUserReq req) {
         UUID res = userAdminService.updateUserInfo(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @PutMapping()
+    @PutMapping("/update/role")
     public ResponseEntity<BaseRes<UUID>> changeUserInfo(@RequestBody ChangeUserRole req) {
         UUID res = userAdminService.changeUserRole(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
