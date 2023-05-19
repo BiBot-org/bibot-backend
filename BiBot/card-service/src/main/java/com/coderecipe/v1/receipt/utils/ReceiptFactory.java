@@ -8,16 +8,18 @@ import com.coderecipe.v1.receipt.model.impl.Receipt3;
 import com.coderecipe.v1.receipt.model.impl.Receipt4;
 import com.coderecipe.v1.receipt.model.impl.Receipt5;
 import com.coderecipe.v1.receipt.model.impl.Receipt6;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
 public class ReceiptFactory {
 
-    private Random rand = SecureRandom.getInstanceStrong();
+    private final Random rand = SecureRandom.getInstanceStrong();
 
     public ReceiptFactory() throws NoSuchAlgorithmException {
     }
+
 
     public IReceipt createReceipt(CreateMockReceiptReq req) {
         int randNum = this.rand.nextInt(1, 7);

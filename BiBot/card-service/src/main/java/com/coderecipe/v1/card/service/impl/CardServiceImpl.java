@@ -1,10 +1,18 @@
 package com.coderecipe.v1.card.service.impl;
 
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.card.dto.CardDTO;
+import com.coderecipe.v1.card.dto.vo.CardReq.*;
+import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
+import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
+
 import java.util.UUID;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,20 +27,37 @@ import java.util.List;
 public class CardServiceImpl implements ICardService {
 
     private final ICardRepository iCardRepository;
+    private final IPaymentHistoryRepository iPaymentHistoryRepository;
 
     @Override
-    public List<Long> addCard(List<CardDTO> req) {
-        return req.stream().map(e -> {
-            Card card = Card.of(e);
-            iCardRepository.save(card);
-            return card.getId();
-        }).toList();
+    public Long addCard(CreateCard req) {
+        Card card = Card.of(req);
+        iCardRepository.save(card);
+        return card.getId();
     }
 
     @Override
     public CardDTO getCard(Long cardId) {
-        return new CardDTO(
-            1L, UUID.randomUUID(),"1234-1234-1234-****","국민", "000", "02/03"
-        );
+        Card card = iCardRepository.findById(cardId)
+                .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
+        return CardDTO.of(card);
+    }
+
+    @Override
+    public List<CardInfoRes> getAllCard(UUID userId) {
+        return iCardRepository.findAllByUserIdOrderById(userId)
+                .stream().map(CardInfoRes::of).toList();
+    }
+
+    @Override
+    public Long deleteCard(Long cardId) {
+        iCardRepository.deleteById(cardId);
+        return cardId;
+    }
+
+    @Override
+    public List<PaymentInfo> getPayments(Long cardId) {
+        return iPaymentHistoryRepository.findAllByCardId(cardId)
+                .stream().map(PaymentInfo::of).toList();
     }
 }

@@ -1,8 +1,13 @@
 package com.coderecipe.v1.card.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
-import com.coderecipe.v1.card.dto.CardDTO;
+import com.coderecipe.v1.card.dto.vo.CardReq.*;
+import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.card.service.ICardService;
+
+import java.util.UUID;
+
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,17 +23,30 @@ import java.util.List;
 public class CardController {
 
     private final ICardService iCardService;
+    UUID userId = UUID.fromString("12f92119-ecee-4bcf-abe8-d01ef389c369");
 
     @PostMapping
-    public ResponseEntity<BaseRes<List<Long>>> addCard(@RequestBody List<CardDTO> cardData) {
-        List<Long> result = iCardService.addCard(cardData);
+    public ResponseEntity<BaseRes<Long>> addCard(@RequestBody CreateCard req) {
+        Long result = iCardService.addCard(req);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @GetMapping
-    public ResponseEntity<BaseRes<CardDTO>> getCard(
-        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
-        CardDTO result = iCardService.getCard(cardId);
+    public ResponseEntity<BaseRes<List<PaymentInfo>>> getPayments(
+            @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
+        List<PaymentInfo> result = iCardService.getPayments(cardId);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<BaseRes<List<CardInfoRes>>> getAllCard() {
+        List<CardInfoRes> result = iCardService.getAllCard(userId);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId) {
+        Long result = iCardService.deleteCard(cardId.getId());
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 }

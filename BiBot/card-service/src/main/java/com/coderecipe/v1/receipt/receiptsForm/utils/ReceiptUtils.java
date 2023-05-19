@@ -1,6 +1,7 @@
 package com.coderecipe.v1.receipt.receiptsForm.utils;
 
 import com.coderecipe.v1.receipt.dto.ReceiptDTO;
+
 import java.util.Random;
 
 public class ReceiptUtils {

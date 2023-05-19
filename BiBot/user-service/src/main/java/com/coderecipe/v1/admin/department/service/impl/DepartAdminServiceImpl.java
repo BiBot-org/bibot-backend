@@ -1,14 +1,16 @@
 package com.coderecipe.v1.admin.department.service.impl;
 
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.admin.department.service.IDepartmentAdminService;
-import com.coderecipe.v1.department.dto.DepartmentDTO;
-import com.coderecipe.v1.department.model.Department;
-import com.coderecipe.v1.department.model.repository.DepartmentRepository;
-import com.coderecipe.v1.team.dto.TeamDTO;
-import com.coderecipe.v1.team.model.Team;
-import com.coderecipe.v1.team.model.repository.TeamRepository;
+import com.coderecipe.v1.user.department.dto.DepartmentDTO;
+import com.coderecipe.v1.user.department.dto.vo.DepartmentReq.AddDepartmentReq;
+import com.coderecipe.v1.user.department.model.Department;
+import com.coderecipe.v1.user.department.model.repository.DepartmentRepository;
+import com.coderecipe.v1.user.team.dto.TeamDTO;
+import com.coderecipe.v1.user.team.model.Team;
+import com.coderecipe.v1.user.team.model.repository.TeamRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,31 +25,46 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
     @Override
-    public DepartmentDTO addDepartment(DepartmentDTO req) {
-        return DepartmentDTO.of(departmentRepository.save(Department.of(req)));
+    public Long addDepartment(AddDepartmentReq req) {
+        if (departmentRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_DEPARTMENT_NAME);
+        } else {
+            Department department = Department.of(req.getName());
+            departmentRepository.save(department);
+            return department.getId();
+        }
     }
 
     @Override
     public DepartmentDTO getDepartment(Long departmentId) {
-        return DepartmentDTO.of(departmentRepository.getReferenceById(departmentId));
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
+        return DepartmentDTO.of(department);
     }
 
     @Override
-    public DepartmentDTO updateDepartment(DepartmentDTO req) {
-        return DepartmentDTO.of(departmentRepository.save(Department.of(req)));
+    public Long updateDepartment(DepartmentDTO req) {
+        if(departmentRepository.existsByName(req.getName())) {
+            throw new CustomException(ResCode.DUPLICATE_DEPARTMENT_NAME);
+        } else {
+            Department department = departmentRepository.findById(req.getId())
+                    .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
+            department.updateDepartmentInfo(req);
+            departmentRepository.save(department);
+            return department.getId();
+        }
     }
 
     @Override
-    public DepartmentDTO deleteDepartment(Long departmentId) {
-        DepartmentDTO departmentDTO = DepartmentDTO.of(departmentRepository.getReferenceById(departmentId));
+    public Long deleteDepartment(Long departmentId) {
         departmentRepository.deleteById(departmentId);
-        return departmentDTO;
+        return departmentId;
     }
 
     @Override
     public List<TeamDTO> getTeamList(Long departmentId) {
         List<Team> teams = teamRepository.findByDepartmentId(departmentId);
-        return teams.stream().map(TeamDTO::of).collect(Collectors.toList());
+        return teams.stream().map(TeamDTO::of).toList();
     }
 
 }
