@@ -6,6 +6,7 @@ import com.coderecipe.v1.admin.notice.dto.NoticeDTO;
 import com.coderecipe.v1.admin.notice.model.Notice;
 import com.coderecipe.v1.admin.notice.model.repository.NoticeRepository;
 import com.coderecipe.v1.user.notice.service.NoticeService;
+import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,8 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<NoticeDTO> getNoticeMain() {
+    public List<NoticeInfo> getNoticeMain() {
         return noticeRepository.findTop5ByOrderByIdDesc()
-                .stream().map(NoticeDTO::of).toList();
+                .stream().map(NoticeInfo::of).toList();
     }
 }

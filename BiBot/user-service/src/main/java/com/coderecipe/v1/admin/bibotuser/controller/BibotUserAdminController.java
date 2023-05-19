@@ -15,7 +15,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/user")
-public class UserAdminController {
+public class BibotUserAdminController {
 
     private final IUserAdminService userAdminService;
 
@@ -25,25 +25,25 @@ public class UserAdminController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<BaseRes<CreateUserRes>> addUser(@RequestBody CreateUserReq req) {
         CreateUserRes res = userAdminService.createUser(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<BaseRes<List<GetAdminInfo>>> getAdminInfoList() {
         List<GetAdminInfo> res = userAdminService.getAdminInfoList();
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @PostMapping()
+    @PutMapping
     public ResponseEntity<BaseRes<UUID>> updateUserInfo(@RequestBody UpdateUserReq req) {
         UUID res = userAdminService.updateUserInfo(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
-    @PutMapping()
+    @PutMapping("/role")
     public ResponseEntity<BaseRes<UUID>> changeUserInfo(@RequestBody ChangeUserRole req) {
         UUID res = userAdminService.changeUserRole(req);
         return ResponseEntity.ok().body(BaseRes.success(res));

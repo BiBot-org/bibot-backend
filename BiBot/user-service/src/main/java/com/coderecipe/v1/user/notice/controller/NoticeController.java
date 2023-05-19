@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
 
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class NoticeController {
     }
 
     @GetMapping("/main")
-    public ResponseEntity<BaseRes<List<NoticeDTO>>> getNoticeMain() {
-        List<NoticeDTO> result = noticeService.getNoticeMain();
+    public ResponseEntity<BaseRes<List<NoticeInfo>>> getNoticeMain() {
+        List<NoticeInfo> result = noticeService.getNoticeMain();
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 

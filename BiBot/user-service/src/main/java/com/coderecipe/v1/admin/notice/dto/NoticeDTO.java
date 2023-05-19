@@ -20,6 +20,7 @@ public class NoticeDTO {
     private String title;
     private String content;
     private NoticeType type;
+//    private String author;
     private UUID createdBy;
     private UUID modifiedBy;
     private LocalDateTime regTime;

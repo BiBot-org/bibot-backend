@@ -30,6 +30,9 @@ public class Notice extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT NOT NULL")
     private String content;
 
+//    @Column(name = "author", columnDefinition = "VARCHAR(20) NOT NULL")
+//    private String author;
+
     @Column(name = "type", columnDefinition = "VARCHAR(15)")
     @Enumerated(EnumType.STRING)
     private NoticeType type;
