@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 public interface ICardRepository extends JpaRepository<Card, Long> {
 
     List<Card> findAllByUserIdOrderById(UUID userId);
-
 }

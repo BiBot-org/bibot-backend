@@ -30,24 +30,40 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
     private final ICardRepository iCardRepository;
     private final ReceiptWorker receiptWorker;
 
+//    @Override
+//    @Transactional
+////    @Deprecated(since = "testcode 입니다. 실제로는 사용하시면 안됍니다.")
+//    public PaymentHistoryDTO addPayment(MockPaymentReq req) {
+////        Card card = iCardRepository.findById(req.getCardId())
+////            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
+//        Card card = Card.builder()
+//                .id(req.getCardId())
+//                .userId(UUID.randomUUID())
+//                .cardCvc("000")
+//                .cardNo("1234")
+//                .cardValid("123")
+//                .build();
+//        PaymentHistory paymentHistory = PaymentHistory.of(req, card);
+//        iPaymentHistoryRepository.save(paymentHistory);
+//
+//        if (receiptWorker.createReceiptImage(
+//                CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req))) {
+//            return PaymentHistoryDTO.of(paymentHistory);
+//        } else {
+//            throw new CustomException(ResCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @Override
     @Transactional
-//    @Deprecated(since = "testcode 입니다. 실제로는 사용하시면 안됍니다.")
     public PaymentHistoryDTO addPayment(MockPaymentReq req) {
-//        Card card = iCardRepository.findById(req.getCardId())
-//            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
-        Card card = Card.builder()
-                .id(req.getCardId())
-                .userId(UUID.randomUUID())
-                .cardCvc("000")
-                .cardNo("1234")
-                .cardValid("123")
-                .build();
+        Card card = iCardRepository.findById(req.getCardId())
+            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
         iPaymentHistoryRepository.save(paymentHistory);
 
         if (receiptWorker.createReceiptImage(
-                CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req))) {
+            CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req))) {
             return PaymentHistoryDTO.of(paymentHistory);
         } else {
             throw new CustomException(ResCode.INTERNAL_SERVER_ERROR);

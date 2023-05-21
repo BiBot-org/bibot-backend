@@ -13,6 +13,21 @@ repositories {
 
 dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+    implementation 'com.itextpdf:html2pdf:3.0.3'
+    implementation 'ognl:ognl:3.3.4'
+
+
+    implementation files('libs/io-8.0.0.jar')
+    implementation files('libs/kernel-8.0.0.jar')
+    implementation files('libs/layout-8.0.0.jar')
+
+    implementation 'org.apache.pdfbox:pdfbox:2.0.26'
+    implementation('org.apache.pdfbox:pdfbox-tools:2.0.27')
+
+
 }
 
 ext {

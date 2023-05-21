@@ -2,16 +2,14 @@ package com.coderecipe.v1.payment.dto.vo;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+
 
 public class PaymentReq {
 
@@ -25,12 +23,20 @@ public class PaymentReq {
     @NoArgsConstructor
     public static class MockPaymentReq {
 
+        private String title;
+        private Long cardId;
+        private String paymentDateStr;
+        private String approvalNo;
+        private String cardCompany;
         private String paymentDestination;
         private String businessLicense;
         private String representationName;
-        private String address;
-        private Long cardId;
+        private String destinationNum;
+        private String tel;
+        private String destinationAddress;
         private List<ProductOrderList> productOrderList;
+        private String vat;
+        private String notice;
 
         public Integer getTotalPrice() {
             return this.productOrderList.stream().mapToInt(ProductOrderList::getAmount).sum();
@@ -45,6 +51,7 @@ public class PaymentReq {
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;
+
 
         public static CreateMockReceiptReq of(String paymentCode, String paymentCardCompany,
                                               MockPaymentReq req) {

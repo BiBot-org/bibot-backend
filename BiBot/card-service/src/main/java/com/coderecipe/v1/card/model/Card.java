@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,7 @@ public class Card {
     private Long id;
 
     @Column(name = "user_id")
+    @JdbcTypeCode(java.sql.Types.VARCHAR)
     private UUID userId;
 
     @Column(name = "card_no", columnDefinition = "VARCHAR(30) NOT NULL")
