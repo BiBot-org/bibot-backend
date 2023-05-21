@@ -1,19 +1,18 @@
-package com.coderecipe.v1.receipt.receiptsForm.utils;
+package com.coderecipe.receiptservice.v1.receipt.receiptsform.utils;
 
-import com.coderecipe.v1.receipt.dto.ReceiptDTO;
+import com.coderecipe.receiptservice.v1.receipt.dto.ReceiptContent;
 
 import java.util.Random;
 
-@Deprecated(since = "영수증 서비스 분리 후 삭제 예정입니다.")
 public class ReceiptUtils {
 
     private ReceiptUtils() {
         throw new IllegalStateException("Utility Class");
     }
 
-    public static ReceiptDTO getReceiptData() {
+    public static ReceiptContent getReceiptData() {
         Random rand = new Random();
-        ReceiptDTO result = new ReceiptDTO();
+        ReceiptContent result = new ReceiptContent();
         int randInt = rand.nextInt(1, 100);
         if (randInt % 3 == 0) {
             result.setAmountName("총합");

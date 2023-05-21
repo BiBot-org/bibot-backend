@@ -10,13 +10,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class ReceiptWorker {
-    //로컬 테스트용
-//    @Value("${imagePath}")
-//    private String imagePath;
+
 
     private final SelectForm selectForm;
     public Boolean createReceiptImage(CreateMockReceiptReq req) {
-
         try {
             selectForm.createReceiptImage(req);
         } catch (Exception e) {

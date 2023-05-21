@@ -4,11 +4,9 @@ import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 public class PaymentReq {
@@ -38,11 +36,14 @@ public class PaymentReq {
         private String vat;
         private String notice;
 
+
         public Integer getTotalPrice() {
             return this.productOrderList.stream().mapToInt(ProductOrderList::getAmount).sum();
         }
     }
 
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown =true)
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -51,7 +52,6 @@ public class PaymentReq {
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;
-
 
         public static CreateMockReceiptReq of(String paymentCode, String paymentCardCompany,
                                               MockPaymentReq req) {
