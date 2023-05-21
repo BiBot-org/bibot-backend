@@ -10,6 +10,7 @@ import java.util.UUID;
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.cassandra.CassandraProperties.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,13 @@ public class CardController {
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
+    @PostMapping("period")
+    public ResponseEntity<BaseRes<List<PaymentInfo>>> getPaymentsPeriod(
+        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
+        List<PaymentInfo> result = iCardService.getPaymentsPeriod(cardId);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<BaseRes<List<CardInfoRes>>> getAllCard() {
         List<CardInfoRes> result = iCardService.getAllCard(userId);
@@ -47,6 +55,13 @@ public class CardController {
     @DeleteMapping
     public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId) {
         Long result = iCardService.deleteCard(cardId.getId());
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+    @GetMapping("/amount")
+    public ResponseEntity<BaseRes<Integer>> getAmount(
+        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
+        Integer result = iCardService.getAmount(cardId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 }

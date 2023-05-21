@@ -9,8 +9,14 @@ import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
+import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.UUID;
 
 import lombok.Data;
@@ -57,7 +63,30 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public List<PaymentInfo> getPayments(Long cardId) {
-        return iPaymentHistoryRepository.findAllByCardId(cardId)
-                .stream().map(PaymentInfo::of).toList();
+
+        LocalDateTime endDateTime = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
+        LocalDateTime startDateTime = endDateTime.minusMonths(3);
+
+        return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardId(startDateTime,endDateTime,cardId)
+                .stream().sorted(Comparator.comparing(PaymentHistory::getRegTime).reversed()).map(PaymentInfo::of).toList();
     }
+
+    @Override
+    public List<PaymentInfo> getPaymentsPeriod(Long cardId) {
+
+        LocalDateTime endDateTime = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
+//        LocalDateTime startDateTime = endDateTime.minusMonths(3).minusDays();
+        return null;
+    }
+
+    @Override
+    public Integer getAmount(Long cardId) {
+
+        LocalDateTime endDateTime = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
+        LocalDateTime startDateTime = endDateTime.minusMonths(1);
+
+        return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardId(startDateTime,endDateTime,cardId)
+            .stream().mapToInt(PaymentHistory::getAmount).sum();
+    }
+
 }

@@ -19,4 +19,8 @@ public interface ICardService {
     Long deleteCard(Long cardId);
 
     List<PaymentInfo> getPayments(Long cardId);
+
+    List<PaymentInfo> getPaymentsPeriod(Long cardId);
+
+    Integer getAmount(Long cardId);
 }
