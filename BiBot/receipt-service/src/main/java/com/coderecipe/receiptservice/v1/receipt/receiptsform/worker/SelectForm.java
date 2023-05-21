@@ -1,22 +1,21 @@
-package com.coderecipe.v1.receipt.receiptsForm.makeReciept;
+package com.coderecipe.receiptservice.v1.receipt.receiptsform.worker;
 
-import com.coderecipe.v1.payment.dto.vo.PaymentReq.CreateMockReceiptReq;
-import com.coderecipe.v1.receipt.model.IReceipt;
-import com.coderecipe.v1.receipt.utils.ReceiptFactory;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
+import com.coderecipe.receiptservice.v1.receipt.model.IReceipt;
+import com.coderecipe.receiptservice.v1.receipt.receiptsform.utils.ReceiptFactory;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.imageio.ImageIO;
-import javax.swing.JEditorPane;
 
-@Deprecated(since = "영수증 서비스 분리 후 삭제 예정입니다.")
 public class SelectForm {
 
-    public boolean createReceiptImage(CreateMockReceiptReq req) throws Exception {
+    public boolean createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws Exception {
         ReceiptFactory receiptFactory = new ReceiptFactory();
         IReceipt iReceipt = receiptFactory.createReceipt(req);
 

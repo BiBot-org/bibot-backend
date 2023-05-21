@@ -3,7 +3,7 @@ package com.coderecipe.receiptservice.v1.receipt.model;
 import com.coderecipe.global.constant.entity.BaseImmutableEntity;
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
-import com.coderecipe.receiptservice.v1.receipt.dto.ReceiptDTO;
+import com.coderecipe.receiptservice.v1.receipt.dto.ReceiptContent;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -38,7 +38,7 @@ public class Receipt extends BaseImmutableEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public static Receipt of(ReceiptDTO dto) {
+    public static Receipt of(ReceiptContent dto) {
         return ModelMapperUtils.getModelMapper().map(dto, Receipt.class);
     }
 

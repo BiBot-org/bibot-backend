@@ -7,10 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class PaymentReq {
@@ -37,6 +35,8 @@ public class PaymentReq {
         }
     }
 
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown =true)
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
