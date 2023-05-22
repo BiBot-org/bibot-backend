@@ -8,6 +8,7 @@ import java.util.List;
 public interface IDepartmentAdminService {
 
     Long addDepartment(AddDepartmentReq req);
+    List<DepartmentDTO> getAllDepartment();
     DepartmentDTO getDepartment(Long departmentId);
     Long updateDepartment(DepartmentDTO req);
     Long deleteDepartment(Long departmentId);

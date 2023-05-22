@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
-@RequestMapping("api/v1/admin/department")
+@RequestMapping("api/admin/v1/department")
 @RequiredArgsConstructor
 @Slf4j
 public class DepartmentAdminController {
@@ -30,6 +30,12 @@ public class DepartmentAdminController {
     @PostMapping
     public ResponseEntity<BaseRes<Long>> addDepartment(@RequestBody AddDepartmentReq departmentData) {
         Long result = iDepartmentAdminService.addDepartment(departmentData);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<BaseRes<List<DepartmentDTO>>> getAllDepartments() {
+        List<DepartmentDTO> result = iDepartmentAdminService.getAllDepartment();
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 

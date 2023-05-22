@@ -31,6 +31,16 @@ public class UserAdminReq {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class SearchUserReq {
+        private Long departmentId;
+        private Long teamId;
+        private Long rankId;
+        private String name;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UpdateUserReq {
         private UUID userId;
         private String firstName;

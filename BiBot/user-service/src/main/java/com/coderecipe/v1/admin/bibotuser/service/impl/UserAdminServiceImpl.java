@@ -2,20 +2,23 @@ package com.coderecipe.v1.admin.bibotuser.service.impl;
 
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
-import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.UpdateUserReq;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.ChangeUserRole;
-import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.GetAdminInfo;
-import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.CreateUserRes;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.CreateUserReq;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.SearchUserReq;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.UpdateUserReq;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.CreateUserRes;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.GetAdminInfo;
+import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.SearchUserRes;
 import com.coderecipe.v1.admin.bibotuser.service.IUserAdminService;
 import com.coderecipe.v1.user.bibotuser.dto.BibotUserDTO;
 import com.coderecipe.v1.user.bibotuser.enums.UserRole;
+import com.coderecipe.v1.user.bibotuser.model.BibotUser;
+import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
+import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserSpecification;
 import com.coderecipe.v1.user.rank.model.Rank;
 import com.coderecipe.v1.user.rank.model.repository.RankRepository;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.team.model.repository.TeamRepository;
-import com.coderecipe.v1.user.bibotuser.model.BibotUser;
-import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +30,10 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -81,6 +87,30 @@ public class UserAdminServiceImpl implements IUserAdminService {
         bibotUserRepository.save(bibotUser);
 
         return new CreateUserRes(bibotUser.getId());
+    }
+
+    @Override
+    public SearchUserRes searchUser(SearchUserReq req, Pageable pageable) {
+        Specification<BibotUser> spec = (root, query, cb) -> cb.isTrue(cb.literal((true)));
+
+        if (req.getDepartmentId() != null) {
+            spec = spec.and(BibotUserSpecification.equalDepartmentId(
+                    req.getDepartmentId()));
+        }
+
+        if (req.getTeamId() != null) {
+            spec = spec.and(BibotUserSpecification.equalTeamId(req.getTeamId()));
+        }
+
+        if(req.getRankId() != null) {
+            spec = spec.and(BibotUserSpecification.equalRankId(req.getRankId()));
+        }
+
+        if(req.getName() != null) {
+            spec = spec.and(BibotUserSpecification.likeUsername(req.getName()));
+        }
+
+        return SearchUserRes.of(BibotUserDTO.of(bibotUserRepository.findAll(spec, pageable)));
     }
 
     @Override

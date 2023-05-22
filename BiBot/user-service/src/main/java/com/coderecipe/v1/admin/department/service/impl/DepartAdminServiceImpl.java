@@ -36,6 +36,11 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
     }
 
     @Override
+    public List<DepartmentDTO> getAllDepartment() {
+        return departmentRepository.findAll().stream().map(DepartmentDTO::of).toList();
+    }
+
+    @Override
     public DepartmentDTO getDepartment(Long departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new CustomException(ResCode.DEPARTMENT_NOT_FOUND));
