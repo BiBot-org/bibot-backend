@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
@@ -25,5 +26,9 @@ public class BibotUserDTO {
 
     public static BibotUserDTO of(BibotUser entity) {
         return ModelMapperUtils.getModelMapper().map(entity, BibotUserDTO.class);
+    }
+
+    public static Page<BibotUserDTO> of (Page<BibotUser> entities) {
+        return entities.map(BibotUserDTO::of);
     }
 }

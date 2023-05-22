@@ -1,5 +1,6 @@
 package com.coderecipe.config.security;
 
+
 import lombok.RequiredArgsConstructor;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.context.annotation.Bean;
