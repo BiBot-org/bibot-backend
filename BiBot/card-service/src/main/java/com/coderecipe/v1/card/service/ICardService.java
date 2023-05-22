@@ -5,6 +5,7 @@ import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public interface ICardService {
 
     Long deleteCard(Long cardId);
 
-    List<PaymentInfo> getPayments(RequestGetPayments req);
+    List<PaymentInfo> getPayments(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-    Integer getAmount(RequestGetPayments cardId);
+    Integer getAmount(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 }

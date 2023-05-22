@@ -5,12 +5,12 @@ import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.card.service.ICardService;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +34,8 @@ public class CardController {
 
     @GetMapping
     public ResponseEntity<BaseRes<List<PaymentInfo>>> getPayments(
-            @RequestBody RequestGetPayments req) {
-        List<PaymentInfo> result = iCardService.getPayments(req);
+            @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+        List<PaymentInfo> result = iCardService.getPayments(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
@@ -53,8 +53,8 @@ public class CardController {
 
     @GetMapping("/amount")
     public ResponseEntity<BaseRes<Integer>> getAmount(
-        @RequestBody RequestGetPayments req) {
-        Integer result = iCardService.getAmount(req);
+        @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+        Integer result = iCardService.getAmount(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 }
