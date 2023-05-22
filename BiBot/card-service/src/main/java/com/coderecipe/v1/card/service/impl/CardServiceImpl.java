@@ -45,14 +45,14 @@ public class CardServiceImpl implements ICardService {
     @Override
     public CardDTO getCard(Long cardId) {
         Card card = iCardRepository.findById(cardId)
-                .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
         return CardDTO.of(card);
     }
 
     @Override
     public List<CardInfoRes> getAllCard(UUID userId) {
         return iCardRepository.findAllByUserIdOrderById(userId)
-                .stream().map(CardInfoRes::of).toList();
+            .stream().map(CardInfoRes::of).toList();
     }
 
     @Override
@@ -62,31 +62,21 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public List<PaymentInfo> getPayments(Long cardId) {
+    public List<PaymentInfo> getPayments(RequestGetPayments req) {
 
-        LocalDateTime endDateTime = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
-        LocalDateTime startDateTime = endDateTime.minusMonths(3);
+        return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardIdOrderByRegTimeDesc(
+                req.getStartDateTime(), req.getEndDateTime(), req.getCardId()).stream()
+            .map(PaymentInfo::of).toList();
 
-        return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardId(startDateTime,endDateTime,cardId)
-                .stream().sorted(Comparator.comparing(PaymentHistory::getRegTime).reversed()).map(PaymentInfo::of).toList();
     }
 
-    @Override
-    public List<PaymentInfo> getPaymentsPeriod(Long cardId) {
-
-        LocalDateTime endDateTime = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
-//        LocalDateTime startDateTime = endDateTime.minusMonths(3).minusDays();
-        return null;
-    }
 
     @Override
-    public Integer getAmount(Long cardId) {
+    public Integer getAmount(RequestGetPayments req) {
 
-        LocalDateTime endDateTime = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
-        LocalDateTime startDateTime = endDateTime.minusMonths(1);
-
-        return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardId(startDateTime,endDateTime,cardId)
-            .stream().mapToInt(PaymentHistory::getAmount).sum();
+        return iPaymentHistoryRepository.findAndSumAllByRegTimeBetweenAndCardId(
+            req.getStartDateTime(), req.getEndDateTime(),
+            iCardRepository.getReferenceById(req.getCardId()));
     }
 
 }

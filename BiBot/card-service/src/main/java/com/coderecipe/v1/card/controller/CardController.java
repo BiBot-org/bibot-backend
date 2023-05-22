@@ -34,15 +34,8 @@ public class CardController {
 
     @GetMapping
     public ResponseEntity<BaseRes<List<PaymentInfo>>> getPayments(
-            @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
-        List<PaymentInfo> result = iCardService.getPayments(cardId);
-        return ResponseEntity.ok().body(BaseRes.success(result));
-    }
-
-    @PostMapping("period")
-    public ResponseEntity<BaseRes<List<PaymentInfo>>> getPaymentsPeriod(
-        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
-        List<PaymentInfo> result = iCardService.getPaymentsPeriod(cardId);
+            @RequestBody RequestGetPayments req) {
+        List<PaymentInfo> result = iCardService.getPayments(req);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
@@ -60,8 +53,8 @@ public class CardController {
 
     @GetMapping("/amount")
     public ResponseEntity<BaseRes<Integer>> getAmount(
-        @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
-        Integer result = iCardService.getAmount(cardId);
+        @RequestBody RequestGetPayments req) {
+        Integer result = iCardService.getAmount(req);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 }
