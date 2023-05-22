@@ -1,5 +1,6 @@
 package com.coderecipe.v1.card.dto.vo;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -41,6 +42,15 @@ public class CardReq {
     @NoArgsConstructor
     public static class CardId {
         private Long id;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RequestGetPayments {
+        private Long cardId;
+        private LocalDateTime startDateTime;
+        private LocalDateTime endDateTime;
     }
 
 }

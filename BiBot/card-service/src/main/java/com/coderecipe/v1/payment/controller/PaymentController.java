@@ -1,8 +1,11 @@
 package com.coderecipe.v1.payment.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
+import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
 import com.coderecipe.v1.payment.dto.vo.PaymentReq.MockPaymentReq;
+import com.coderecipe.v1.payment.model.PaymentHistory;
+import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 import com.coderecipe.v1.payment.service.IPaymentHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final IPaymentHistoryService iPaymentHistoryService;
+    private final IPaymentHistoryRepository iPaymentHistoryRepository;
+    private final ICardRepository iCardRepository;
 
     @GetMapping
     public ResponseEntity<BaseRes<PaymentHistoryDTO>> getPaymentHistory(
             @RequestParam(name = "historyId", defaultValue = "") Long historyId) {
+
+        iPaymentHistoryRepository.save(
+            PaymentHistory.builder().card(iCardRepository.findById(1L).get())
+                .id("dsdsdsdsdsdf")
+                .paymentDestination("gd")
+                .amount(12312)
+                .build());
         return ResponseEntity.ok().body(BaseRes.success(new PaymentHistoryDTO(
                 "tras",
                 2L,

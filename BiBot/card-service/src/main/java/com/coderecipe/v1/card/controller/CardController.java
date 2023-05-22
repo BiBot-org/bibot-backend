@@ -5,6 +5,7 @@ import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.card.service.ICardService;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
@@ -33,8 +34,8 @@ public class CardController {
 
     @GetMapping
     public ResponseEntity<BaseRes<List<PaymentInfo>>> getPayments(
-            @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
-        List<PaymentInfo> result = iCardService.getPayments(cardId);
+            @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+        List<PaymentInfo> result = iCardService.getPayments(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
@@ -47,6 +48,13 @@ public class CardController {
     @DeleteMapping
     public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId) {
         Long result = iCardService.deleteCard(cardId.getId());
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+    @GetMapping("/amount")
+    public ResponseEntity<BaseRes<Integer>> getAmount(
+        @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+        Integer result = iCardService.getAmount(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 }

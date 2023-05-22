@@ -40,7 +40,12 @@ public class Card {
     private String cardValid;
 
     public static Card of(CreateCard res) {
-        return ModelMapperUtils.getModelMapper().map(res, Card.class);
+        return Card.builder()
+            .userId(res.getUserId())
+            .cardNo(res.getCardNo())
+            .cardCompany(res.getCardCompany())
+            .cardCvc(res.getCardCvc())
+            .cardValid(res.getCardValid()).build();
     }
 
 }

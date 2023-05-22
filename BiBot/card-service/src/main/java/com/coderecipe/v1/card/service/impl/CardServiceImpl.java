@@ -9,8 +9,10 @@ import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
+
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Data;
@@ -39,14 +41,14 @@ public class CardServiceImpl implements ICardService {
     @Override
     public CardDTO getCard(Long cardId) {
         Card card = iCardRepository.findById(cardId)
-                .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
         return CardDTO.of(card);
     }
 
     @Override
     public List<CardInfoRes> getAllCard(UUID userId) {
         return iCardRepository.findAllByUserIdOrderById(userId)
-                .stream().map(CardInfoRes::of).toList();
+            .stream().map(CardInfoRes::of).toList();
     }
 
     @Override
@@ -56,8 +58,21 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public List<PaymentInfo> getPayments(Long cardId) {
-        return iPaymentHistoryRepository.findAllByCardId(cardId)
-                .stream().map(PaymentInfo::of).toList();
+    public List<PaymentInfo> getPayments(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+
+        return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardIdOrderByRegTimeDesc(
+                startDateTime, endDateTime, cardId).stream()
+            .map(PaymentInfo::of).toList();
+
     }
+
+
+    @Override
+    public Integer getAmount(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+
+        return iPaymentHistoryRepository.findAndSumAllByRegTimeBetweenAndCardId(
+            startDateTime, endDateTime,
+            iCardRepository.getReferenceById(cardId));
+    }
+
 }
