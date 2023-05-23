@@ -1,16 +1,14 @@
 package com.coderecipe.receiptservice.v1.receipt.service.impl;
 
-import com.coderecipe.receiptservice.v1.clovalocr.dto.vo.OcrReq;
+import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import com.coderecipe.receiptservice.v1.receipt.receiptsform.worker.SelectForm;
 import com.coderecipe.receiptservice.v1.receipt.service.ReceiptService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Base64;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,11 +55,12 @@ public class ReceiptServiceImpl implements ReceiptService {
     }
 
     @Override
-    public String getOcrData(OcrReq req) {
+    public StringBuffer getOcrData(OcrReq req) {
 
+        StringBuffer response = null;
         try {
             URL url = new URL(apiUrl);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setUseCaches(false);
             con.setDoInput(true);
             con.setDoOutput(true);
@@ -81,7 +80,8 @@ public class ReceiptServiceImpl implements ReceiptService {
 //            byte[] buffer = new byte[inputStream.available()];
 //            inputStream.read(buffer);
 //            inputStream.close();
-            URL url2 = new URL("https://images.chosun.com/resizer/mcbrEkwTr5YKQZ89QPO9hmdb0iE=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/LPCZYYKZ4FFIJPDD344FSGCLCY.jpg");
+            URL url2 = new URL(
+                "https://img.etnews.com/photonews/1707/971120_20170705143932_354_0001.jpg");
             InputStream inputStream = url2.openStream();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -97,7 +97,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
             byte[] base64Bytes = Base64.getEncoder().encode(imageBytes);
 
-            image.put("data",  new String(base64Bytes));
+            image.put("data", new String(base64Bytes));
             image.put("name", "demo");
             JSONArray images = new JSONArray();
             images.put(image);
@@ -117,18 +117,30 @@ public class ReceiptServiceImpl implements ReceiptService {
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            response = new StringBuffer();
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
             br.close();
 
-            System.out.println(response);
+            String jsonText = response.toString();
+            String data = new JSONObject(jsonText)
+                .getJSONArray("images")
+                .getJSONObject(0)
+                .getJSONObject("receipt")
+                .getJSONObject("result")
+                .getJSONObject("storeInfo")
+                .getJSONArray("addresses")
+                .getJSONObject(0)
+                .getString("text");
+
+            log.info("data : " + data);
+
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        return "ok";
+        return response;
     }
 
 }

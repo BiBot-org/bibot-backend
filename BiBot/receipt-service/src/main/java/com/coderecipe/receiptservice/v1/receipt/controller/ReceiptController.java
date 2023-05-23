@@ -1,7 +1,7 @@
 package com.coderecipe.receiptservice.v1.receipt.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
-import com.coderecipe.receiptservice.v1.clovalocr.dto.vo.OcrReq;
+import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import com.coderecipe.receiptservice.v1.receipt.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,8 @@ public class ReceiptController {
       3. 해당 데이터를 Json 타입으로 저장한다.
      */
     @PostMapping
-    public ResponseEntity<BaseRes<String>> getOcrData(@RequestBody OcrReq req) {
-        String result = receiptService.getOcrData(req);
+    public ResponseEntity<BaseRes<StringBuffer>> getOcrData(@RequestBody OcrReq req) {
+        StringBuffer result = receiptService.getOcrData(req);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 

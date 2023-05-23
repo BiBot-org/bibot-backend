@@ -1,4 +1,4 @@
-package com.coderecipe.receiptservice.v1.clovalocr.dto.vo;
+package com.coderecipe.receiptservice.v1.clovaocr.dto.vo;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;

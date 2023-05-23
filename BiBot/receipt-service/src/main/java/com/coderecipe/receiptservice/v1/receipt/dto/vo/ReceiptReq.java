@@ -1,5 +1,6 @@
 package com.coderecipe.receiptservice.v1.receipt.dto.vo;
 
+import com.coderecipe.receiptservice.v1.clovaocr.dto.layer3.Receipt;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,5 +47,11 @@ public class ReceiptReq {
         private String productCost;
         private Integer count;
         private Integer amount;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @Data
+    public static class OCRtoJsonReq {
+        private Receipt receipt;
     }
 }
