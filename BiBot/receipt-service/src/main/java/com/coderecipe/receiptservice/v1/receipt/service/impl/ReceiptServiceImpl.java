@@ -81,7 +81,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 //            inputStream.read(buffer);
 //            inputStream.close();
             URL url2 = new URL(
-                "https://img.etnews.com/photonews/1707/971120_20170705143932_354_0001.jpg");
+                "https://www.shutterstock.com/image-photo/background-white-paper-texture-box-260nw-1599254647.jpg");
             InputStream inputStream = url2.openStream();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
