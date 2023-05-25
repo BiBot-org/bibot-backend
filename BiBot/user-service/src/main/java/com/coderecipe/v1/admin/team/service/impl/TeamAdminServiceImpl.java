@@ -3,6 +3,7 @@ package com.coderecipe.v1.admin.team.service.impl;
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.admin.team.service.ITeamAdminService;
+import com.coderecipe.v1.admin.team.vo.TeamAdminReq.*;
 import com.coderecipe.v1.user.team.dto.TeamDTO;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.team.model.repository.TeamRepository;
@@ -20,7 +21,7 @@ public class TeamAdminServiceImpl implements ITeamAdminService {
     private final TeamRepository teamRepository;
 
     @Override
-    public Long addTeam(TeamDTO req) {
+    public Long addTeam(CreateTeamReq req) {
         if (teamRepository.existsByName(req.getName())) {
             throw new CustomException(ResCode.DUPLICATE_TEAM_NAME);
         } else {

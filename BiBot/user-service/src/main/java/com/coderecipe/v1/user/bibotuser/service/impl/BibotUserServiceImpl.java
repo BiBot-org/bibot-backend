@@ -23,6 +23,6 @@ public class BibotUserServiceImpl implements BibotUserService {
     @Override
     @Deprecated(since = "유저 서비스에 어드민 목적의 API는 모두 제거합니다.")
     public Boolean isInit() {
-        return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.BIBOT_SUPER_ADMIN)).isEmpty();
+        return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.SUPER_ADMIN)).isEmpty();
     }
 }

@@ -3,7 +3,7 @@ package com.coderecipe.v1.user.bibotuser.model;
 import com.coderecipe.global.constant.entity.BaseTimeEntity;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.CreateUserReq;
-import com.coderecipe.v1.user.rank.model.Rank;
+import com.coderecipe.v1.admin.init.vo.InitAdminReq;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import jakarta.persistence.*;
@@ -43,16 +43,12 @@ public class BibotUser extends BaseTimeEntity {
     @Column(name = "email", columnDefinition = "VARCHAR(50) NOT NULL")
     private String email;
 
-    @Column(name = "duty", columnDefinition = "VARCHAR(20) Not NULL")
+    @Column(name = "duty", columnDefinition = "VARCHAR(20)")
     private String duty;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rank_id")
-    private Rank rank;
 
     public static BibotUser of(CreateUserReq req, UUID userId) {
         return BibotUser.builder()
@@ -62,7 +58,18 @@ public class BibotUser extends BaseTimeEntity {
                 .email(req.getEmail())
                 .profileUrl(req.getProfileUrl())
                 .duty(req.getDuty())
-                .userRole(UserRole.BIBOT_USER)
+                .userRole(UserRole.USER)
+                .build();
+    }
+
+    public static BibotUser of(UUID userId, String firstName, String lastName, String email, Team team) {
+        return BibotUser.builder()
+                .id(userId)
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .userRole(UserRole.SUPER_ADMIN)
+                .team(team)
                 .build();
     }
 

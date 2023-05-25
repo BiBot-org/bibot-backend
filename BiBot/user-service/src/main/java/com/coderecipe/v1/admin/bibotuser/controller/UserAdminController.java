@@ -5,7 +5,6 @@ import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.*;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.*;
 import com.coderecipe.v1.admin.bibotuser.service.IUserAdminService;
 import com.coderecipe.v1.user.bibotuser.dto.BibotUserDTO;
-import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,14 +30,12 @@ public class UserAdminController {
 
     @GetMapping("/search")
     public ResponseEntity<BaseRes<SearchUserRes>> getUsers(
-            @RequestParam(value = "role", required = false, defaultValue = "") UserRole role,
             @RequestParam(value = "department", required = false, defaultValue = "") Long departmentId,
             @RequestParam(value = "team", required = false, defaultValue = "") Long teamId,
-            @RequestParam(value = "rank", required = false, defaultValue = "") Long rankId,
             @RequestParam(value = "name", required = false, defaultValue = "") String name,
             @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        SearchUserRes res = userAdminService.searchUser(new SearchUserReq(departmentId, teamId, rankId, name), pageable);
+        SearchUserRes res = userAdminService.searchUser(new SearchUserReq(departmentId, teamId, name), pageable);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 

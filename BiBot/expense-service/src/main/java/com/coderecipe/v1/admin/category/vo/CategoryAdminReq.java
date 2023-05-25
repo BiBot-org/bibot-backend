@@ -14,9 +14,9 @@ public class CategoryAdminReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class AddCategory {
-        private String categoryName;
-        private Integer limitation;
-        private Integer automatedCost;
+        private String name;
+        private int limitation;
+        private int automatedCost;
         private ResetCycle resetCycle;
     }
 }

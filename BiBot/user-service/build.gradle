@@ -13,9 +13,9 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.keycloak:keycloak-spring-boot-starter:21.1.1'
     implementation 'org.keycloak:keycloak-admin-client:21.1.1'
-    implementation 'org.keycloak.bom:keycloak-adapter-bom:21.1.1'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 

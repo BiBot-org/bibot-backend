@@ -1,7 +1,7 @@
 package com.coderecipe.v1.user.category.model;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
-import com.coderecipe.v1.admin.category.vo.CategoryAdminReq.*;
+import com.coderecipe.v1.admin.category.vo.CategoryAdminReq.AddCategory;
 import com.coderecipe.v1.user.category.dto.CategoryDTO;
 import com.coderecipe.v1.user.category.enums.ResetCycle;
 import jakarta.persistence.*;
@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @Column(name = "category_name", columnDefinition = "VARCHAR(20) NOT NULL")
+    @Column(name = "category_name", columnDefinition = "VARCHAR(20) NOT NULL", unique = true)
     public String categoryName;
 
     @Column(name = "limitaion", columnDefinition = "INT4")
@@ -36,16 +38,38 @@ public class Category {
     @Enumerated(EnumType.STRING)
     public ResetCycle resetCycle;
 
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    @Column(name = "will_be_updated")
+    private boolean willBeUpdated = false;
+
+    @Column(name = "next_cycle")
+    @Enumerated(EnumType.STRING)
+    public ResetCycle nextCycle;
+
     public static Category of(CategoryDTO dto) {
-        return Category.builder()
-                .id(dto.getId())
-                .categoryName(dto.getCategoryName())
-                .resetCycle(dto.getResetCycle())
-                .build();
+        return ModelMapperUtils.getModelMapper().map(dto, Category.class);
     }
 
     public static Category of(AddCategory req) {
-        return ModelMapperUtils.getModelMapper().map(req, Category.class);
+
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now()
+                .plusDays(ResetCycle.getResetCycleDay(req.getResetCycle().toString()));
+
+        return Category.builder()
+                .categoryName(req.getName())
+                .limitation(req.getLimitation())
+                .automatedCost(req.getAutomatedCost())
+                .resetCycle(req.getResetCycle())
+                .startDate(startDate)
+                .endDate(endDate)
+                .willBeUpdated(false)
+                .build();
     }
 
 }

@@ -2,6 +2,7 @@ package com.coderecipe.v1.admin.team.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.team.service.ITeamAdminService;
+import com.coderecipe.v1.admin.team.vo.TeamAdminReq.*;
 import com.coderecipe.v1.user.team.dto.TeamDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class TeamAdminController {
     private final ITeamAdminService iTeamAdminService;
 
     @PostMapping
-    public ResponseEntity<BaseRes<Long>> addTeam(@RequestBody TeamDTO teamData) {
+    public ResponseEntity<BaseRes<Long>> addTeam(@RequestBody CreateTeamReq teamData) {
         Long result = iTeamAdminService.addTeam(teamData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }

@@ -15,8 +15,6 @@ import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import com.coderecipe.v1.user.bibotuser.model.BibotUser;
 import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
 import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserSpecification;
-import com.coderecipe.v1.user.rank.model.Rank;
-import com.coderecipe.v1.user.rank.model.repository.RankRepository;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.team.model.repository.TeamRepository;
 import jakarta.transaction.Transactional;
@@ -27,15 +25,17 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,18 +46,18 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Value("${keycloak.realm}")
     private String realm;
+    @Value("${keycloak.resource}")
+    private String client;
     private final BibotUserRepository bibotUserRepository;
-    private final RankRepository rankRepository;
     private final TeamRepository teamRepository;
     private final Keycloak keycloak;
 
     @Override
     public CreateUserRes createUser(CreateUserReq req) throws CustomException {
 
-        Rank rank = rankRepository.findById(req.getRankId())
-                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         Team team = teamRepository.findById(req.getTeamId())
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+
 
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
@@ -71,19 +71,22 @@ public class UserAdminServiceImpl implements IUserAdminService {
         credential.setValue(req.getPassword());
         credential.setTemporary(false);
 
-        user.setRealmRoles(List.of("BIBOT_USER"));
-
         RealmResource realmResource = keycloak.realm(realm);
+        ClientRepresentation clientRepresentation = realmResource.clients().findByClientId(client).get(0);
         UsersResource usersResource = realmResource.users();
         Response response = usersResource.create(user);
+
         String userId = CreatedResponseUtil.getCreatedId(response);
 
         UserResource userResource = usersResource.get(userId);
         userResource.resetPassword(credential);
 
+        RoleRepresentation roleRepresentation = realmResource.clients().get(clientRepresentation.getId())
+                .roles().get(req.getUserRole().toString()).toRepresentation();
+        userResource.roles().clientLevel(clientRepresentation.getId()).add(Collections.singletonList(roleRepresentation));
+
         BibotUser bibotUser = BibotUser.of(req, UUID.fromString(userId));
         bibotUser.setTeam(team);
-        bibotUser.setRank(rank);
         bibotUserRepository.save(bibotUser);
 
         return new CreateUserRes(bibotUser.getId());
@@ -102,11 +105,7 @@ public class UserAdminServiceImpl implements IUserAdminService {
             spec = spec.and(BibotUserSpecification.equalTeamId(req.getTeamId()));
         }
 
-        if(req.getRankId() != null) {
-            spec = spec.and(BibotUserSpecification.equalRankId(req.getRankId()));
-        }
-
-        if(req.getName() != null) {
+        if (req.getName() != null) {
             spec = spec.and(BibotUserSpecification.likeUsername(req.getName()));
         }
 
@@ -122,22 +121,27 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Override
     public List<GetAdminInfo> getAdminInfoList() {
-        return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.BIBOT_ADMIN, UserRole.BIBOT_SUPER_ADMIN))
+        return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.ADMIN, UserRole.SUPER_ADMIN))
                 .stream().map(GetAdminInfo::of).toList();
     }
 
     @Override
     public UUID updateUserInfo(UpdateUserReq req) {
+
         BibotUser user = bibotUserRepository.findById(req.getUserId())
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
 
-        user.updateEntityColumns(req);
+        RealmResource realmResource = keycloak.realm(realm);
+        UserResource userResource = realmResource.users().get(req.getUserId().toString());
+        UserRepresentation userRepresentation = userResource.toRepresentation();
 
-        if (req.getRankId() != null) {
-            Rank rank = rankRepository.findById(req.getRankId())
-                    .orElseThrow(() -> new CustomException(ResCode.RANK_NOT_FOUND));
-            user.setRank(rank);
-        }
+        userRepresentation.setEmail(req.getEmail());
+        userRepresentation.setUsername(req.getEmail());
+        userRepresentation.setFirstName(req.getFirstName());
+        userRepresentation.setLastName(req.getLastName());
+        userResource.update(userRepresentation);
+
+        user.updateEntityColumns(req);
 
         if (req.getTeamId() != null) {
             Team team = teamRepository.findById(req.getTeamId())
@@ -154,13 +158,23 @@ public class UserAdminServiceImpl implements IUserAdminService {
     public UUID changeUserRole(ChangeUserRole req) {
 
         RealmResource realmResource = keycloak.realm(realm);
+        ClientRepresentation clientRepresentation = realmResource.clients().findByClientId(client).get(0);
+
+        RoleRepresentation prevRoleRep = realmResource.clients().get(clientRepresentation.getId())
+                .roles().get(req.getPrevRole().toString()).toRepresentation();
+        RoleRepresentation nextRoleRep = realmResource.clients().get(clientRepresentation.getId())
+                .roles().get(req.getNextRole().toString()).toRepresentation();
+
         UserRepresentation userRep = realmResource.users().get(req.getUserId().toString()).toRepresentation();
-        userRep.setRealmRoles(List.of(req.getUserRole().toString()));
+        UserResource userResource = realmResource.users().get(userRep.getId());
+        userResource.roles().clientLevel(clientRepresentation.getClientId()).remove(Collections.singletonList(prevRoleRep));
+        userResource.roles().clientLevel(clientRepresentation.getClientId()).add(Collections.singletonList(nextRoleRep));
+
         keycloak.realm(realm).users().get(req.getUserId().toString()).update(userRep);
 
         BibotUser user = bibotUserRepository.findById(req.getUserId())
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
-        user.setUserRole(req.getUserRole());
+        user.setUserRole(req.getNextRole());
         bibotUserRepository.save(user);
         return user.getId();
 
@@ -168,6 +182,13 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Override
     public UUID deleteUser(UUID userId) {
+
+        RealmResource realmResource = keycloak.realm(realm);
+
+        UserRepresentation userRep = realmResource.users().get(userId.toString()).toRepresentation();
+        UserResource userResource = realmResource.users().get(userRep.getId());
+        userResource.remove();
+
         bibotUserRepository.deleteById(userId);
         return userId;
     }

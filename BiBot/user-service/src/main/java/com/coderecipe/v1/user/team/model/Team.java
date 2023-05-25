@@ -1,6 +1,7 @@
 package com.coderecipe.v1.user.team.model;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
+import com.coderecipe.v1.admin.team.vo.TeamAdminReq;
 import com.coderecipe.v1.user.department.model.Department;
 import com.coderecipe.v1.user.team.dto.TeamDTO;
 import jakarta.persistence.*;
@@ -21,7 +22,7 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL")
+    @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL", unique = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +31,10 @@ public class Team {
 
     public static Team of(TeamDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, Team.class);
+    }
+
+    public static Team of(TeamAdminReq.CreateTeamReq req) {
+        return ModelMapperUtils.getModelMapper().map(req, Team.class);
     }
 
     public void updateTeamName(TeamDTO dto) {
