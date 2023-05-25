@@ -2,6 +2,7 @@ package com.coderecipe.receiptservice.v1.receipt.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
+import com.coderecipe.receiptservice.v1.clovaocr.utils.ExtractJson;
 import com.coderecipe.receiptservice.v1.receipt.service.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReceiptController {
 
     private final ReceiptService receiptService;
-    /*
-      clobal ocr 영수증 api 구축
-      1. 요청 바디를 받아온다
-      2. 요청 바디를 통해서 ocr 데이터를 받아온다.
-      3. 해당 데이터를 Json 타입으로 저장한다.
-     */
+
     @PostMapping
-    public ResponseEntity<BaseRes<StringBuffer>> getOcrData(@RequestBody OcrReq req) {
-        StringBuffer result = receiptService.getOcrData(req);
+    public ResponseEntity<BaseRes<ExtractJson>> getOcrData(@RequestBody OcrReq req) {
+        ExtractJson result = receiptService.getOcrData(req);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 

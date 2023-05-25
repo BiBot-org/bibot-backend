@@ -1,11 +1,14 @@
 package com.coderecipe.receiptservice.v1.receipt.service.impl;
 
+import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OCRtoJSONRes.Receipt;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
+import com.coderecipe.receiptservice.v1.clovaocr.utils.ExtractJson;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import com.coderecipe.receiptservice.v1.receipt.receiptsform.worker.SelectForm;
 import com.coderecipe.receiptservice.v1.receipt.service.ReceiptService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -55,12 +58,14 @@ public class ReceiptServiceImpl implements ReceiptService {
     }
 
     @Override
-    public StringBuffer getOcrData(OcrReq req) {
+    public ExtractJson getOcrData(OcrReq req) {
 
-        StringBuffer response = null;
+        StringBuffer response = new StringBuffer();
+        String jsonText = "";
         try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            URL requestURL = new URL(apiUrl);
+            HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
             con.setUseCaches(false);
             con.setDoInput(true);
             con.setDoOutput(true);
@@ -68,21 +73,10 @@ public class ReceiptServiceImpl implements ReceiptService {
             con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             con.setRequestProperty("X-OCR-SECRET", apiSecret);
 
-            JSONObject json = new JSONObject();
-            json.put("version", "V2");
-            json.put("requestId", UUID.randomUUID().toString());
-            json.put("timestamp", System.currentTimeMillis());
-            JSONObject image = new JSONObject();
-            image.put("format", "jpg");
 
-            //image should be public, otherwise, should use data
-//            FileInputStream inputStream = new FileInputStream("/kakaru.png");
-//            byte[] buffer = new byte[inputStream.available()];
-//            inputStream.read(buffer);
-//            inputStream.close();
-            URL url2 = new URL(
-                "https://www.shutterstock.com/image-photo/background-white-paper-texture-box-260nw-1599254647.jpg");
-            InputStream inputStream = url2.openStream();
+            URL url = new URL(
+                "https://img.etnews.com/photonews/1707/971120_20170705143932_354_0001.jpg");
+            InputStream inputStream = url.openStream();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
             byte[] buffer = new byte[1024];
@@ -91,17 +85,23 @@ public class ReceiptServiceImpl implements ReceiptService {
                 outputStream.write(buffer, 0, bytesRead);
             }
 
-            byte[] imageBytes = outputStream.toByteArray();
-            inputStream.close();
-            outputStream.close();
+            byte[] base64Bytes = Base64.getEncoder().encode(outputStream.toByteArray());
+            inputStream.close(); outputStream.close();
 
-            byte[] base64Bytes = Base64.getEncoder().encode(imageBytes);
+            JSONObject json = new JSONObject();
+            JSONArray images = new JSONArray();
+            JSONObject image = new JSONObject();
 
+            json.put("version", "V2");
+            json.put("requestId", UUID.randomUUID().toString());
+            json.put("timestamp", System.currentTimeMillis());
+            json.put("images", images);
+
+            images.put(image);
+            image.put("format", "jpg");
             image.put("data", new String(base64Bytes));
             image.put("name", "demo");
-            JSONArray images = new JSONArray();
-            images.put(image);
-            json.put("images", images);
+
             String postParams = json.toString();
 
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -116,31 +116,50 @@ public class ReceiptServiceImpl implements ReceiptService {
             } else {
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
+
             String inputLine;
-            response = new StringBuffer();
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
             br.close();
 
-            String jsonText = response.toString();
-            String data = new JSONObject(jsonText)
-                .getJSONArray("images")
-                .getJSONObject(0)
-                .getJSONObject("receipt")
-                .getJSONObject("result")
-                .getJSONObject("storeInfo")
-                .getJSONArray("addresses")
-                .getJSONObject(0)
-                .getString("text");
+            jsonText = response.toString();
 
-            log.info("data : " + data);
+            log.info("data : " + jsonText);
 
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        return response;
+     ObjectMapper mapper = new ObjectMapper();
+        ExtractJson ex = new ExtractJson();
+
+        if (JsonPath.read(jsonText, "$.images[0].receipt") != null) {
+            Receipt receipt = mapper.convertValue(JsonPath.read(jsonText, "$.images[0].receipt"),
+                Receipt.class);
+            ex = ExtractJson.of(receipt);
+        }
+
+        System.out.println(ex);
+
+        return ex;
     }
 
 }
+
+/*
+     ObjectMapper mapper = new ObjectMapper();
+        ExtractJson ex = new ExtractJson();
+
+        if (JsonPath.read(response, "$.images[0].receipt") != null) {
+            Receipt receipt = mapper.convertValue(JsonPath.read(response, "$.images[0].receipt"),
+                Receipt.class);
+            ex = ExtractJson.of(receipt);
+        }
+ */
+
+//image should be public, otherwise, should use data
+//            FileInputStream inputStream = new FileInputStream("/kakaru.png");
+//            byte[] buffer = new byte[inputStream.available()];
+//            inputStream.read(buffer);
+//            inputStream.close();
