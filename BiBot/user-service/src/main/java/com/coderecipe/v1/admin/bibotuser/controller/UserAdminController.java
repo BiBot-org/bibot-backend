@@ -5,7 +5,6 @@ import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminReq.*;
 import com.coderecipe.v1.admin.bibotuser.dto.vo.UserAdminRes.*;
 import com.coderecipe.v1.admin.bibotuser.service.IUserAdminService;
 import com.coderecipe.v1.user.bibotuser.dto.BibotUserDTO;
-import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,19 +31,17 @@ public class UserAdminController {
 
     @GetMapping("/search")
     public ResponseEntity<BaseRes<SearchUserRes>> getUsers(
-            @RequestParam(value = "role", required = false, defaultValue = "") UserRole role,
             @RequestParam(value = "department", required = false, defaultValue = "") Long departmentId,
             @RequestParam(value = "team", required = false, defaultValue = "") Long teamId,
-            @RequestParam(value = "rank", required = false, defaultValue = "") Long rankId,
             @RequestParam(value = "name", required = false, defaultValue = "") String name,
             @PageableDefault(size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        SearchUserRes res = userAdminService.searchUser(new SearchUserReq(departmentId, teamId, rankId, name), pageable);
+        SearchUserRes res = userAdminService.searchUser(new SearchUserReq(departmentId, teamId, name), pageable);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
     @PostMapping
-    public ResponseEntity<BaseRes<CreateUserRes>> addUser(@RequestBody CreateUserReq req) {
+    public ResponseEntity<BaseRes<CreateUserRes>> addUser(@RequestBody CreateUserReq req) throws NoSuchAlgorithmException {
         CreateUserRes res = userAdminService.createUser(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
@@ -61,7 +59,7 @@ public class UserAdminController {
     }
 
     @PutMapping("/update/role")
-    public ResponseEntity<BaseRes<UUID>> changeUserInfo(@RequestBody ChangeUserRole req) {
+    public ResponseEntity<BaseRes<UUID>> changeUserRole(@RequestBody ChangeUserRole req) {
         UUID res = userAdminService.changeUserRole(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }

@@ -5,11 +5,14 @@ import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.admin.notice.dto.vo.NoticeReq;
 import com.coderecipe.v1.admin.notice.dto.vo.NoticeReq.CreateNoticeReq;
 import com.coderecipe.v1.admin.notice.enums.NoticeType;
+import com.coderecipe.v1.user.bibotuser.model.BibotUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -34,14 +37,17 @@ public class Notice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NoticeType type;
 
-    public static Notice of (CreateNoticeReq req) {
-        return ModelMapperUtils.getModelMapper().map(req, Notice.class);
+    public static Notice of(CreateNoticeReq req, BibotUser user) {
+        Notice notice = ModelMapperUtils.getModelMapper().map(req, Notice.class);
+        notice.setCreatedBy(user.getId());
+        return notice;
     }
 
-    public void updateNotice(NoticeReq.UpdateNoticeReq req) {
+    public void updateNotice(NoticeReq.UpdateNoticeReq req, UUID userId) {
         this.title = req.getTitle();
         this.content = req.getContent();
         this.type = req.getType();
+        this.setModifiedBy(userId);
     }
 
 }

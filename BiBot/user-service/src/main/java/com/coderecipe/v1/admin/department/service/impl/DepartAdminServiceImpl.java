@@ -2,6 +2,7 @@ package com.coderecipe.v1.admin.department.service.impl;
 
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
+import com.coderecipe.v1.admin.department.dto.vo.DepartmentAdminRes;
 import com.coderecipe.v1.admin.department.service.IDepartmentAdminService;
 import com.coderecipe.v1.user.department.dto.DepartmentDTO;
 import com.coderecipe.v1.user.department.dto.vo.DepartmentReq.AddDepartmentReq;
@@ -38,6 +39,11 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
     @Override
     public List<DepartmentDTO> getAllDepartment() {
         return departmentRepository.findAll().stream().map(DepartmentDTO::of).toList();
+    }
+
+    @Override
+    public List<DepartmentAdminRes.DepartmentInfo> getAllDepartmentInfo() {
+        return DepartmentAdminRes.DepartmentInfo.of(departmentRepository.findAll());
     }
 
     @Override

@@ -22,75 +22,118 @@ services:
       code_recipe:
         aliases:
           - "database"
+  keycloak-database:
+    image: postgres:latest
+    container_name: code_recipe_keycloak_db
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    volumes:
+      - ./db/keycloakDB:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: "keycloak"
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - "-p 5433"
+    networks:
+      code_recipe:
+        aliases:
+          - "keycloak_db"
+
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: code_recipe_redis
+    hostname: code_recipe_redis
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
 
   keycloak:
     image: quay.io/keycloak/keycloak
     container_name: code_recipe_keycloak
-    restart: always
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-database:5433/keycloak
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
     ports:
       - "8080:8080"
     command: start-dev
-    volumes:
-      - ./keycloak/data:/opt/keycloak/data
     healthcheck:
-        test: "curl -f http://localhost:8080/admin || exit 1"
+      test: "curl -f http://localhost:8080/admin || exit 1"
+    depends_on:
+      keycloak-database:
+        condition: service_started
     networks:
       code_recipe:
         aliases:
           - "keycloak"
-  zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: code_recipe_zookeeper
-    restart: always
-    ports:
-      - "2181:2181"
-    networks:
-      code_recipe:
-        aliases:
-          - "zookeeper"
-  kafka:
-    image: wurstmeister/kafka
-    container_name: code_recipe_kafka
-    restart: always
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: payment_success:1:1
-      KAFKA_LISTENERS: LISTENER_BOB://kafka:29092,LISTENER_FRED://kafka:9092
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_BOB://kafka:29092,LISTENER_FRED://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_BOB:PLAINTEXT,LISTENER_FRED:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_BOB
-      KAFKA_DELETE_TOPIC_ENABLE: "true"
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - zookeeper
-    networks:
-      code_recipe:
-        aliases:
-          - "kafka"
-  kafka-ui:
-    image: provectuslabs/kafka-ui:0.2.1
-    container_name: code_recipe_kafka_ui
-    ports:
-      - "8079:8080"
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=localhost
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
-    depends_on:
-      - kafka
-    networks:
-      code_recipe:
-        aliases:
-          - "kafka-ui"
+#  zookeeper:
+#    image: wurstmeister/zookeeper
+#    container_name: code_recipe_zookeeper
+#    restart: always
+#    ports:
+#      - "2181:2181"
+#    networks:
+#      code_recipe:
+#        aliases:
+#          - "zookeeper"
+#  kafka:
+#    image: wurstmeister/kafka
+#    container_name: code_recipe_kafka
+#    restart: always
+#    ports:
+#      - "9092:9092"
+#    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: kafka
+#      KAFKA_ADVERTISED_PORT: 9092
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_CREATE_TOPICS: payment_success:1:1
+#      KAFKA_LISTENERS: LISTENER_BOB://kafka:29092,LISTENER_FRED://kafka:9092
+#      KAFKA_ADVERTISED_LISTENERS: LISTENER_BOB://kafka:29092,LISTENER_FRED://kafka:9092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_BOB:PLAINTEXT,LISTENER_FRED:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_BOB
+#      KAFKA_DELETE_TOPIC_ENABLE: "true"
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    depends_on:
+#      - zookeeper
+#    networks:
+#      code_recipe:
+#        aliases:
+#          - "kafka"
+#  kafka-ui:
+#    image: provectuslabs/kafka-ui:0.2.1
+#    container_name: code_recipe_kafka_ui
+#    ports:
+#      - "8079:8080"
+#    environment:
+#      - KAFKA_CLUSTERS_0_NAME=localhost
+#      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+#      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+#    depends_on:
+#      - kafka
+#    networks:
+#      code_recipe:
+#        aliases:
+#          - "kafka-ui"
 
 networks:
   code_recipe:

@@ -17,13 +17,9 @@ public class BibotUserSpecification {
         return (root, query, criteriabuilder) -> criteriabuilder.equal(root.get("team").get("id"), teamId);
     }
 
-    public static Specification<BibotUser> equalRankId(Long rankId) {
-        return (root, query, criteriabuilder) -> criteriabuilder.equal(root.get("rank").get("id"), rankId);
-    }
-
     public static Specification<BibotUser> likeUsername(String name) {
         return (root, query, criteriabuilder) -> criteriabuilder.like(
-                root.get("lastName"), "%" + name + "%");
+                criteriabuilder.concat(root.get("lastName"), root.get("firstName")), "%" + name + "%");
     }
 
 

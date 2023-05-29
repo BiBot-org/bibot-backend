@@ -16,6 +16,11 @@ import java.util.UUID;
 public interface BibotUserRepository extends JpaRepository<BibotUser, UUID>,
         JpaSpecificationExecutor<BibotUser> {
     List<BibotUser> findAllByUserRoleInOrderByUserRole(List<UserRole> roles);
-    Page<BibotUser> findAll(Specification<BibotUser> spec,  Pageable pageable);
+
+    Boolean existsBibotUserByUserRole(UserRole role);
+
+    Boolean existsByEmail(String email);
+
+    Page<BibotUser> findAll(Specification<BibotUser> spec, Pageable pageable);
 
 }

@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -22,12 +22,16 @@ public class NoticeDTO {
     private NoticeType type;
     private UUID createdBy;
     private UUID modifiedBy;
-    private LocalDateTime regTime;
-    private LocalDateTime updateTime;
+    private String regTime;
+    private String updateTime;
     private boolean isDeleted;
 
-    public static NoticeDTO of (Notice entity) {
+    public static NoticeDTO of(Notice entity) {
         return ModelMapperUtils.getModelMapper().map(entity, NoticeDTO.class);
+    }
+
+    public static Page<NoticeDTO> of(Page<Notice> entities) {
+        return entities.map(NoticeDTO::of);
     }
 
 }

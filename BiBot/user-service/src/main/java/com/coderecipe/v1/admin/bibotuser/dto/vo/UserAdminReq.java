@@ -3,6 +3,7 @@ package com.coderecipe.v1.admin.bibotuser.dto.vo;
 import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class UserAdminReq {
     }
 
     @Data
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CreateUserReq {
@@ -22,10 +24,9 @@ public class UserAdminReq {
         private String lastName;
         private String profileUrl;
         private String email;
-        private String password;
         private String duty;
         private Long teamId;
-        private Long rankId;
+
     }
 
     @Data
@@ -34,7 +35,6 @@ public class UserAdminReq {
     public static class SearchUserReq {
         private Long departmentId;
         private Long teamId;
-        private Long rankId;
         private String name;
     }
 
@@ -42,17 +42,14 @@ public class UserAdminReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UpdateUserReq {
-        private UUID userId;
+        private UUID id;
         private String firstName;
         private String lastName;
         private String profileUrl;
         private String email;
-        private String password;
         private String duty;
         @Nullable
         private Long teamId;
-        @Nullable
-        private Long rankId;
     }
 
     @Data
@@ -60,6 +57,7 @@ public class UserAdminReq {
     @NoArgsConstructor
     public static class ChangeUserRole {
         private UUID userId;
-        private UserRole userRole;
+        private UserRole prevRole;
+        private UserRole nextRole;
     }
 }
