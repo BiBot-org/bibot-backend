@@ -63,7 +63,6 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak
     container_name: code_recipe_keycloak
-    restart: always
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}

@@ -28,7 +28,7 @@ public class BibotUserDTO {
         return ModelMapperUtils.getModelMapper().map(entity, BibotUserDTO.class);
     }
 
-    public static Page<BibotUserDTO> of (Page<BibotUser> entities) {
+    public static Page<BibotUserDTO> of(Page<BibotUser> entities) {
         return entities.map(BibotUserDTO::of);
     }
 }

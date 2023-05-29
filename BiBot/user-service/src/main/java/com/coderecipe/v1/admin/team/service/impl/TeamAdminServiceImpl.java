@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Data
@@ -37,6 +39,12 @@ public class TeamAdminServiceImpl implements ITeamAdminService {
                 .orElseThrow(() -> new CustomException(ResCode.TEAM_NOT_FOUND));
 
         return TeamDTO.of(team);
+    }
+
+    @Override
+    public List<TeamDTO> getTeamInfoByDepartmentId(Long departmentId) {
+        return teamRepository.findByDepartmentId(departmentId)
+                .stream().map(TeamDTO::of).toList();
     }
 
     @Override

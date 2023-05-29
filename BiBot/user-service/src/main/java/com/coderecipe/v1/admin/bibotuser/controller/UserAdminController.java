@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public class UserAdminController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseRes<CreateUserRes>> addUser(@RequestBody CreateUserReq req) {
+    public ResponseEntity<BaseRes<CreateUserRes>> addUser(@RequestBody CreateUserReq req) throws NoSuchAlgorithmException {
         CreateUserRes res = userAdminService.createUser(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
@@ -58,7 +59,7 @@ public class UserAdminController {
     }
 
     @PutMapping("/update/role")
-    public ResponseEntity<BaseRes<UUID>> changeUserInfo(@RequestBody ChangeUserRole req) {
+    public ResponseEntity<BaseRes<UUID>> changeUserRole(@RequestBody ChangeUserRole req) {
         UUID res = userAdminService.changeUserRole(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }

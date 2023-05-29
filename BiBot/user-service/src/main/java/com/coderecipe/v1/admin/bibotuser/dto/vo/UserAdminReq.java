@@ -1,6 +1,5 @@
 package com.coderecipe.v1.admin.bibotuser.dto.vo;
 
-import com.coderecipe.global.utils.InternalDataUtils;
 import com.coderecipe.v1.user.bibotuser.enums.UserRole;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class UserAdminReq {
@@ -26,19 +24,9 @@ public class UserAdminReq {
         private String lastName;
         private String profileUrl;
         private String email;
-        private String password;
         private String duty;
         private Long teamId;
-        private UserRole userRole;
 
-        public static CreateUserReq initRootUser() throws NoSuchAlgorithmException {
-            return CreateUserReq.builder()
-                    .firstName("")
-                    .lastName("")
-                    .email("root@root.com")
-                    .password(String.valueOf(InternalDataUtils.makeRandNum()))
-                    .build();
-        }
     }
 
     @Data
@@ -54,7 +42,7 @@ public class UserAdminReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UpdateUserReq {
-        private UUID userId;
+        private UUID id;
         private String firstName;
         private String lastName;
         private String profileUrl;

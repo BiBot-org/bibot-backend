@@ -35,6 +35,25 @@ public class EmailService {
         return Integer.toString(randNum);
     }
 
+    public boolean userPasswordEmail(String email, String password) {
+        String setForm = senderEmail;
+        String toMail = email;
+        String title = "회원 가입 이메일입니다.";
+        String content = "";
+        content += "<div style=\"text-align: center; background-size: cover; position: absolute; \">";
+        content += "<img width=\"120\" height=\"120\" style=\"margin: 0 0 32px 0px;padding-right: 30px; padding-left: 30px;\" src=\"https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/800px-Starbucks_Corporation_Logo_2011.svg.png\" loading=\"lazy\">";
+        content += "<h1 style=\"color: black; font-size: 30px; padding-right: 30px; padding-left: 30px;\">가입을 환영 합니다.</h1>";
+        content += "<p style=\"color: black; font-size: 17px; padding-right: 30px; padding-left: 30px;\">임시 비밀번호를 발급 해 드립니다.</p>";
+        content += "<p style=\"color: black; font-size: 17px; padding-right: 30px; padding-left: 30px;\">새로운 비밀번호로 꼭 변경 해 주세요.</p>";
+        content +=
+                "<h2 style=\"color : black; font-size: 15px; padding-right : 30px; padding-left: 30px;\">"
+                        + password + "</h2>";
+        content += "<a href=\"https://github.com/BiBot-org\" style=\"text-decoration: none; color: black;\" rel=\"noreferrer noopener\" target=\"_blank\">ⓒ 2023 BiBot-org. All Rights Reserved.</a></div>";
+
+        mailSend(setForm, toMail, title, content);
+        return true;
+    }
+
     public String mailSend(String setForm, String toMail, String title, String content) {
         MimeMessage message = mailSender.createMimeMessage();
         try {

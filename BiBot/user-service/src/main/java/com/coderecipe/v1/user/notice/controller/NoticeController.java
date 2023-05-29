@@ -2,8 +2,12 @@ package com.coderecipe.v1.user.notice.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.notice.dto.NoticeDTO;
+import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
 import com.coderecipe.v1.user.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +26,15 @@ public class NoticeController {
     @GetMapping
     public ResponseEntity<BaseRes<NoticeDTO>> getNotice(@RequestParam(name = "id", defaultValue = "") Long id) {
         NoticeDTO result = noticeService.getNotice(id);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<BaseRes<SearchNoticeRes>> searchNotice(
+            @RequestParam(name = "title", defaultValue = "") String title,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        SearchNoticeRes result = noticeService.searchNotice(title, pageable);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
