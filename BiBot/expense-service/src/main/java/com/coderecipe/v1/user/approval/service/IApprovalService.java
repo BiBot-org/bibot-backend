@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IApprovalService {
 
-    List<Long> addApproval(List<ApprovalDTO> req);
+    List<String> addApproval(List<ApprovalDTO> req);
 }

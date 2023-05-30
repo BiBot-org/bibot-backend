@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/approval")
@@ -21,18 +22,20 @@ public class ApprovalController {
     private final IApprovalService iApprovalService;
 
     @PostMapping
-    public ResponseEntity<BaseRes<List<Long>>> addApproval(
+    @Deprecated(since = "개발 초기 테스트용")
+    public ResponseEntity<BaseRes<List<String>>> addApproval(
             @RequestBody List<ApprovalDTO> approvalData) {
-        List<Long> result = iApprovalService.addApproval(approvalData);
+        List<String> result = iApprovalService.addApproval(approvalData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @GetMapping
+    @Deprecated(since = "개발 초기 테스트용")
     public ResponseEntity<BaseRes<ApprovalDTO>> getApproval() {
         return ResponseEntity.ok().body(BaseRes.success(new ApprovalDTO(
-                1L,
-                "{manager-uuid}",
-                "{requester-uuid}",
+                "test",
+                UUID.randomUUID(),
+                UUID.randomUUID(),
                 ApprovalStatus.APPROVED,
                 "자동 승인",
                 true

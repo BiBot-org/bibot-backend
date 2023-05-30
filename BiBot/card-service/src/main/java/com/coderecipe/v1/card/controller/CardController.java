@@ -9,7 +9,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,13 +32,6 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
-    @GetMapping
-    public ResponseEntity<BaseRes<List<PaymentInfo>>> getPayments(
-            @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
-        List<PaymentInfo> result = iCardService.getPayments(cardId, startDateTime, endDateTime);
-        return ResponseEntity.ok().body(BaseRes.success(result));
-    }
-
     @GetMapping("/all")
     public ResponseEntity<BaseRes<List<CardInfoRes>>> getAllCard(Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
@@ -48,9 +40,9 @@ public class CardController {
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId, Principal principal) {
+    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestParam(value = "id", defaultValue = "") Long cardId, Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
-        Long result = iCardService.deleteCard(cardId.getId(), userId);
+        Long result = iCardService.deleteCard(cardId, userId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 

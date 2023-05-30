@@ -20,7 +20,8 @@ public class ApprovalServiceImpl implements IApprovalService {
     private final IApprovalRepository iApprovalRepository;
 
     @Override
-    public List<Long> addApproval(List<ApprovalDTO> req) {
+    @Deprecated(since = "추후 삭제예정 (초기 테스트용 API)")
+    public List<String> addApproval(List<ApprovalDTO> req) {
         return req.stream().map(e -> {
             Approval approval = Approval.of(e);
             iApprovalRepository.save(approval);
