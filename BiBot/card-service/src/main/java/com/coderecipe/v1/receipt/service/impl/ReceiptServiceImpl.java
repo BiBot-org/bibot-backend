@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Deprecated(since = "영수증 서비스 분리 후 삭제 예정입니다.")
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ReceiptServiceImpl {
     private final SelectForm selectForm;

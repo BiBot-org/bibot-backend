@@ -172,6 +172,7 @@
 
 <body>
 <div class="container">
+<<<<<<< HEAD
   <p class="title" th:text="${title}">KB 체크카드 승인</p>
   <table class="bill-details">
     <tbody>
@@ -261,6 +262,97 @@
   <footer style="text-align:center">
     <p>본 영수증은 참고 용으로만 사용 해 주세요</p>
   </footer>
+=======
+    <p class="title" th:text="${title}">KB 체크카드 승인</p>
+    <table class="bill-details">
+        <tbody>
+        <tr>
+            <td colspan=3>[TID] : <span th:text="${message}" >g</span></td>
+            <td class="right">[회원용]</td>
+        </tr>
+        <tr>
+            <td colspan=3>[VISA DEBIT]</td>
+            <td class="right">할부 : [일시불]</td>
+        </tr>
+        <tr>
+            <td ><span class="big-font" th:text="${cardNum}"><b>4673-09**-****-1079</b></span></td>
+        </tr>
+        <tr>
+            <td><b>거래일시</b> : <span th:text="${paymentDateStr}">23/05/19 13:03:04</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="items">
+        <tr>
+            <td>품명</td>
+            <td>가격</td>
+            <td>갯수</td>
+            <td>총가격</td>
+        </tr>
+        <tr th:each="product : ${productOrderList}">
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.productCost}"></td>
+            <td th:text="${product.count}"></td>
+            <td th:text="${product.amount}"></td>
+        </tr>
+    </table>
+
+
+    <table class="items">
+        <tbody>
+        <tr>
+            <td colspan=3><b>금 액 :</b></td>
+            <td class="price" > <span th:text="${price}">13,636원</span></td>
+        </tr>
+        <tr>
+            <td colspan=3><b>부가세 :</b></td>
+            <td class="price"> <span th:text="${vat}">1,364원</span></td>
+        </tr>
+        <tr>
+            <td colspan=3><b>합계 :</b></td>
+            <td class="price"> <span th:text="${amount}">15,000원</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <tbody class="bill-details">
+        <tr>
+            <td colspan=1><b>승인번호 : </b></td>
+            <td class="right" colspan=3><span class="big-font" th:text="${approvalNo}"><b>30070024[EC]</b></span></td>
+        </tr>
+        <tr>
+            <td colspan=1><b>매입사명[002-DESC] </b></td>
+            <td class="right" colspan=3><span class="big-font" th:text="${cardCompany}"><b>국민카드</b></span></td>
+        </tr>
+        <tr>
+            <td colspan=1><b>가맹점/사업자번호</b></td>
+            <td class="right" colspan=3><span th:text="${destinationNum}">00090592597</span>/<span th:text="${businessLicense}">374-57-00282</span></span></td>
+        </tr>
+        <tr>
+            <td colspan=1><span th:text="${presentation}"><b>이미경</b></span>(TEL:<span th:text="${tel}">0517310355</span>)</td>
+            <td class="right" colspan=3><span th:text="${paymentDestination}">조선 갈비탕</span></td>
+        </tr>
+        <tr>
+            <td colspan=4><span th:text="${destinationAddress}"><b>부산광역시 해운대구 센텀1로 28 101동101호(우동, 더블유비씨더팔레스오피스텔)</b></span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="items">
+        <tr>
+            <td colspan="4"><b>50,000원 이하는 무서명 거래입니다.</b></td>
+        </tr>
+    </table>
+
+    <section><b>알림</b>&nbsp;&nbsp;<span th:text="${notice}">자동이체 KIS로 제출</span><br>
+    </section>
+
+    <footer style="text-align:center">
+        <p>본 영수증은 참고 용으로만 사용 해 주세요</p>
+    </footer>
+>>>>>>> origin/develop
 </div>
 </body>
 
