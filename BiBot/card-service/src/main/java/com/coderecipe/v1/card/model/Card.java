@@ -1,6 +1,5 @@
 package com.coderecipe.v1.card.model;
 
-import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import jakarta.persistence.*;
 
@@ -21,7 +20,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 public class Card {
 
     @Id
-    @Column(name = "card_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -41,8 +40,13 @@ public class Card {
     @Column(name = "card_valid", columnDefinition = "VARCHAR(20) NOT NULL")
     private String cardValid;
 
-    public static Card of(CreateCard res) {
-        return ModelMapperUtils.getModelMapper().map(res, Card.class);
+    public static Card of(CreateCard res, UUID userId) {
+        return Card.builder()
+                .userId(userId)
+                .cardNo(res.getCardNo())
+                .cardCompany(res.getCardCompany())
+                .cardCvc(res.getCardCvc())
+                .cardValid(res.getCardValid()).build();
     }
 
 }

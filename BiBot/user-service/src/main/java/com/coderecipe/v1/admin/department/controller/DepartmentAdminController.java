@@ -1,6 +1,7 @@
 package com.coderecipe.v1.admin.department.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
+import com.coderecipe.v1.admin.department.dto.vo.DepartmentAdminRes.*;
 import com.coderecipe.v1.admin.department.service.IDepartmentAdminService;
 import com.coderecipe.v1.user.department.dto.DepartmentDTO;
 import com.coderecipe.v1.user.department.dto.vo.DepartmentReq.AddDepartmentReq;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
-@RequestMapping("api/v1/admin/department")
+@RequestMapping("api/admin/v1/department")
 @RequiredArgsConstructor
 @Slf4j
 public class DepartmentAdminController {
@@ -31,6 +32,18 @@ public class DepartmentAdminController {
     public ResponseEntity<BaseRes<Long>> addDepartment(@RequestBody AddDepartmentReq departmentData) {
         Long result = iDepartmentAdminService.addDepartment(departmentData);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<BaseRes<List<DepartmentDTO>>> getAllDepartments() {
+        List<DepartmentDTO> result = iDepartmentAdminService.getAllDepartment();
+        return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
+    }
+
+    @GetMapping("/info/all")
+    public ResponseEntity<BaseRes<List<DepartmentInfo>>> getAllDepartmentsInfo() {
+        List<DepartmentInfo> result = iDepartmentAdminService.getAllDepartmentInfo();
+        return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
     @GetMapping

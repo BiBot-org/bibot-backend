@@ -1,11 +1,11 @@
 package com.coderecipe.v1.admin.notice.dto.vo;
 
-import com.coderecipe.v1.admin.notice.dto.NoticeDTO;
+import com.coderecipe.v1.admin.notice.enums.NoticeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class NoticeRes {
     private NoticeRes() {
@@ -15,11 +15,15 @@ public class NoticeRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class SearchNoticeRes {
-        private List<NoticeDTO> content;
-        private Integer pageNo;
-        private boolean isLast;
-        private Integer totalPage;
-        private Long totalElement;
+    public static class NoticeInfo {
+        private Long id;
+        private String title;
+        private String content;
+        private NoticeType type;
+        private String createdBy;
+        private String modifiedBy;
+        private LocalDateTime regTime;
+        private LocalDateTime updateTime;
+        private boolean isDeleted;
     }
 }

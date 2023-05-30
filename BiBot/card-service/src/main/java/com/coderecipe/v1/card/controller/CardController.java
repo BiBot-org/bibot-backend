@@ -5,6 +5,8 @@ import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import com.coderecipe.v1.card.dto.vo.CardRes.*;
 import com.coderecipe.v1.card.service.ICardService;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
@@ -23,30 +25,39 @@ import java.util.List;
 public class CardController {
 
     private final ICardService iCardService;
-    UUID userId = UUID.fromString("12f92119-ecee-4bcf-abe8-d01ef389c369");
 
     @PostMapping
-    public ResponseEntity<BaseRes<Long>> addCard(@RequestBody CreateCard req) {
-        Long result = iCardService.addCard(req);
+    public ResponseEntity<BaseRes<Long>> addCard(@RequestBody CreateCard req, Principal principal) {
+        UUID userId = UUID.fromString(principal.getName());
+        Long result = iCardService.addCard(req, userId);
         return ResponseEntity.status(HttpStatus.OK).body(BaseRes.success(result));
     }
 
     @GetMapping
     public ResponseEntity<BaseRes<List<PaymentInfo>>> getPayments(
-            @RequestParam(name = "cardId", defaultValue = "") Long cardId) {
-        List<PaymentInfo> result = iCardService.getPayments(cardId);
+            @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+        List<PaymentInfo> result = iCardService.getPayments(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<BaseRes<List<CardInfoRes>>> getAllCard() {
+    public ResponseEntity<BaseRes<List<CardInfoRes>>> getAllCard(Principal principal) {
+        UUID userId = UUID.fromString(principal.getName());
         List<CardInfoRes> result = iCardService.getAllCard(userId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId) {
-        Long result = iCardService.deleteCard(cardId.getId());
+    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId, Principal principal) {
+        UUID userId = UUID.fromString(principal.getName());
+        Long result = iCardService.deleteCard(cardId.getId(), userId);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+    @GetMapping("/amount")
+    public ResponseEntity<BaseRes<Integer>> getAmount(
+        @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+        Integer result = iCardService.getAmount(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +18,9 @@ public class TeamDTO {
 
     public static TeamDTO of(Team entity) {
         return ModelMapperUtils.getModelMapper().map(entity, TeamDTO.class);
+    }
+
+    public static List<TeamDTO> of(List<Team> entities) {
+        return entities.stream().map(TeamDTO::of).toList();
     }
 }

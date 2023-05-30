@@ -21,7 +21,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL")
+    @Column(name = "name", columnDefinition = "VARCHAR(20) NOT NULL", unique = true)
     private String name;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
