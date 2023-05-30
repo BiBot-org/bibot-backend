@@ -12,6 +12,8 @@ import com.coderecipe.v1.user.department.model.Department;
 import com.coderecipe.v1.user.team.model.Team;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,15 +26,6 @@ import java.util.UUID;
 public class BibotUserServiceImpl implements BibotUserService {
 
     private final BibotUserRepository bibotUserRepository;
-
-    /**
-     * @deprecated - 유저 API에서 어드민 목적 API는 모두 제거합니다.
-     */
-    @Override
-    @Deprecated(since = "유저 서비스에 어드민 목적의 API는 모두 제거합니다.")
-    public Boolean isInit() {
-        return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.SUPER_ADMIN)).isEmpty();
-    }
 
     @Override
     public BibotUserDTO getUser(UUID userId) {

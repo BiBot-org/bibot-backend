@@ -46,4 +46,12 @@ public class BibotUserReq {
             return entities.map(BibotUserInfo::of);
         }
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChangeUserPassword {
+        private String password;
+        private String newPassword;
+    }
 }

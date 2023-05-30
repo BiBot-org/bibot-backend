@@ -7,8 +7,6 @@ import java.util.UUID;
 
 public interface BibotUserService {
 
-    Boolean isInit();
-
     BibotUserDTO getUser(UUID userId);
 
     BibotUserInfo getUserInfo(UUID userId);

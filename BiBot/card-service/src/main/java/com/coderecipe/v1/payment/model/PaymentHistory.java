@@ -36,6 +36,12 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
     @Column(name = "amount")
     private Integer amount;
 
+    @Column(name = "approval_id")
+    private String approvalId;
+
+    @Column(name = "is_requested")
+    private boolean isRequested;
+
     public static PaymentHistory of(PaymentHistoryDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, PaymentHistory.class);
     }
@@ -45,6 +51,7 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
                 .card(card)
                 .paymentDestination(req.getPaymentDestination())
                 .amount(req.getProductOrderList().stream().mapToInt(ProductOrderList::getAmount).sum())
+                .isRequested(false)
                 .build();
     }
 }

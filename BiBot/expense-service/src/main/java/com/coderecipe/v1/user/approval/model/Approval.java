@@ -1,5 +1,7 @@
 package com.coderecipe.v1.user.approval.model;
 
+import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
+import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.user.approval.dto.ApprovalDTO;
 import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import com.coderecipe.v1.user.category.model.Category;
@@ -8,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,18 +20,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "approval")
-public class Approval {
+public class Approval extends BaseImmutableTimeEntity {
 
     @Id
-    @Column(name = "approval_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private String id = StringUtils.generateDateTimeCode(StringUtils.CODE_APPROVE);
 
     @Column(name = "manager_id")
-    private String managerId;
+    private UUID managerId;
 
     @Column(name = "requester_id")
-    private String requesterId;
+    private UUID requesterId;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
