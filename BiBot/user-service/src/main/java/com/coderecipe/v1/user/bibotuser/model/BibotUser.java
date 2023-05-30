@@ -24,7 +24,6 @@ public class BibotUser extends BaseTimeEntity {
     @Id
     @Column(name = "id")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @JdbcTypeCode(java.sql.Types.VARCHAR)
     private UUID id;
 
     @Column(name = "firstName", columnDefinition = "VARCHAR(10) NOT NULL")

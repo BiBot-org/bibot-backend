@@ -2,15 +2,13 @@ package com.coderecipe.v1.payment.dto.vo;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import org.springframework.data.domain.Pageable;
 public class PaymentReq {
 
     private PaymentReq() {
@@ -67,6 +65,16 @@ public class PaymentReq {
         private String productCost;
         private Integer count;
         private Integer amount;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchPaymentHistoryReq {
+        private Long cardId;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private Pageable pageable;
     }
 
 }

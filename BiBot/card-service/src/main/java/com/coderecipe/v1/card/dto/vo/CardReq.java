@@ -30,7 +30,6 @@ public class CardReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CreateCard {
-        private UUID userId;
         private String cardNo;
         private String cardCompany;
         private String cardCvc;

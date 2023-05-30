@@ -11,13 +11,13 @@ import java.util.UUID;
 
 public interface ICardService {
 
-    Long addCard(CreateCard req);
+    Long addCard(CreateCard req, UUID userId);
 
     CardDTO getCard(Long cardId);
 
     List<CardInfoRes> getAllCard(UUID userId);
 
-    Long deleteCard(Long cardId);
+    Long deleteCard(Long cardId, UUID userId);
 
     List<PaymentInfo> getPayments(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 

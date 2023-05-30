@@ -32,8 +32,8 @@ public class CardServiceImpl implements ICardService {
     private final IPaymentHistoryRepository iPaymentHistoryRepository;
 
     @Override
-    public Long addCard(CreateCard req) {
-        Card card = Card.of(req);
+    public Long addCard(CreateCard req, UUID userId) {
+        Card card = Card.of(req, userId);
         iCardRepository.save(card);
         return card.getId();
     }
@@ -52,24 +52,27 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public Long deleteCard(Long cardId) {
-        iCardRepository.deleteById(cardId);
-        return cardId;
+    public Long deleteCard(Long cardId, UUID userId) {
+        Card card = iCardRepository.findById(cardId)
+                .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
+        if (card.getUserId() != userId) {
+            throw new CustomException(ResCode.BAD_REQUEST);
+        } else {
+            iCardRepository.deleteById(cardId);
+            return cardId;
+        }
     }
 
     @Override
     public List<PaymentInfo> getPayments(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-
         return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardIdOrderByRegTimeDesc(
                 startDateTime, endDateTime, cardId).stream()
             .map(PaymentInfo::of).toList();
-
     }
 
 
     @Override
     public Integer getAmount(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-
         return iPaymentHistoryRepository.findAndSumAllByRegTimeBetweenAndCardId(
             startDateTime, endDateTime,
             iCardRepository.getReferenceById(cardId));

@@ -5,14 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApprovalDTO {
 
-    private Long id;
-    private String managerId;
-    private String requesterId;
+    private String id;
+    private UUID managerId;
+    private UUID requesterId;
     private ApprovalStatus status;
     private String comment;
     private boolean isAutomated;

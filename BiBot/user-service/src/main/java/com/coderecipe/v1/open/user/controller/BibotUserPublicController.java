@@ -9,6 +9,8 @@ import org.keycloak.admin.client.Keycloak;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -32,9 +34,27 @@ public class BibotUserPublicController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
+    @GetMapping("/verify/email")
+    public ResponseEntity<BaseRes<String>> verifyUserByEmail(@RequestParam(value = "email", defaultValue = "") String email) {
+        String res = bibotUserPublicService.sendUserVerification(email);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
     @PostMapping("/email")
     public ResponseEntity<BaseRes<Boolean>> verifyEmail(@RequestBody VerifyEmailReq req) {
         Boolean res = bibotUserPublicService.verifyEmail(req);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
+    @PostMapping("/verify/email")
+    public ResponseEntity<BaseRes<Boolean>> verifyUserEmail(@RequestBody VerifyEmailReq req) {
+        Boolean res = bibotUserPublicService.verifyUserEmail(req);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
+    @PostMapping("/password/reset/email")
+    public ResponseEntity<BaseRes<UUID>> resetPasswordByUserByEmail(@RequestBody VerifyEmailReq req) throws Exception {
+        UUID res = bibotUserPublicService.resetPasswordByEmail(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
