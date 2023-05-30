@@ -28,6 +28,17 @@ dependencies {
     implementation 'com.jayway.jsonpath:json-path:2.7.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'com.itextpdf:html2pdf:3.0.3'
+    implementation 'ognl:ognl:3.3.4'
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation files('libs/io-8.0.0.jar')
+    implementation files('libs/kernel-8.0.0.jar')
+    implementation files('libs/layout-8.0.0.jar')
+
+    implementation 'org.apache.pdfbox:pdfbox:2.0.26'
+    implementation('org.apache.pdfbox:pdfbox-tools:2.0.27')
 
 }
 

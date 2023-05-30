@@ -9,5 +9,5 @@ public interface IPaymentHistoryService {
 
     SearchPaymentHistoryRes searchPaymentHistory(SearchPaymentHistoryReq req);
 
-    String addPayment(MockPaymentReq req);
+    PaymentHistoryDTO addPayment(MockPaymentReq req);
 }

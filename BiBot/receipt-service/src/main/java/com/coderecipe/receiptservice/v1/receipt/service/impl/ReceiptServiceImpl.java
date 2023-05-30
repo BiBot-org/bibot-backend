@@ -1,11 +1,17 @@
 package com.coderecipe.receiptservice.v1.receipt.service.impl;
 
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OCRtoJSONRes.Receipt;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import com.coderecipe.receiptservice.v1.clovaocr.utils.ExtractJson;
+import com.coderecipe.receiptservice.v1.receipt.dto.ReceiptDTO;
+import com.coderecipe.receiptservice.v1.receipt.dto.vo.PaymentReq.CreateMockReceiptReq;
+import com.coderecipe.receiptservice.v1.receipt.dto.vo.PaymentReq.MockPaymentReq;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import com.coderecipe.receiptservice.v1.receipt.receiptsform.worker.SelectForm;
-import com.coderecipe.receiptservice.v1.receipt.service.ReceiptService;
+import com.coderecipe.receiptservice.v1.receipt.service.IReceiptService;
+import com.coderecipe.receiptservice.v1.receipt.worker.ReceiptWorker;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -13,10 +19,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Base64;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -32,29 +38,40 @@ import org.json.JSONObject;
 @Service
 @Slf4j
 @PropertySource("classpath:application.yml")
-public class ReceiptServiceImpl implements ReceiptService {
+@RequiredArgsConstructor
+public class ReceiptServiceImpl implements IReceiptService {
 
+    private final ReceiptWorker receiptWorker;
     @Value("${ocr-api-secret}")
     private String apiSecret;
     @Value("${ocr-api-url}")
     private String apiUrl;
 
-    @KafkaListener(topics = "payment_success", groupId = "group-bibot")
-    public Boolean createReceipt(String kafkaMessage) {
-        log.info("kafka message = {}", kafkaMessage);
+//    @KafkaListener(topics = "payment_success", groupId = "group-bibot")
+//    public ReceiptDTO createReceipt(String kafkaMessage) {
+    public String createReceipt(MockPaymentReq req) {
+//        log.info("kafka message = {}", kafkaMessage);
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Map<Object, Object> map = mapper.readValue(kafkaMessage, new TypeReference<>() {
-            });
-            ReceiptReq.CreateMockReceiptReq req = mapper.convertValue(map, ReceiptReq.CreateMockReceiptReq.class);
-            log.info(req.toString());
-            SelectForm selectForm = new SelectForm();
-            selectForm.createReceiptImage(req);
-        } catch (Exception e) {
-            e.printStackTrace();
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Map<Object, Object> map = mapper.readValue(kafkaMessage, new TypeReference<>() {
+//            });
+//            ReceiptReq.CreateMockReceiptReq req = mapper.convertValue(map, ReceiptReq.CreateMockReceiptReq.class);
+//            log.info(req.toString());
+//            SelectForm selectForm = new SelectForm();
+//            selectForm.createReceiptImage(req);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        if (receiptWorker.createReceiptImage(
+            CreateMockReceiptReq.of("결제승인코드 및 이미지 이름", "결제한 카드 회사", req))) {
+            return "성공";
+        } else {
+            throw new CustomException(ResCode.INTERNAL_SERVER_ERROR);
         }
-        return true;
+
+//        return null;
     }
 
     @Override

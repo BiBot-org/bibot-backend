@@ -11,6 +11,7 @@ import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 import com.coderecipe.v1.payment.service.IPaymentHistoryService;
+import com.coderecipe.v1.receipt.worker.ReceiptWorker;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
     private final IPaymentHistoryRepository iPaymentHistoryRepository;
     private final ICardRepository iCardRepository;
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ReceiptWorker receiptWorker;
 
     @Override
     public PaymentHistoryDTO getPaymentHistory(String id) {
@@ -50,7 +52,7 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
 
 
     @Override
-    public String addPayment(MockPaymentReq req) {
+    public PaymentHistoryDTO addPayment(MockPaymentReq req) {
         Card card = iCardRepository.findById(req.getCardId())
                 .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
@@ -62,10 +64,18 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+        } catch(Exception e) {
+            throw new RuntimeException(e);
         }
-        kafkaTemplate.send("payment_success", message);
+//        kafkaTemplate.send("payment_success", message);
         iPaymentHistoryRepository.save(paymentHistory);
-        return paymentHistory.getId();
+
+        if (receiptWorker.createReceiptImage(
+            CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req))) {
+            return PaymentHistoryDTO.of(paymentHistory);
+        } else {
+            throw new CustomException(ResCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
