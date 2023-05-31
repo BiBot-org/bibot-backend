@@ -12,7 +12,6 @@ import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 import com.coderecipe.v1.payment.service.IPaymentHistoryService;
 import com.coderecipe.v1.receipt.worker.ReceiptWorker;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -59,19 +58,19 @@ public class PaymentHistoryImpl implements IPaymentHistoryService {
         paymentHistory.setId(StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT));
         ObjectMapper mapper = new ObjectMapper();
         String message = "";
-        try {
-            message = mapper.writeValueAsString(CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req));
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            message = mapper.writeValueAsString(CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req));
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        } catch(Exception e) {
+//            throw new RuntimeException(e);
+//        }
 //        kafkaTemplate.send("payment_success", message);
         iPaymentHistoryRepository.save(paymentHistory);
 
-        if (receiptWorker.createReceiptImage(
-            CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req))) {
+        if (Boolean.TRUE.equals(receiptWorker.createReceiptImage(
+                CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req)))) {
             return PaymentHistoryDTO.of(paymentHistory);
         } else {
             throw new CustomException(ResCode.INTERNAL_SERVER_ERROR);

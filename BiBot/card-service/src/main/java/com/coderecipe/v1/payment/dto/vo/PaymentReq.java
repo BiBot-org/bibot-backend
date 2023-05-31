@@ -40,6 +40,7 @@ public class PaymentReq {
     @NoArgsConstructor
     public static class CreateMockReceiptReq extends MockPaymentReq {
 
+        private String cardName;
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;
