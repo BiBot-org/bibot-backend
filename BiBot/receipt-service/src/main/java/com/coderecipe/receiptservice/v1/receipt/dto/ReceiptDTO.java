@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,20 +17,5 @@ public class ReceiptDTO {
     private Integer amount;
     private String approvalId;
     private boolean isRequested;
-
-//    public static PaymentHistoryDTO of(PaymentHistory entity) {
-//        return PaymentHistoryDTO.builder()
-//            .id(entity.getId())
-//            .cardId(entity.getCard().getId())
-//            .paymentDestination(entity.getPaymentDestination())
-//            .amount(entity.getAmount())
-//            .approvalId(entity.getApprovalId())
-//            .isRequested(entity.isRequested())
-//            .build();
-//    }
-//
-//    public static Page<PaymentHistoryDTO> of(Page<PaymentHistory> entities) {
-//        return entities.map(PaymentHistoryDTO::of);
-//    }
 
 }
