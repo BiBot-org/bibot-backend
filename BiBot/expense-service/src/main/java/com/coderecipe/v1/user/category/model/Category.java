@@ -31,8 +31,14 @@ public class Category {
     @Column(name = "limitaion", columnDefinition = "INT4")
     public Integer limitation;
 
+    @Column(name = "next_limitaion", columnDefinition = "INT4")
+    public Integer nextLimitation;
+
     @Column(name = "automated_cost", columnDefinition = "INT4")
     private Integer automatedCost;
+
+    @Column(name = "next_automated_cost", columnDefinition = "INT4")
+    private Integer nextAutomatedCost;
 
     @Column(name = "reset_cycle")
     @Enumerated(EnumType.STRING)
