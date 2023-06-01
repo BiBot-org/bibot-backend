@@ -14,9 +14,28 @@ public class CategoryAdminReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class AddCategory {
-        private String name;
+        private String categoryName;
         private int limitation;
         private int automatedCost;
         private ResetCycle resetCycle;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateCategory {
+        private Long id;
+        private String categoryName;
+        private int nextLimitation;
+        private int nextAutomatedCost;
+        private ResetCycle nextCycle;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DeleteCategory {
+        private Long id;
+    }
+
 }
