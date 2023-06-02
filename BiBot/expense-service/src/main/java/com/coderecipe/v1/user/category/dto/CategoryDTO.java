@@ -15,7 +15,9 @@ public class CategoryDTO {
     private Long id;
     private String categoryName;
     private Integer limitation;
+    private Integer nextLimitation;
     private Integer automatedCost;
+    private Integer nextAutomatedCost;
     private ResetCycle resetCycle;
     private String startDate;
     private String endDate;
