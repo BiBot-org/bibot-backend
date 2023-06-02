@@ -6,13 +6,19 @@ import com.coderecipe.v1.admin.category.vo.CategoryAdminReq.AddCategory;
 import com.coderecipe.v1.admin.category.vo.CategoryAdminReq.UpdateCategory;
 import com.coderecipe.v1.user.category.dto.CategoryDTO;
 import com.coderecipe.v1.user.category.enums.ResetCycle;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,29 +41,61 @@ public class Category extends BaseEntity {
 
     @Column(name = "next_limitaion", columnDefinition = "INT4")
     public Integer nextLimitation;
-
-    @Column(name = "automated_cost", columnDefinition = "INT4")
-    private Integer automatedCost;
-
-    @Column(name = "next_automated_cost", columnDefinition = "INT4")
-    private Integer nextAutomatedCost;
-
     @Column(name = "reset_cycle")
     @Enumerated(EnumType.STRING)
     public ResetCycle resetCycle;
-
-    @Column(name = "start_date")
-    private LocalDate startDate;
-
-    @Column(name = "end_date")
-    private LocalDate endDate;
-
-    @Column(name = "will_be_updated")
-    private boolean willBeUpdated = false;
-
     @Column(name = "next_cycle")
     @Enumerated(EnumType.STRING)
     public ResetCycle nextCycle;
+    @Column(name = "automated_cost", columnDefinition = "INT4")
+    private Integer automatedCost;
+    @Column(name = "next_automated_cost", columnDefinition = "INT4")
+    private Integer nextAutomatedCost;
+    @Column(name = "start_date")
+    private LocalDate startDate;
+    @Column(name = "end_date")
+    private LocalDate endDate;
+    @Column(name = "will_be_updated")
+    private boolean willBeUpdated = false;
+
+    public void updateCategory (UpdateCategory req) {
+        boolean check = false;
+        if(!this.categoryName.equals(req.getCategoryName())) {
+            this.categoryName = req.getCategoryName();
+            check = true;
+        }
+        if(!this.nextLimitation.equals(req.getNextLimitation())) {
+            this.nextLimitation = req.getNextLimitation();
+            check = true;
+        }
+        if(!this.nextAutomatedCost.equals(req.getNextAutomatedCost())) {
+            this.nextAutomatedCost = req.getNextAutomatedCost();
+            check = true;
+        }
+        if(!this.nextCycle.equals(req.getNextCycle())){
+            this.nextCycle = req.getNextCycle();
+            check = true;
+        }
+        if(check) {
+            this.willBeUpdated = true;
+        }
+    }
+
+    public void updateNextValue() {
+        this.automatedCost = this.nextAutomatedCost;
+        this.limitation = this.nextLimitation;
+        this.resetCycle = this.nextCycle;
+        this.willBeUpdated = false;
+    }
+
+    public void updateNextSequence() {
+        this.startDate = LocalDate.now();
+        this.endDate = LocalDate.now().plusDays(ResetCycle.getResetCycleDay(this.resetCycle));
+    }
+
+    public void deleteCategory() {
+        super.setDeleted(true);
+    }
 
     public static Category of(CategoryDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, Category.class);
@@ -67,36 +105,19 @@ public class Category extends BaseEntity {
 
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now()
-                .plusDays(ResetCycle.getResetCycleDay(req.getResetCycle().toString()));
+            .plusDays(ResetCycle.getResetCycleDay(req.getResetCycle().toString()));
 
         return Category.builder()
-                .categoryName(req.getCategoryName())
-                .limitation(req.getLimitation())
-                .nextLimitation(req.getLimitation())
-                .automatedCost(req.getAutomatedCost())
-                .nextAutomatedCost(req.getAutomatedCost())
-                .resetCycle(req.getResetCycle())
-                .nextCycle(req.getResetCycle())
-                .startDate(startDate)
-                .endDate(endDate)
-                .willBeUpdated(false)
-                .build();
-    }
-
-    public static Category of(Category category,UpdateCategory req) {
-
-        return Category.builder()
-            .id(category.getId())
-            .categoryName(category.getCategoryName())
-            .limitation(category.getLimitation())
-            .nextLimitation(req.getNextLimitation())
-            .automatedCost(category.getAutomatedCost())
-            .nextAutomatedCost(req.getNextAutomatedCost())
-            .resetCycle(category.getResetCycle())
-            .nextCycle(req.getNextCycle())
-            .startDate(category.getEndDate())
-            .endDate(category.getEndDate())
-            .willBeUpdated(true)
+            .categoryName(req.getCategoryName())
+            .limitation(req.getLimitation())
+            .nextLimitation(req.getLimitation())
+            .automatedCost(req.getAutomatedCost())
+            .nextAutomatedCost(req.getAutomatedCost())
+            .resetCycle(req.getResetCycle())
+            .nextCycle(req.getResetCycle())
+            .startDate(startDate)
+            .endDate(endDate)
+            .willBeUpdated(false)
             .build();
     }
 
