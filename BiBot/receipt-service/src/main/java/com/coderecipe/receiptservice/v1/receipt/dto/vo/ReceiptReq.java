@@ -6,11 +6,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ReceiptReq {
 
     private ReceiptReq() {
         throw new IllegalStateException("VO Class");
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApprovalStartReq {
+        private Long cardId;
+        private Long categoryId;
+        private String paymentId;
+        private UUID userId;
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MockApprovalStartReq extends ApprovalStartReq {
+        private String imageUrl;
     }
 
     @Builder

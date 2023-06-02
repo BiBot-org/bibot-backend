@@ -1,7 +1,13 @@
 package com.coderecipe.receiptservice.v1.receipt.receiptsform.worker;
 
+import com.coderecipe.global.constant.enums.CustomLogFormat;
+import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 
@@ -11,8 +17,11 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -29,8 +41,11 @@ import org.thymeleaf.context.Context;
 @Slf4j
 @RequiredArgsConstructor
 public class SelectForm {
+    @Value("${gcp.bucket.name}")
+    private String bucketName;
+    private final Storage storage;
 
-    private  final TemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
 
     public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws Exception {
 
@@ -71,12 +86,24 @@ public class SelectForm {
         File file = new File(pdfFile);
         if (file.exists()) {
             if (!file.delete()) {
-                log.error(String.format("generate receipt error : %s", req.getPaymentCode()));
+                log.error(String.format(CustomLogFormat.GENERATE_RECEIPT_ERROR.getFormatString(), req.getPaymentCode()));
             } else {
-                log.info(String.format("generate receipt success : %s", req.getPaymentCode()));
+                log.info(String.format(CustomLogFormat.GENERATE_RECEIPT_SUCCESS.getFormatString(), req.getPaymentCode()));
             }
         }
 
-        return req.getPaymentCode();
+        MultipartFile imageFile = new MockMultipartFile(outputFile, new FileInputStream(outputFile));
+        String imagePath = String.format("RECEIPT_IMAGE/%s/%s", StringUtils.generateDateString(), imageFile.getName());
+        BlobId blobId = BlobId.of("bibot_receipt", imagePath);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(imageFile.getContentType()).build();
+        Blob blob = storage.create(blobInfo, imageFile.getBytes());
+        log.info(blob.toString());
+        log.info(StringUtils.generateCloudStorageUrl("bibot_receipt", imagePath));
+
+
+        return StringUtils.generateCloudStorageUrl("bibot_receipt", imagePath);
     }
+
+
 }

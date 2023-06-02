@@ -2,14 +2,23 @@ package com.coderecipe.receiptservice.v1.receipt.service.impl;
 
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
+import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OCRtoJSONRes.Receipt;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
-import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrResult;
+import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrRes;
+import com.coderecipe.receiptservice.v1.receipt.dto.BibotReceiptDTO;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
+import com.coderecipe.receiptservice.v1.receipt.model.BibotReceipt;
+import com.coderecipe.receiptservice.v1.receipt.model.repository.BibotReceiptRepository;
+import com.coderecipe.receiptservice.v1.receipt.producer.ReceiptProducer;
 import com.coderecipe.receiptservice.v1.receipt.receiptsform.worker.SelectForm;
 import com.coderecipe.receiptservice.v1.receipt.service.IReceiptService;
 import com.coderecipe.receiptservice.v1.receipt.utils.ReceiptUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import com.jayway.jsonpath.JsonPath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +26,7 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -37,13 +47,65 @@ public class ReceiptServiceImpl implements IReceiptService {
     @Value("${ocr.api.url}")
     private String apiUrl;
     private final ReceiptUtils receiptUtils;
+    private final ReceiptProducer receiptProducer;
+    private final BibotReceiptRepository bibotReceiptRepository;
+    private final ObjectMapper mapper;
+    private final Storage storage;
 
-    public String createReceipt(ReceiptReq.CreateMockReceiptReq req) throws Exception {
+    public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws Exception {
         return selectForm.createReceiptImage(req);
     }
 
     @Override
-    public OcrResult.OcrResultInfo getOcrData(OcrReq req) {
+    public String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile imageFile) throws IOException {
+        String imagePath = String.format("OCR_REQUEST/%s/%s", StringUtils.generateDateString(), imageFile.getName());
+        BlobId blobId = BlobId.of("bibot_receipt", imagePath);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(imageFile.getContentType()).build();
+        log.info("image uploaded : " + storage.create(blobInfo, imageFile.getBytes()).toString());
+
+        String storageUrl = StringUtils.generateCloudStorageUrl("bibot_receipt", imagePath);
+        receiptProducer.sendMessageOcrStart(new OcrReq.OcrStartReq(req.getCardId(), req.getCategoryId(),
+                req.getPaymentId(), req.getUserId(), storageUrl));
+        return storageUrl;
+    }
+
+    @Override
+    public String requestMockApprovalStart(ReceiptReq.MockApprovalStartReq req) {
+        receiptProducer.sendMessageOcrStart(new OcrReq.OcrStartReq(req.getCardId(), req.getCategoryId(),
+                req.getPaymentId(), req.getUserId(), req.getImageUrl()));
+        return req.getImageUrl();
+    }
+
+    @Override
+    public BibotReceiptDTO getReceipt(String receiptId) {
+        BibotReceipt receipt = bibotReceiptRepository.findById(receiptId)
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        return BibotReceiptDTO.of(receipt);
+    }
+
+    @Override
+    public OcrRes.OcrEndResponse ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException {
+        BibotReceipt receipt = BibotReceipt.of(req);
+
+        OcrRes.OCRResponse ocrResponse = getOcrData(req.getImageUrl());
+        String result = mapper.writeValueAsString(ocrResponse);
+        receipt.setOcrResult(result);
+        log.info("OCR Result : " + result);
+        bibotReceiptRepository.save(receipt);
+        OcrReq.RequestAutoApproval request = new OcrReq.RequestAutoApproval(
+                Integer.parseInt(ocrResponse.getTotalPrice()),
+                req.getCategoryId(),
+                receipt.getReceiptId(),
+                req.getCardId(),
+                req.getUserId()
+        );
+        receiptProducer.sendMessageOcrEnd(request);
+        return new OcrRes.OcrEndResponse(ocrResponse, receipt.getReceiptId());
+    }
+
+    @Override
+    public OcrRes.OCRResponse getOcrData(String imageUrl) {
 
         StringBuffer response = new StringBuffer();
         String jsonText = "";
@@ -58,8 +120,7 @@ public class ReceiptServiceImpl implements IReceiptService {
             con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             con.setRequestProperty("X-OCR-SECRET", apiSecret);
 
-            URL url = new URL(
-                    "https://img.etnews.com/photonews/1707/971120_20170705143932_354_0001.jpg");
+            URL url = new URL(imageUrl);
             String postParams = receiptUtils.getPostParams(new String(receiptUtils.transformInputStreamToByteArray(url.openStream())));
 
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -95,7 +156,7 @@ public class ReceiptServiceImpl implements IReceiptService {
         if (JsonPath.read(jsonText, "$.images[0].receipt") != null) {
             Receipt receipt = mapper.convertValue(JsonPath.read(jsonText, "$.images[0].receipt"),
                     Receipt.class);
-            return OcrResult.OcrResultInfo.of(receipt.getResult());
+            return OcrRes.OCRResponse.of(receipt.getResult());
         } else {
             throw new CustomException(ResCode.BAD_REQUEST);
         }

@@ -23,20 +23,20 @@ public class Category {
     @Id
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name = "category_name", columnDefinition = "VARCHAR(20) NOT NULL", unique = true)
-    public String categoryName;
+    private String categoryName;
 
     @Column(name = "limitaion", columnDefinition = "INT4")
-    public Integer limitation;
+    private Integer limitation;
 
     @Column(name = "automated_cost", columnDefinition = "INT4")
     private Integer automatedCost;
 
     @Column(name = "reset_cycle")
     @Enumerated(EnumType.STRING)
-    public ResetCycle resetCycle;
+    private ResetCycle resetCycle;
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -49,7 +49,7 @@ public class Category {
 
     @Column(name = "next_cycle")
     @Enumerated(EnumType.STRING)
-    public ResetCycle nextCycle;
+    private ResetCycle nextCycle;
 
     public static Category of(CategoryDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, Category.class);

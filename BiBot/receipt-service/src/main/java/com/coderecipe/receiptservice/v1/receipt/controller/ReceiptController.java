@@ -1,16 +1,17 @@
 package com.coderecipe.receiptservice.v1.receipt.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
-import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
-import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrResult;
+import com.coderecipe.receiptservice.v1.receipt.dto.BibotReceiptDTO;
+import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import com.coderecipe.receiptservice.v1.receipt.service.IReceiptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/receipt")
@@ -20,9 +21,25 @@ public class ReceiptController {
 
     private final IReceiptService ireceiptService;
 
-    @PostMapping
-    public ResponseEntity<BaseRes<OcrResult.OcrResultInfo>> getOcrData(@RequestBody OcrReq req) {
-        OcrResult.OcrResultInfo result = ireceiptService.getOcrData(req);
-        return ResponseEntity.ok().body(BaseRes.success(result));
+    @GetMapping
+    public ResponseEntity<BaseRes<BibotReceiptDTO>> getReceiptInfo(@RequestParam String id) {
+        BibotReceiptDTO res = ireceiptService.getReceipt(id);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<BaseRes<String>> uploadReceiptImage(@RequestParam(name = "file") MultipartFile file,
+                                                              @RequestParam(name = "cardId") Long cardId,
+                                                              @RequestParam(name = "categoryId") Long categoryId,
+                                                              @RequestParam(name = "paymentId") String paymentId,
+                                                              @RequestParam(name = "userId") UUID userId) throws IOException {
+        String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, userId), file);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<BaseRes<String>> testApprovalStart(@RequestBody ReceiptReq.MockApprovalStartReq req) {
+        String res = ireceiptService.requestMockApprovalStart(req);
+        return ResponseEntity.ok().body(BaseRes.success(res));
     }
 }

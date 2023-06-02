@@ -1,17 +1,13 @@
 package com.coderecipe.receiptservice.v1.receipt.model;
 
 import com.coderecipe.global.constant.entity.BaseImmutableEntity;
-import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
-import com.coderecipe.receiptservice.v1.receipt.dto.ReceiptContent;
+import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -21,13 +17,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Table(name = "receipt")
-public class Receipt extends BaseImmutableEntity {
+public class BibotReceipt extends BaseImmutableEntity {
     @Id
     @Column(name = "id")
     private String receiptId = StringUtils.generateDateTimeCode(StringUtils.CODE_RECEIPT);
 
     @Column(name = "user_id")
     private UUID userId;
+
+    @Column(name = "card_id")
+    private Long cardId;
 
     @Column(name = "approve_id")
     private String approveId;
@@ -38,8 +37,17 @@ public class Receipt extends BaseImmutableEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public static Receipt of(ReceiptContent dto) {
-        return ModelMapperUtils.getModelMapper().map(dto, Receipt.class);
+    @Column(name = "ocr_result")
+    private String ocrResult;
+
+    public static BibotReceipt of(OcrReq.OcrStartReq req) {
+        return BibotReceipt.builder()
+                .receiptId(StringUtils.generateDateTimeCode(StringUtils.CODE_RECEIPT))
+                .userId(req.getUserId())
+                .cardId(req.getCardId())
+                .paymentId(req.getPaymentId())
+                .imageUrl(req.getImageUrl())
+                .build();
     }
 
 }

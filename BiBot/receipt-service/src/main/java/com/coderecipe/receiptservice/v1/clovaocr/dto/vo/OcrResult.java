@@ -14,25 +14,6 @@ public class OcrResult {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class OcrResultInfo {
-        private StoreInfoRes storeInfo;
-        private PaymentInfoRes paymentInfo;
-        private List<PurchasedItem> items;
-        private String totalPrice;
-
-        public static OcrResultInfo of(OCRtoJSONRes.Result result) {
-            return new OcrResultInfo(
-                    StoreInfoRes.of(result.getStoreInfo()),
-                    PaymentInfoRes.of(result.getPaymentInfo()),
-                    PurchasedItem.of(result.getSubResults()),
-                    result.getTotalPrice().getPrice().getText()
-            );
-        }
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class StoreInfoRes {
         private String storeName;
         private String bizNum;
@@ -52,14 +33,10 @@ public class OcrResult {
     @NoArgsConstructor
     public static class PaymentInfoRes {
         private String date;
-        private CardInfoRes cardInfo;
-        private String confirmNum;
 
         public static PaymentInfoRes of(OCRtoJSONRes.PaymentInfo paymentInfo) {
             return new PaymentInfoRes(
-                    paymentInfo.getDate().getText(),
-                    CardInfoRes.of(paymentInfo.getCardInfo()),
-                    paymentInfo.getConfirmNum().getText()
+                    paymentInfo.getDate().getText()
             );
         }
     }
@@ -91,7 +68,7 @@ public class OcrResult {
 
             return new PurchasedItem(item.getName().getText() != null ? item.getName().getText() : "",
                     item.getCount() != null && item.getCount().getText() != null ? item.getCount().getText() : "",
-                    item.getPrice().getPrice().getText() != null ? item.getPrice().getPrice().getText() : "");
+                    item.getPrice().getPrice().getText() != null ? item.getPrice().getPrice().getText().replaceAll(",", "") : "");
         }
 
         public static List<PurchasedItem> of(List<OCRtoJSONRes.SubResult> subResults) {
