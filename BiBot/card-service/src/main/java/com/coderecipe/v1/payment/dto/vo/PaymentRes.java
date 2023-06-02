@@ -22,6 +22,7 @@ public class PaymentRes {
     public static class PaymentInfo {
         private String id;
         private String paymentDestination;
+        private String destinationNum;
         private Integer amount;
 
         public static PaymentInfo of(PaymentHistory entity) {

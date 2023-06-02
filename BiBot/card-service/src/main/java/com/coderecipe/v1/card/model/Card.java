@@ -25,7 +25,6 @@ public class Card {
     private Long id;
 
     @Column(name = "user_id")
-    @JdbcTypeCode(java.sql.Types.VARCHAR)
     private UUID userId;
 
     @Column(name = "card_no", columnDefinition = "VARCHAR(30) NOT NULL")

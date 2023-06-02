@@ -3,6 +3,7 @@ package com.coderecipe.v1.user.approval.model;
 import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.user.approval.dto.ApprovalDTO;
+import com.coderecipe.v1.user.approval.dto.vo.ApprovalReq;
 import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import com.coderecipe.v1.user.category.model.Category;
 import jakarta.persistence.*;
@@ -32,6 +33,12 @@ public class Approval extends BaseImmutableTimeEntity {
     @Column(name = "requester_id")
     private UUID requesterId;
 
+    @Column(name = "receipt_id")
+    private String receiptId;
+
+    @Column(name = "amount")
+    private Integer amount;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -46,6 +53,15 @@ public class Approval extends BaseImmutableTimeEntity {
     @Column(name = "is_automated")
     private boolean isAutomated;
 
+    public void updateApprovalStatus(ApprovalStatus status) {
+        this.status = status;
+    }
+
+    public void approvalExpense(ApprovalStatus status, String comment) {
+        this.status = status;
+        this.comment = comment;
+    }
+
     public static Approval of(ApprovalDTO dto) {
         return Approval.builder()
                 .id(dto.getId())
@@ -54,6 +70,16 @@ public class Approval extends BaseImmutableTimeEntity {
                 .status(dto.getStatus())
                 .comment(dto.getComment())
                 .isAutomated(dto.isAutomated())
+                .build();
+    }
+
+    public static Approval init(Category category, UUID userId, int amount, String receiptId) {
+        return Approval.builder()
+                .id(StringUtils.generateDateTimeCode(StringUtils.CODE_APPROVE))
+                .requesterId(userId)
+                .receiptId(receiptId)
+                .amount(amount)
+                .category(category)
                 .build();
     }
 

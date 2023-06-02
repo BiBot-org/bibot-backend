@@ -25,11 +25,12 @@ public class PaymentReq {
         private String businessLicense;
         private String representationName;
         private String address;
+        private String destinationNum;
         private Long cardId;
         private List<ProductOrderList> productOrderList;
 
         public Integer getTotalPrice() {
-            return this.productOrderList.stream().mapToInt(ProductOrderList::getAmount).sum();
+            return productOrderList.stream().mapToInt(ProductOrderList::getAmount).sum();
         }
     }
 
@@ -44,6 +45,7 @@ public class PaymentReq {
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;
+        private Integer totalPrice;
 
         public static CreateMockReceiptReq of(String paymentCode, String paymentCardCompany,
                                               MockPaymentReq req) {
@@ -52,6 +54,7 @@ public class PaymentReq {
             result.setPaymentCode(paymentCode);
             result.setPaymentDateStr(StringUtils.generateDateStringRandom());
             result.setPaymentCardCompany(paymentCardCompany);
+            result.setTotalPrice(req.getTotalPrice());
             return result;
         }
     }
@@ -63,9 +66,12 @@ public class PaymentReq {
     public static class ProductOrderList {
 
         private String productName;
-        private String productCost;
+        private Integer productCost;
         private Integer count;
-        private Integer amount;
+
+        public Integer getAmount() {
+            return productCost * count;
+        }
     }
 
     @Data

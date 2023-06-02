@@ -2,6 +2,7 @@ package com.coderecipe.v1.user.notice.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.notice.dto.NoticeDTO;
+import com.coderecipe.v1.admin.notice.enums.NoticeType;
 import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
 import com.coderecipe.v1.user.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,9 @@ public class NoticeController {
     @GetMapping("/search")
     public ResponseEntity<BaseRes<SearchNoticeRes>> searchNotice(
             @RequestParam(name = "title", defaultValue = "") String title,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        SearchNoticeRes result = noticeService.searchNotice(title, pageable);
+            @RequestParam(name = "type", defaultValue = "") NoticeType type,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        SearchNoticeRes result = noticeService.searchNotice(title, type, pageable);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
