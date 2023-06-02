@@ -1,7 +1,9 @@
 package com.coderecipe.v1.user.category.model;
 
+import com.coderecipe.global.constant.entity.BaseEntity;
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.admin.category.vo.CategoryAdminReq.AddCategory;
+import com.coderecipe.v1.admin.category.vo.CategoryAdminReq.UpdateCategory;
 import com.coderecipe.v1.user.category.dto.CategoryDTO;
 import com.coderecipe.v1.user.category.enums.ResetCycle;
 import jakarta.persistence.*;
@@ -18,7 +20,7 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @Table(name = "category")
-public class Category {
+public class Category extends BaseEntity {
 
     @Id
     @Column(name = "category_id")
@@ -68,14 +70,34 @@ public class Category {
                 .plusDays(ResetCycle.getResetCycleDay(req.getResetCycle().toString()));
 
         return Category.builder()
-                .categoryName(req.getName())
+                .categoryName(req.getCategoryName())
                 .limitation(req.getLimitation())
+                .nextLimitation(req.getLimitation())
                 .automatedCost(req.getAutomatedCost())
+                .nextAutomatedCost(req.getAutomatedCost())
                 .resetCycle(req.getResetCycle())
+                .nextCycle(req.getResetCycle())
                 .startDate(startDate)
                 .endDate(endDate)
                 .willBeUpdated(false)
                 .build();
+    }
+
+    public static Category of(Category category,UpdateCategory req) {
+
+        return Category.builder()
+            .id(category.getId())
+            .categoryName(category.getCategoryName())
+            .limitation(category.getLimitation())
+            .nextLimitation(req.getNextLimitation())
+            .automatedCost(category.getAutomatedCost())
+            .nextAutomatedCost(req.getNextAutomatedCost())
+            .resetCycle(category.getResetCycle())
+            .nextCycle(req.getNextCycle())
+            .startDate(category.getEndDate())
+            .endDate(category.getEndDate())
+            .willBeUpdated(true)
+            .build();
     }
 
 }
