@@ -36,7 +36,6 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
         if (categoryRepository.findById(req.getId()).get().isDeleted()) {
             throw new CustomException(ResCode.BAD_REQUEST);
         }
-        log.info(category.categoryName);
         return ModelMapperUtils.getModelMapper()
             .map(categoryRepository.save(category), CategoryDTO.class);
     }
