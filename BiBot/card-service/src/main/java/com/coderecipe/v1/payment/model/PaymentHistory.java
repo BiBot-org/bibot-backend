@@ -50,7 +50,7 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
                 .id(StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT))
                 .card(card)
                 .paymentDestination(req.getPaymentDestination())
-                .amount(req.getProductOrderList().stream().mapToInt(ProductOrderList::getAmount).sum())
+                .amount(req.getTotalPrice())
                 .isRequested(false)
                 .build();
     }

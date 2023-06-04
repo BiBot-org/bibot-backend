@@ -20,7 +20,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.cloud:spring-cloud-stream'
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
-
+    testImplementation project(path: ':card-service')
+    implementation 'com.google.cloud:spring-cloud-gcp-starter'
+    implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -44,15 +46,16 @@ dependencies {
 
 ext {
     set('springCloudVersion', "2022.0.2")
+    set('springCloudGcpVersion', "4.3.1")
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
 
     }
 }
-
 
 test {
     useJUnitPlatform()

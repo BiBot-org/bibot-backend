@@ -1,27 +1,5 @@
 version: "3.8"
 services:
-  database:
-    image: postgres:latest
-    container_name: code_recipe_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: "coderecipe_dev"
-    env_file:
-      - .env
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      code_recipe:
-        aliases:
-          - "database"
   keycloak-database:
     image: postgres:latest
     container_name: code_recipe_keycloak_db

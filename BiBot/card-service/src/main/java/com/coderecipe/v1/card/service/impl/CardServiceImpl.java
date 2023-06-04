@@ -47,8 +47,8 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public List<CardInfoRes> getAllCard(UUID userId) {
-        return iCardRepository.findAllByUserIdOrderById(userId)
-            .stream().map(CardInfoRes::of).toList();
+        return iCardRepository.findCardsByUserIdOrderById(userId)
+                .stream().map(CardInfoRes::of).toList();
     }
 
     @Override

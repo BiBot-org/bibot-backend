@@ -2,62 +2,57 @@ package com.coderecipe.receiptservice.v1.clovaocr.dto.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.ArrayList;
+
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown =true)
 public class OCRtoJSONRes {
 
-    public String version;
-    public String requestId;
-    public long timestamp;
-    public ArrayList<Image> images;
+    private OCRtoJSONRes() {
+        throw new IllegalStateException("VO Class");
+    }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class OcrResult {
+        private String version;
+        private String requestId;
+        private long timestamp;
+        private List<Image> images;
+    }
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Address {
 
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+        private String text;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BizNum {
 
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+        private String text;
     }
-
-//    @Data
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    public static class BoundingPoly {
-//
-//        public ArrayList<Vertex> vertices;
-//    }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CardInfo {
 
-        public Company company;
-        public Number number;
+        private Company company;
+        private Number number;
     }
 
     @Data
@@ -66,20 +61,16 @@ public class OCRtoJSONRes {
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Code {
 
-        public String text;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private String text;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Company {
 
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+        private String text;
     }
 
     @Data
@@ -88,31 +79,26 @@ public class OCRtoJSONRes {
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class ConfirmNum {
 
-        public String text;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private String text;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Count {
 
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private String text;
+        private Formatted formatted;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Date {
 
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+        private String text;
     }
 
     @Data
@@ -121,56 +107,41 @@ public class OCRtoJSONRes {
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Formatted {
 
-        public String value;
-//        public String year;
-//        public String month;
-//        public String day;
+        private String value;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Image {
 
-        public Receipt receipt;
-        public String uid;
-        public String name;
-        public String inferResult;
-        public String message;
-//        public ValidationResult validationResult;
+        private Receipt receipt;
+        private String uid;
+        private String name;
+        private String inferResult;
+        private String message;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Item {
 
-        public Name name;
-        public Code code;
-        public Count count;
-        public Price price;
+        private Name name;
+        private Code code;
+        private Count count;
+        private Price price;
     }
-
-//    @Data
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    public static class Meta {
-//
-//        public String estimatedLanguage;
-//    }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Name {
 
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+        private String text;
     }
 
     @Data
@@ -179,22 +150,19 @@ public class OCRtoJSONRes {
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Number {
 
-        public String text;
-//        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+        private String text;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PaymentInfo {
 
-        public Date date;
-        public Time time;
-        public CardInfo cardInfo;
-        public ConfirmNum confirmNum;
+        private Date date;
+        private Time time;
+        private CardInfo cardInfo;
+        private ConfirmNum confirmNum;
     }
 
     @Data
@@ -202,22 +170,18 @@ public class OCRtoJSONRes {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Time{
-        public String text;
-//        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private String text;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Price {
 
-        public Price price;
-        public UnitPrice unitPrice;
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private Price price;
+        private UnitPrice unitPrice;
+        private String text;
     }
 
     @Data
@@ -225,45 +189,40 @@ public class OCRtoJSONRes {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Receipt {
-
-//        public Meta meta;
-        public Result result;
+        private Result result;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Result {
 
-        public StoreInfo storeInfo;
-        public PaymentInfo paymentInfo;
-        public ArrayList<SubResult> subResults;
-        public TotalPrice totalPrice;
+        private StoreInfo storeInfo;
+        private PaymentInfo paymentInfo;
+        private List<SubResult> subResults;
+        private TotalPrice totalPrice;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class StoreInfo {
 
-        public Name name;
-        public BizNum bizNum;
-        public SubName subName;
-        public ArrayList<Address> addresses;
-        public ArrayList<Tel> tel;
+        private Name name;
+        private BizNum bizNum;
+        private SubName subName;
+        private List<Address> addresses;
+        private List<Tel> tel;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
-    public static class SubName{
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
-//        public ArrayList<Object> maskingPolys;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class SubName {
+        private String text;
     }
 
     @Data
@@ -271,55 +230,31 @@ public class OCRtoJSONRes {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class SubResult {
-        public ArrayList<Item> items;
+        private List<Item> items;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Tel {
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private String text;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class TotalPrice {
-
-        public Price price;
+        private Price price;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UnitPrice {
-
-        public String text;
-        public Formatted formatted;
-//        public ArrayList<BoundingPoly> boundingPolys;
+        private String text;
     }
-
-//    @Data
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    public static class ValidationResult {
-//
-//        public String result;
-//    }
-
-//    @Data
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-////    @JsonIgnoreProperties(ignoreUnknown =true)
-//    public static class Vertex {
-//
-//        public double x;
-//        public double y;
-//    }
 
 
 }

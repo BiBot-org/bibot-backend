@@ -1,15 +1,20 @@
 package com.coderecipe.v1.user.approval.service.impl;
 
-import com.coderecipe.v1.user.approval.dto.ApprovalDTO;
+import com.coderecipe.global.constant.enums.ResCode;
+import com.coderecipe.global.constant.error.CustomException;
+import com.coderecipe.v1.user.approval.dto.vo.ApprovalReq;
+import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import com.coderecipe.v1.user.approval.model.Approval;
 import com.coderecipe.v1.user.approval.model.repository.IApprovalRepository;
 import com.coderecipe.v1.user.approval.service.IApprovalService;
+import com.coderecipe.v1.user.category.model.Category;
+import com.coderecipe.v1.user.category.model.repository.ICategoryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Service
 @Data
@@ -18,14 +23,41 @@ import java.util.List;
 public class ApprovalServiceImpl implements IApprovalService {
 
     private final IApprovalRepository iApprovalRepository;
+    private final ICategoryRepository iCategoryRepository;
 
     @Override
-    @Deprecated(since = "추후 삭제예정 (초기 테스트용 API)")
-    public List<String> addApproval(List<ApprovalDTO> req) {
-        return req.stream().map(e -> {
-            Approval approval = Approval.of(e);
-            iApprovalRepository.save(approval);
-            return approval.getId();
-        }).toList();
+    public ApprovalStatus autoApproval(ApprovalReq.RequestAutoApproval req) {
+        Category category = iCategoryRepository.findById(req.getCategoryId())
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        LocalDate startDate = category.getStartDate();
+        LocalDate endDate = category.getEndDate();
+
+        Approval approval = Approval.init(category, req.getUserId(), req.getTotalPrice(), req.getReceiptId());
+
+        int amounOfApprovals = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
+                startDate.atStartOfDay(), endDate.atStartOfDay(), req.getUserId(), category
+        ).stream().mapToInt(Approval::getAmount).sum();
+
+        if (amounOfApprovals + req.getTotalPrice() >= category.getLimitation()) {
+            approval.updateApprovalStatus(ApprovalStatus.REJECTED);
+        } else {
+            if (req.getTotalPrice() > category.getAutomatedCost()) {
+                approval.updateApprovalStatus(ApprovalStatus.PENDING);
+            } else {
+                approval.updateApprovalStatus(ApprovalStatus.APPROVED);
+            }
+        }
+
+        iApprovalRepository.save(approval);
+        return approval.getStatus();
+    }
+
+    @Override
+    public String approvalExpense(String approvalId, ApprovalStatus status, String comment) {
+        Approval approval = iApprovalRepository.findById(approvalId)
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        approval.approvalExpense(status, comment);
+        iApprovalRepository.save(approval);
+        return approval.getId();
     }
 }
