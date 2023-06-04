@@ -3,9 +3,11 @@ package com.coderecipe.v1.user.approval.service.impl;
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.user.approval.dto.vo.ApprovalReq;
+import com.coderecipe.v1.user.approval.dto.vo.ApprovalRes;
 import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import com.coderecipe.v1.user.approval.model.Approval;
 import com.coderecipe.v1.user.approval.model.repository.IApprovalRepository;
+import com.coderecipe.v1.user.approval.producer.ApprovalProducer;
 import com.coderecipe.v1.user.approval.service.IApprovalService;
 import com.coderecipe.v1.user.category.model.Category;
 import com.coderecipe.v1.user.category.model.repository.ICategoryRepository;
@@ -24,6 +26,7 @@ public class ApprovalServiceImpl implements IApprovalService {
 
     private final IApprovalRepository iApprovalRepository;
     private final ICategoryRepository iCategoryRepository;
+    private final ApprovalProducer approvalProducer;
 
     @Override
     public ApprovalStatus autoApproval(ApprovalReq.RequestAutoApproval req) {
@@ -47,8 +50,10 @@ public class ApprovalServiceImpl implements IApprovalService {
                 approval.updateApprovalStatus(ApprovalStatus.APPROVED);
             }
         }
+        log.info(String.format("Auto Approval end : %s -> %s", approval.getId(), approval.getStatus()));
 
         iApprovalRepository.save(approval);
+        approvalProducer.sendMessageApproveEnd(new ApprovalRes.AutoApprovalRes(approval.getId(), req.getReceiptId()));
         return approval.getStatus();
     }
 

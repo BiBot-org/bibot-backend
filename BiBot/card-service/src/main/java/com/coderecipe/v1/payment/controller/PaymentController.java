@@ -33,9 +33,9 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseRes<PaymentHistoryDTO >> addPayment(@RequestBody MockPaymentReq req) {
-        PaymentHistoryDTO  result = iPaymentHistoryService.addPayment(req);
-        return ResponseEntity.ok().body(BaseRes.success((result)));
+    public ResponseEntity<BaseRes<String>> addPayment(@RequestBody MockPaymentReq req) {
+        String result = iPaymentHistoryService.addPayment(req);
+        return ResponseEntity.ok(BaseRes.success(result));
     }
 
     @GetMapping("/search")

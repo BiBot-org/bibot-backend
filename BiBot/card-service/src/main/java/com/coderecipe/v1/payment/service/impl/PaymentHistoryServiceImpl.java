@@ -48,14 +48,15 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
 
 
     @Override
-    public PaymentHistoryDTO addPayment(MockPaymentReq req) {
+    public String addPayment(MockPaymentReq req) {
         Card card = iCardRepository.findById(req.getCardId())
                 .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
+        paymentHistory.updatePaymentDate(req.getPaymentDate());
         paymentHistory.setId(StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT));
         iPaymentHistoryRepository.save(paymentHistory);
         paymentProducer.sendMessage(CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req));
-        return PaymentHistoryDTO.of(paymentHistory);
+        return paymentHistory.getId();
     }
 
 }

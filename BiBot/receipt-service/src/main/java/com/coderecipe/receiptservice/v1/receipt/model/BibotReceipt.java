@@ -1,6 +1,6 @@
 package com.coderecipe.receiptservice.v1.receipt.model;
 
-import com.coderecipe.global.constant.entity.BaseImmutableEntity;
+import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import jakarta.persistence.Column;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Table(name = "receipt")
-public class BibotReceipt extends BaseImmutableEntity {
+public class BibotReceipt extends BaseImmutableTimeEntity {
     @Id
     @Column(name = "id")
     private String receiptId = StringUtils.generateDateTimeCode(StringUtils.CODE_RECEIPT);

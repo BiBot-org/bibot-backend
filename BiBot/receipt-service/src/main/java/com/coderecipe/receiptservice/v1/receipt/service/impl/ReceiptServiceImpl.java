@@ -52,7 +52,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     private final ObjectMapper mapper;
     private final Storage storage;
 
-    public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws Exception {
+    public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws IOException {
         return selectForm.createReceiptImage(req);
     }
 
@@ -68,6 +68,15 @@ public class ReceiptServiceImpl implements IReceiptService {
         receiptProducer.sendMessageOcrStart(new OcrReq.OcrStartReq(req.getCardId(), req.getCategoryId(),
                 req.getPaymentId(), req.getUserId(), storageUrl));
         return storageUrl;
+    }
+
+    @Override
+    public String requestApprovalEnd(ReceiptReq.ApprovalEndReq req) {
+        BibotReceipt receipt = bibotReceiptRepository.findById(req.getReceiptId())
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        receipt.setReceiptId(req.getReceiptId());
+        bibotReceiptRepository.save(receipt);
+        return receipt.getReceiptId();
     }
 
     @Override
