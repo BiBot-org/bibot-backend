@@ -25,7 +25,7 @@ public class CategoryScheduler {
             category.updateNextSequence();
             iCategoryRepository.save(category);
             log.info(
-                String.format("%s category updated ! start : %s , end : %s", category.categoryName,
+                String.format("%s category updated ! start : %s , end : %s", category.getCategoryName(),
                     category.getStartDate(), category.getEndDate()));
         }
     }

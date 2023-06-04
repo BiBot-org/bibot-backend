@@ -33,6 +33,11 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -46,6 +51,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = "user")
 public class UserAdminServiceImpl implements IUserAdminService {
 
     @Value("${keycloak.realm}")
@@ -58,6 +64,7 @@ public class UserAdminServiceImpl implements IUserAdminService {
     private final EmailService emailService;
 
     @Override
+    @CachePut(key = "#req.email")
     public CreateUserRes createUser(CreateUserReq req) throws CustomException, NoSuchAlgorithmException {
 
         Team team = teamRepository.findById(req.getTeamId())
@@ -120,6 +127,7 @@ public class UserAdminServiceImpl implements IUserAdminService {
     }
 
     @Override
+    @Cacheable(key = "#userId")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -127,12 +135,14 @@ public class UserAdminServiceImpl implements IUserAdminService {
     }
 
     @Override
+    @Cacheable(key = "'admin'" )
     public List<GetAdminInfo> getAdminInfoList() {
         return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.ADMIN, UserRole.SUPER_ADMIN))
                 .stream().map(GetAdminInfo::of).toList();
     }
 
     @Override
+    @CachePut(key = "#req.userId + 'info'")
     public UUID updateUserInfo(UpdateUserReq req) {
 
         BibotUser user = bibotUserRepository.findById(req.getId())
@@ -163,6 +173,8 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Override
     @Transactional
+    @CachePut(key = "#req.userId + 'role'")
+    @CacheEvict(key = "'admin'")
     public UUID changeUserRole(ChangeUserRole req) {
 
         RealmResource realmResource = keycloak.realm(realm);
@@ -189,6 +201,12 @@ public class UserAdminServiceImpl implements IUserAdminService {
     }
 
     @Override
+    @Caching(evict = {
+        @CacheEvict(key = "#req.userId + 'role'"),
+        @CacheEvict(key = "#req.userId + 'info'"),
+        @CacheEvict(key = "#userId"),
+        @CacheEvict(key = "'admin'")
+    })
     public UUID deleteUser(UUID userId) {
 
         RealmResource realmResource = keycloak.realm(realm);
