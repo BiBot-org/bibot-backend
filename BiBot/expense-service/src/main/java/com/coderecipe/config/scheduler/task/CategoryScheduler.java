@@ -15,7 +15,7 @@ public class CategoryScheduler {
 
     private final ICategoryRepository iCategoryRepository;
 
-    @Scheduled(cron = "0 0 10 * * 3")
+    @Scheduled(cron = "0 0 10 * * *")
     @SchedulerLock(name = "category_recycle", lockAtLeastFor = "5S", lockAtMostFor = "30S")
     public void recycle() {
         for (Category category : iCategoryRepository.findAllByIsDeletedNot(true)) {

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +23,6 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     private final ICategoryRepository categoryRepository;
 
     @Override
-    @CachePut(key = "#req.categoryName")
     @CacheEvict(key = "'all'")
     public Long addCategory(AddCategory req) {
         if (categoryRepository.existsByCategoryName(req.getCategoryName())) {
@@ -36,7 +34,6 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     }
 
     @Override
-    @CachePut(key = "#req.categoryName")
     @CacheEvict(key = "'all'")
     public Long updateCategory(UpdateCategory req) {
         Category category = categoryRepository.findByIdAndIsDeletedNot(req.getId(), true)

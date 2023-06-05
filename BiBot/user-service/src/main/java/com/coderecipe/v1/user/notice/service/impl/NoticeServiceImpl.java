@@ -52,7 +52,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Cacheable(key ="notionMain")
+    @Cacheable(key ="'notionMain'")
     public List<NoticeDTO> getNoticeMain() {
         return noticeRepository.findTop5ByOrderByIdDesc()
                 .stream().map(NoticeDTO::of).toList();

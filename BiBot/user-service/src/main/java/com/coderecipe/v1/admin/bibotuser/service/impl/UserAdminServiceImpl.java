@@ -64,7 +64,6 @@ public class UserAdminServiceImpl implements IUserAdminService {
     private final EmailService emailService;
 
     @Override
-    @CachePut(key = "#req.email")
     public CreateUserRes createUser(CreateUserReq req) throws CustomException, NoSuchAlgorithmException {
 
         Team team = teamRepository.findById(req.getTeamId())
@@ -173,8 +172,11 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Override
     @Transactional
-    @CachePut(key = "#req.userId + 'role'")
-    @CacheEvict(key = "'admin'")
+    @Caching(evict = {
+        @CacheEvict(key = "#req.userId + 'info'"),
+        @CacheEvict(key = "#userId"),
+        @CacheEvict(key = "'admin'")
+    })
     public UUID changeUserRole(ChangeUserRole req) {
 
         RealmResource realmResource = keycloak.realm(realm);
@@ -202,7 +204,6 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Override
     @Caching(evict = {
-        @CacheEvict(key = "#req.userId + 'role'"),
         @CacheEvict(key = "#req.userId + 'info'"),
         @CacheEvict(key = "#userId"),
         @CacheEvict(key = "'admin'")

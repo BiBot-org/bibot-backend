@@ -25,7 +25,6 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Cacheable(key = "'all'")
     public List<CategoryDTO> getAllCategoryList() {
-        log.info("data");
         return iCategoryRepository.findAll().stream().map(CategoryDTO::of).toList();
     }
 }
