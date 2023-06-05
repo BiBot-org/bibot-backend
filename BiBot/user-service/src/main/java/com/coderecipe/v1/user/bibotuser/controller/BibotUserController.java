@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,5 +29,26 @@ public class BibotUserController {
         BibotUserInfo res = bibotUserService.getUserInfo(userId);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
+
+    @PostMapping("/profile")
+    public ResponseEntity<BaseRes<String>> addProfile(@RequestParam(name = "profile_url")
+        MultipartFile file, @RequestParam UUID userId){
+        String res = bibotUserService.addProfile(userId, file);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
+    @DeleteMapping("/profile")
+    public ResponseEntity<BaseRes<String>> deleteProfile(@RequestParam UUID userId){
+        String res = bibotUserService.deleteProfile(userId);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<BaseRes<String>> updateProfile(@RequestParam(name = "profile_url")
+    MultipartFile file, @RequestParam UUID userId){
+        String res = bibotUserService.updateProfile(userId, file);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
 
 }

@@ -18,17 +18,20 @@ dependencies {
     implementation 'org.keycloak:keycloak-spring-boot-starter:21.1.1'
     implementation 'org.keycloak:keycloak-admin-client:21.1.1'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
 }
 
 ext {
     set('springCloudVersion', "2022.0.2")
+    set('springCloudGcpVersion', "4.3.1")
     set('keyCloakVersion', '21.1.1')
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-
+        mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
     }
 }
 
