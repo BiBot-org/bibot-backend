@@ -10,16 +10,20 @@ import com.coderecipe.v1.user.category.model.Category;
 import com.coderecipe.v1.user.category.model.repository.ICategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = "category")
 public class CategoryAdminServiceImpl implements CategoryAdminService {
 
     private final ICategoryRepository categoryRepository;
 
     @Override
+    @CacheEvict(key = "'all'")
     public Long addCategory(AddCategory req) {
         if (categoryRepository.existsByCategoryName(req.getCategoryName())) {
             throw new CustomException(ResCode.BAD_REQUEST);
@@ -30,6 +34,7 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     }
 
     @Override
+    @CacheEvict(key = "'all'")
     public Long updateCategory(UpdateCategory req) {
         Category category = categoryRepository.findByIdAndIsDeletedNot(req.getId(), true)
             .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
@@ -39,6 +44,7 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     }
 
     @Override
+    @CacheEvict(key = "'all'")
     public Long deleteCategory(DeleteCategory req) {
         Category category = categoryRepository.findByIdAndIsDeletedNot(req.getId(), true)
             .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

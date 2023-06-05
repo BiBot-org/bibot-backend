@@ -9,18 +9,22 @@ import com.coderecipe.v1.admin.notice.service.NoticeAdminService;
 import com.coderecipe.v1.user.bibotuser.model.BibotUser;
 import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "notice")
 public class NoticeAdminServiceImpl implements NoticeAdminService {
 
     private final NoticeRepository noticeRepository;
     private final BibotUserRepository bibotUserRepository;
 
     @Override
+    @CacheEvict(key = "'notionMain'")
     public Long createNotice(NoticeReq.CreateNoticeReq req, UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -31,6 +35,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     }
 
     @Override
+    @CacheEvict(key = "'notionMain'")
     public Long updateNotice(NoticeReq.UpdateNoticeReq req, UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -43,6 +48,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     }
 
     @Override
+    @CacheEvict(key = "'notionMain'")
     public Long deleteNotice(Long id) {
         noticeRepository.deleteById(id);
         return id;

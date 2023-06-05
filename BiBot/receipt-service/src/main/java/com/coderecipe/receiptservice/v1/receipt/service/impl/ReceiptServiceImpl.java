@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +41,7 @@ import java.net.URL;
 @Slf4j
 @PropertySource("classpath:application.yml")
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "receipt")
 public class ReceiptServiceImpl implements IReceiptService {
 
     private final SelectForm selectForm;
@@ -51,7 +54,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     private final BibotReceiptRepository bibotReceiptRepository;
     private final ObjectMapper mapper;
     private final Storage storage;
-
+    
     public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws Exception {
         return selectForm.createReceiptImage(req);
     }
@@ -78,6 +81,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     }
 
     @Override
+    @Cacheable(key = "#receiptId")
     public BibotReceiptDTO getReceipt(String receiptId) {
         BibotReceipt receipt = bibotReceiptRepository.findById(receiptId)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

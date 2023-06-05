@@ -15,6 +15,8 @@ import com.coderecipe.v1.payment.service.IPaymentHistoryService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ import java.time.LocalTime;
 @Data
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = "payment")
 public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
 
     private final IPaymentHistoryRepository iPaymentHistoryRepository;
@@ -31,6 +34,7 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     private final PaymentProducer paymentProducer;
 
     @Override
+    @Cacheable(key = "#id")
     public PaymentHistoryDTO getPaymentHistory(String id) {
         PaymentHistory result = iPaymentHistoryRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
