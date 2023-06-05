@@ -10,4 +10,6 @@ public interface BibotUserService {
     BibotUserDTO getUser(UUID userId);
 
     BibotUserInfo getUserInfo(UUID userId);
+
+    boolean changePassword(String newPassword);
 }

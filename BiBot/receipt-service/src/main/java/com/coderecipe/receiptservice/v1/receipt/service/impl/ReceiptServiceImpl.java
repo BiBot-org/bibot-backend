@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -58,7 +59,7 @@ public class ReceiptServiceImpl implements IReceiptService {
 
     @Override
     public String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile imageFile) throws IOException {
-        String imagePath = String.format("OCR_REQUEST/%s/%s", StringUtils.generateDateString(), imageFile.getName());
+        String imagePath = String.format("OCR_REQUEST/%s/%s", StringUtils.generateDateString(), req.getPaymentId());
         BlobId blobId = BlobId.of("bibot_receipt", imagePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                 .setContentType(imageFile.getContentType()).build();
@@ -74,7 +75,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     public String requestApprovalEnd(ReceiptReq.ApprovalEndReq req) {
         BibotReceipt receipt = bibotReceiptRepository.findById(req.getReceiptId())
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
-        receipt.setReceiptId(req.getReceiptId());
+        receipt.setApproveId(req.getApprovalId());
         bibotReceiptRepository.save(receipt);
         return receipt.getReceiptId();
     }
@@ -98,9 +99,9 @@ public class ReceiptServiceImpl implements IReceiptService {
         BibotReceipt receipt = BibotReceipt.of(req);
 
         OcrRes.OCRResponse ocrResponse = getOcrData(req.getImageUrl());
-        String result = mapper.writeValueAsString(ocrResponse);
-        receipt.setOcrResult(result);
-        log.info("OCR Result : " + result);
+        Map<String, Object> res = mapper.convertValue(ocrResponse, Map.class);
+        receipt.setOcrResult(res);
+        log.info("OCR Result : " + res.toString());
         bibotReceiptRepository.save(receipt);
         OcrReq.RequestAutoApproval request = new OcrReq.RequestAutoApproval(
                 Integer.parseInt(ocrResponse.getTotalPrice()),

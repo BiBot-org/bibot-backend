@@ -3,12 +3,15 @@ package com.coderecipe.receiptservice.v1.receipt.model;
 import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -37,8 +40,9 @@ public class BibotReceipt extends BaseImmutableTimeEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "ocr_result")
-    private String ocrResult;
+    @Column(name = "ocr_result", columnDefinition = "json")
+    @Type(JsonType.class)
+    private Map<String, Object> ocrResult;
 
     public static BibotReceipt of(OcrReq.OcrStartReq req) {
         return BibotReceipt.builder()

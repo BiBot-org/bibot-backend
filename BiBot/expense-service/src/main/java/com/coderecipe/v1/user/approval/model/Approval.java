@@ -1,9 +1,8 @@
 package com.coderecipe.v1.user.approval.model;
 
-import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
+import com.coderecipe.global.constant.entity.BaseTimeEntity;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.user.approval.dto.ApprovalDTO;
-import com.coderecipe.v1.user.approval.dto.vo.ApprovalReq;
 import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import com.coderecipe.v1.user.category.model.Category;
 import jakarta.persistence.*;
@@ -11,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
 
 import java.util.UUID;
 
@@ -21,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "approval")
-public class Approval extends BaseImmutableTimeEntity {
+public class Approval extends BaseTimeEntity {
 
     @Id
     @Column(name = "id")
@@ -55,6 +53,14 @@ public class Approval extends BaseImmutableTimeEntity {
 
     public void updateApprovalStatus(ApprovalStatus status) {
         this.status = status;
+    }
+
+    public void updateManagerId(UUID userId) {
+        this.managerId = userId;
+    }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
     }
 
     public void approvalExpense(ApprovalStatus status, String comment) {

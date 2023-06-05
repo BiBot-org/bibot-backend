@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class OcrResult {
         private String version;
@@ -30,6 +32,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Address {
 
@@ -39,6 +42,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BizNum {
 
@@ -48,6 +52,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CardInfo {
 
@@ -58,6 +63,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Code {
 
@@ -67,6 +73,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Company {
 
@@ -76,6 +83,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class ConfirmNum {
 
@@ -85,6 +93,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Count {
 
@@ -95,6 +104,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Date {
 
@@ -104,6 +114,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Formatted {
 
@@ -113,6 +124,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Image {
 
@@ -126,6 +138,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Item {
 
@@ -138,6 +151,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Name {
 
@@ -147,6 +161,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Number {
 
@@ -156,6 +171,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PaymentInfo {
 
@@ -168,6 +184,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Time{
         private String text;
@@ -176,6 +193,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Price {
 
@@ -187,6 +205,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class Receipt {
         private Result result;
@@ -195,6 +214,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Result {
 
@@ -207,6 +227,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class StoreInfo {
 
@@ -220,6 +241,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class SubName {
         private String text;
@@ -228,6 +250,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown =true)
     public static class SubResult {
         private List<Item> items;
@@ -236,6 +259,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Tel {
         private String text;
@@ -244,6 +268,8 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TotalPrice {
         private Price price;
     }
@@ -251,6 +277,7 @@ public class OCRtoJSONRes {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UnitPrice {
         private String text;
