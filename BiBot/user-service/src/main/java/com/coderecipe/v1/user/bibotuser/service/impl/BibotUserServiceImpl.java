@@ -10,13 +10,14 @@ import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
 import com.coderecipe.v1.user.bibotuser.service.BibotUserService;
 import com.coderecipe.v1.user.department.model.Department;
 import com.coderecipe.v1.user.team.model.Team;
-import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,7 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @CacheConfig(cacheNames = "user")
 public class BibotUserServiceImpl implements BibotUserService {
-
+    @Value("${bucketName}")
+    private String bucketName;
     private final Storage storage;
     private final BibotUserRepository bibotUserRepository;
 
@@ -57,127 +59,89 @@ public class BibotUserServiceImpl implements BibotUserService {
 
     @Override
     @CacheEvict(key = "#userId + 'info'")
-    public String addProfile(UUID userId, MultipartFile file) {
+    public String addProfile(UUID userId, MultipartFile file) throws IOException {
 
-        BibotUser bibotUser = bibotUserRepository.findById(userId)
+        BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
             .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
-        if (bibotUser.isDeleted()) {
-            throw new CustomException(ResCode.NOT_FOUND);
-        }
 
-        MultipartFile imageFile = null;
-
-        try {
-            imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
+        MultipartFile imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
                 file.getBytes());
-        } catch (Exception e) {
-            throw new CustomException(ResCode.BAD_REQUEST);
-        }
 
         String imagePath = String.format("USER_PROFILE/%s/%s", StringUtils.generateDateString(),
             imageFile.getName());
-        BlobId blobId = BlobId.of("bibot_user", imagePath);
+        BlobId blobId = BlobId.of(bucketName, imagePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(imageFile.getContentType())
             .build();
 
-        Blob blob = null;
-        try {
-            blob = storage.create(blobInfo, imageFile.getBytes());
-        } catch (Exception e) {
-            throw new CustomException(ResCode.NOT_FOUND);
-        }
+        storage.create(blobInfo, imageFile.getBytes());
+        bibotUser.addProfile(imagePath);
+        bibotUserRepository.save(bibotUser);
 
-        bibotUserRepository.save(bibotUser.addProfile(imagePath));
-        log.info(blob.toString());
-        log.info(StringUtils.generateCloudStorageUrl("bibot_user", imagePath));
-
-        return StringUtils.generateCloudStorageUrl("bibot_user", imagePath);
+        return StringUtils.generateCloudStorageUrl(bucketName, imagePath);
     }
 
     @Override
     @CacheEvict(key = "#userId + 'info'")
-    public String updateProfile(UUID userId, MultipartFile file) {
+    public String updateProfile(UUID userId, MultipartFile file) throws IOException {
 
-        BibotUser bibotUser = bibotUserRepository.findById(userId)
+        BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
             .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
 
-        if (bibotUser.isDeleted()) {
-            throw new CustomException(ResCode.NOT_FOUND);
-        }
-
-        MultipartFile imageFile = null;
-
-        try {
-            imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
+        MultipartFile imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
                 file.getBytes());
-        } catch (Exception e) {
-            log.info("유효하지 않은 파일 형식입니다.");
-            throw new CustomException(ResCode.BAD_REQUEST);
-        }
 
-        if (bibotUser.getProfileUrl() == null) {
-            log.info("profileURL 없음");
+        if (bibotUser.getProfileUrl() == null || bibotUser.getProfileUrl() == "") {
             throw new CustomException(ResCode.BAD_REQUEST);
         }
 
         String profilePath = bibotUser.getProfileUrl();
 
-        BlobId blobId = BlobId.of("bibot_user", profilePath);
-        Blob blob = storage.get(blobId);
+        BlobId blobId = BlobId.of(bucketName, profilePath);
 
-        if (blob == null) {
-            log.info("blob 객체 없음");
+        if (storage.get(blobId) != null) {
+            storage.delete(blobId);
+        } else {
             throw new CustomException(ResCode.BAD_REQUEST);
         }
-
-        storage.delete(blobId);
-        bibotUserRepository.save(bibotUser.delete(profilePath));
+        bibotUser.deleteProfile();
+        bibotUserRepository.save(bibotUser);
 
         String imagePath = String.format("USER_PROFILE/%s/%s", StringUtils.generateDateString(),
             imageFile.getName());
-        blobId = BlobId.of("bibot_user", imagePath);
+        blobId = BlobId.of(bucketName, imagePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(imageFile.getContentType())
             .build();
 
-        blob = null;
-        try {
-            blob = storage.create(blobInfo, imageFile.getBytes());
-        } catch (Exception e) {
-            throw new CustomException(ResCode.NOT_FOUND);
-        }
-
-        bibotUserRepository.save(bibotUser.updateProfile(imagePath));
-        return StringUtils.generateCloudStorageUrl("bibot_user", imagePath);
+        storage.create(blobInfo, imageFile.getBytes());
+        bibotUser.updateProfile(imagePath);
+        bibotUserRepository.save(bibotUser);
+        return StringUtils.generateCloudStorageUrl(bucketName, imagePath);
     }
 
     @Override
     @CacheEvict(key = "#userId + 'info'")
     public String deleteProfile(UUID userId) {
 
-        BibotUser bibotUser = bibotUserRepository.findById(userId)
+        BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
             .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
-
-        if (bibotUser.isDeleted()) {
-            throw new CustomException(ResCode.NOT_FOUND);
-        }
 
         if (bibotUser.getProfileUrl() == null) {
             throw new CustomException(ResCode.BAD_REQUEST);
         }
 
         String profilePath = bibotUser.getProfileUrl();
+        BlobId blobId = BlobId.of(bucketName, profilePath);
 
-        BlobId blobId = BlobId.of("bibot_user", profilePath);
-        Blob blob = storage.get(blobId);
-
-        if (blob == null) {
+        if (storage.get(blobId) != null) {
+            storage.delete(blobId);
+        } else {
             throw new CustomException(ResCode.BAD_REQUEST);
         }
 
-        storage.delete(blobId);
-        bibotUserRepository.save(bibotUser.delete(profilePath));
+        bibotUser.deleteProfile();
+        bibotUserRepository.save(bibotUser);
 
-        return StringUtils.generateCloudStorageUrl("bibot_user", profilePath);
+        return StringUtils.generateCloudStorageUrl(bucketName, profilePath);
     }
 
 }

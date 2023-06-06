@@ -89,8 +89,8 @@ public class BibotUser extends BaseTimeEntity {
         return this;
     }
 
-    public BibotUser delete(String profileUrl) {
-        this.profileUrl = null;
+    public BibotUser deleteProfile() {
+        this.profileUrl = "";
         return this;
     }
 }

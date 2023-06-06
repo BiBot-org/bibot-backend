@@ -26,4 +26,5 @@ public interface BibotUserRepository extends JpaRepository<BibotUser, UUID>,
 
     Page<BibotUser> findAll(Specification<BibotUser> spec, Pageable pageable);
 
+    Optional<BibotUser> findByIdAndIsDeletedFalse(UUID userId);
 }
