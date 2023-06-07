@@ -12,6 +12,9 @@ import com.coderecipe.v1.user.team.model.Team;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +23,14 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = "user")
 public class BibotUserServiceImpl implements BibotUserService {
 
     private final BibotUserRepository bibotUserRepository;
     private final Keycloak keycloak;
 
     @Override
+    @Cacheable(key = "#userId")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -35,6 +40,7 @@ public class BibotUserServiceImpl implements BibotUserService {
 
     @Override
     @Transactional
+    @Cacheable(key = "#userId + 'info'")
     public BibotUserInfo getUserInfo(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
