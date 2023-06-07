@@ -9,6 +9,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 public class PaymentReq {
 
     private PaymentReq() {
@@ -25,6 +27,7 @@ public class PaymentReq {
         private String businessLicense;
         private String representationName;
         private String address;
+        private String paymentDate;
         private String destinationNum;
         private Long cardId;
         private List<ProductOrderList> productOrderList;
@@ -52,7 +55,7 @@ public class PaymentReq {
             CreateMockReceiptReq result = ModelMapperUtils.getModelMapper()
                     .map(req, CreateMockReceiptReq.class);
             result.setPaymentCode(paymentCode);
-            result.setPaymentDateStr(StringUtils.generateDateStringRandom());
+            result.setPaymentDateStr(req.getPaymentDate());
             result.setPaymentCardCompany(paymentCardCompany);
             result.setTotalPrice(req.getTotalPrice());
             return result;

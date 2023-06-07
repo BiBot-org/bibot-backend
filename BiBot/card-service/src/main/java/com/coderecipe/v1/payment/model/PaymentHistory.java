@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "payment_history")
@@ -40,6 +42,15 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
 
     @Column(name = "is_requested")
     private boolean isRequested;
+
+    public void updatePaymentDate(String paymentDate) {
+        if (paymentDate.isEmpty()) {
+            this.setRegTime(LocalDateTime.now());
+        } else {
+            this.setRegTime(LocalDateTime.parse(paymentDate));
+        }
+        this.setRegTime(LocalDateTime.parse(paymentDate));
+    }
 
     public static PaymentHistory of(PaymentHistoryDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, PaymentHistory.class);

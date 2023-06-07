@@ -10,6 +10,8 @@ import com.coderecipe.v1.admin.notice.model.repository.NoticeSpecification;
 import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
 import com.coderecipe.v1.user.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,11 +22,13 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "notice")
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
     @Override
+    @Cacheable(key ="#id")
     public NoticeDTO getNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.NOTICE_NOT_FOUND));
@@ -48,6 +52,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    @Cacheable(key ="'notionMain'")
     public List<NoticeDTO> getNoticeMain() {
         return noticeRepository.findTop5ByOrderByIdDesc()
                 .stream().map(NoticeDTO::of).toList();

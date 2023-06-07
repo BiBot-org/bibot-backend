@@ -20,5 +20,9 @@ public class ApprovalSpecification {
         return (root, query, criteriabuilder) -> criteriabuilder.equal(root.get("status"), status);
     }
 
+    public static Specification<Approval> equalCategoryId(Long categoryId) {
+        return (root, query, criteriabuilder) -> criteriabuilder.equal(root.get("category").get("id"), categoryId);
+    }
+
 
 }
