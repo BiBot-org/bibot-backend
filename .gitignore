@@ -38,7 +38,7 @@ out/
 .vscode/
 
 ### application.yml ###
-application.yml
+#application.yml
 
 ### resource data ###
 /Bibot/docker/db/data/
