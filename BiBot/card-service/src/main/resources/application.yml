@@ -83,8 +83,6 @@ keycloak:
   cors: true
 
 
-
-
 #  datasource:
 #    write:
 #      driver-class-name: org.postgresql.Driver

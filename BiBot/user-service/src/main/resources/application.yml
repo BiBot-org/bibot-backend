@@ -73,7 +73,6 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
-
 keycloak:
   realm: bibot-org
   auth-server-url: ${cloak_host}
@@ -86,13 +85,11 @@ keycloak:
   public-client: true
   cors: true
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-
 
 #  datasource:
 #    write:

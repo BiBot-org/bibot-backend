@@ -82,8 +82,6 @@ ocr-api-secret: ${ocr_token}
 
 ocr-api-url: ${ocr_url}
 
-
-
 #  datasource:
 #    write:
 #      driver-class-name: org.postgresql.Driver
