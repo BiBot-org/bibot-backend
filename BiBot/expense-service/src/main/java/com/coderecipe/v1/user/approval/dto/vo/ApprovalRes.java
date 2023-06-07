@@ -1,17 +1,37 @@
 package com.coderecipe.v1.user.approval.dto.vo;
 
 import com.coderecipe.v1.user.approval.dto.ApprovalDTO;
+import com.coderecipe.v1.user.approval.model.Approval;
+import com.coderecipe.v1.user.category.dto.CategoryDTO;
+import com.coderecipe.v1.user.category.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 public class ApprovalRes {
     private ApprovalRes() {
         throw new IllegalStateException("VO Class");
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApprovalInfo {
+        private ApprovalDTO approval;
+        private CategoryDTO category;
+        private String createAt;
+
+        public static ApprovalInfo of(Approval approval, Category category) {
+            return new ApprovalInfo(ApprovalDTO.of(approval), CategoryDTO.of(category), approval.getRegTime().toString());
+        }
+
+        public static ApprovalInfo of(Approval approval) {
+            return new ApprovalInfo(ApprovalDTO.of(approval), CategoryDTO.of(approval.getCategory()), approval.getRegTime().toString());
+        }
     }
 
     @Data

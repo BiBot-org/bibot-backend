@@ -65,15 +65,15 @@ public class Category extends BaseEntity {
             this.categoryName = req.getCategoryName();
             check = true;
         }
-        if (!this.nextLimitation.equals(req.getNextLimitation())) {
+        if (this.nextLimitation == null || !this.nextLimitation.equals(req.getNextLimitation())) {
             this.nextLimitation = req.getNextLimitation();
             check = true;
         }
-        if (!this.nextAutomatedCost.equals(req.getNextAutomatedCost())) {
+        if (this.nextAutomatedCost == null || !this.nextAutomatedCost.equals(req.getNextAutomatedCost())) {
             this.nextAutomatedCost = req.getNextAutomatedCost();
             check = true;
         }
-        if (!this.nextCycle.equals(req.getNextCycle())) {
+        if (this.nextCycle == null || !this.nextCycle.equals(req.getNextCycle())) {
             this.nextCycle = req.getNextCycle();
             check = true;
         }

@@ -16,9 +16,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Data
@@ -35,6 +37,12 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
         PaymentHistory result = iPaymentHistoryRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         return PaymentHistoryDTO.of(result);
+    }
+
+    @Override
+    public SearchPaymentHistoryInfoRes getAllPaymentHistoryByIsRequested(boolean isRequested, Pageable pageable) {
+        Page<PaymentHistoryInfo> result = PaymentHistoryInfo.of(iPaymentHistoryRepository.findAllByIsRequested(isRequested, pageable));
+        return SearchPaymentHistoryInfoRes.of(result);
     }
 
     @Override

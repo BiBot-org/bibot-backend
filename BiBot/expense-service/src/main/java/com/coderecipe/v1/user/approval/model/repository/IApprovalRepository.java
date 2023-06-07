@@ -17,5 +17,6 @@ import java.util.UUID;
 public interface IApprovalRepository extends JpaRepository<Approval, String>,
         JpaSpecificationExecutor<Approval> {
     List<Approval> findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(LocalDateTime startDate, LocalDateTime endDate, UUID userId, Category category);
+    List<Approval> findTop5ByOrderByIdDesc();
     Page<Approval> findAll(Specification<Approval> spec, Pageable pageable);
 }

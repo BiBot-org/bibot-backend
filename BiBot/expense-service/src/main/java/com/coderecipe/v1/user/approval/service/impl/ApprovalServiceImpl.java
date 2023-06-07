@@ -22,7 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,10 +106,9 @@ public class ApprovalServiceImpl implements IApprovalService {
     public ApprovalRes.GetExpenseProcessingStatusByCategoryRes getExpenseProcessingstatusByCategory(UUID userId, Long categoryId) {
         Category category = iCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
-        LocalDateTime a = category.getEndDate().atStartOfDay();
-        LocalDateTime b = category.getStartDate().atStartOfDay();
 
-        List<Approval> result = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(b, a, userId, category);
+        List<Approval> result = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(category.getStartDate().atStartOfDay(),
+                category.getEndDate().atStartOfDay(), userId, category);
         int amountOfApprovals = result.stream().filter(e -> e.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum();
 
         int limitation = category.getLimitation();
