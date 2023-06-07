@@ -18,9 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Data
@@ -42,6 +44,12 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     }
 
     @Override
+    public SearchPaymentHistoryInfoRes getAllPaymentHistoryByIsRequested(boolean isRequested, Pageable pageable) {
+        Page<PaymentHistoryInfo> result = PaymentHistoryInfo.of(iPaymentHistoryRepository.findAllByIsRequested(isRequested, pageable));
+        return SearchPaymentHistoryInfoRes.of(result);
+    }
+
+    @Override
     public SearchPaymentHistoryRes searchPaymentHistory(SearchPaymentHistoryReq req) {
         Page<PaymentHistoryDTO> result = PaymentHistoryDTO.of(
                 iPaymentHistoryRepository.findPaymentHistoriesByCardIdAndRegTimeBetween(
@@ -52,14 +60,15 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
 
 
     @Override
-    public PaymentHistoryDTO addPayment(MockPaymentReq req) {
+    public String addPayment(MockPaymentReq req) {
         Card card = iCardRepository.findById(req.getCardId())
                 .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
+        paymentHistory.updatePaymentDate(req.getPaymentDate());
         paymentHistory.setId(StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT));
         iPaymentHistoryRepository.save(paymentHistory);
         paymentProducer.sendMessage(CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req));
-        return PaymentHistoryDTO.of(paymentHistory);
+        return paymentHistory.getId();
     }
 
 }

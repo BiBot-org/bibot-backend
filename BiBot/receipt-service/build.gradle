@@ -20,6 +20,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.cloud:spring-cloud-stream'
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
+    implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
+
     testImplementation project(path: ':card-service')
     implementation 'com.google.cloud:spring-cloud-gcp-starter'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'

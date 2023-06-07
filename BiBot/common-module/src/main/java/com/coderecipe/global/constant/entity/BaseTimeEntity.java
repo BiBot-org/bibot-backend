@@ -22,5 +22,5 @@ public class BaseTimeEntity {
     @LastModifiedDate
     private LocalDateTime updateTime;
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 }

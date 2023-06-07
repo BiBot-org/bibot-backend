@@ -18,13 +18,10 @@ public class OcrResult {
         private String storeName;
         private String bizNum;
         private List<String> address;
-        private List<String> tel;
-
         public static StoreInfoRes of(OCRtoJSONRes.StoreInfo storeInfo) {
             return new StoreInfoRes(storeInfo.getName().getText(),
                     storeInfo.getBizNum().getText(),
-                    storeInfo.getAddresses().stream().map(OCRtoJSONRes.Address::getText).toList(),
-                    storeInfo.getTel().stream().map(OCRtoJSONRes.Tel::getText).toList());
+                    storeInfo.getAddresses().stream().map(OCRtoJSONRes.Address::getText).toList());
         }
     }
 
