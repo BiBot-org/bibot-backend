@@ -73,6 +73,10 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/develop
 keycloak:
   realm: bibot-org
   auth-server-url: ${cloak_host}

@@ -80,7 +80,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers("/public/**").permitAll()
+                .requestMatchers("/public/**",  "/v3/api-docs/**", "/swagger-ui/**",
+                        "/swagger-resources/**").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .and()
                 .sessionManagement()

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IPaymentHistoryRepository extends JpaRepository<PaymentHistory, String> {
     List<PaymentHistory> findAllByCardId(Long cardId);
+    Page<PaymentHistory> findAllByIsRequested(boolean isRequested, Pageable pageable);
 
     Page<PaymentHistory> findPaymentHistoriesByCardIdAndRegTimeBetween(Long cardId, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 
