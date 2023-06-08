@@ -38,7 +38,7 @@ public class ApprovalController {
             @RequestParam(name = "endDate", defaultValue = "") LocalDate endDate,
             @RequestParam(name = "status", defaultValue = "") ApprovalStatus status,
             @RequestParam(name = "categoryId", defaultValue = "") Long categoryId,
-            @PageableDefault(page = 6, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(page = 6, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
         ApprovalRes.SearchApprovalInfoRes res = iApprovalService.searchApprovalInfo(new ApprovalReq.SearchApprovalInfoReq(startDate, endDate, status, categoryId), pageable);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
