@@ -43,9 +43,7 @@ spring:
   sql:
     init:
       platform: postgres
-#  redis:
-#    host: ${redis_host}
-#    port: ${redis_port}
+
 
   output:
     ansi:
@@ -83,8 +81,6 @@ keycloak:
   bearer-only: true
   public-client: true
   cors: true
-
-
 
 
 #  datasource:

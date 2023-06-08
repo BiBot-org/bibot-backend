@@ -26,13 +26,6 @@ public class ApprovalController {
 
     private final IApprovalService iApprovalService;
 
-    @PutMapping
-    public ResponseEntity<BaseRes<String>> approveExpense(@RequestBody ApprovalReq.RequestApproval req, Principal principal) {
-        UUID userId = UUID.fromString(principal.getName());
-        String res = iApprovalService.approvalExpense(req, userId);
-        return ResponseEntity.ok().body(BaseRes.success(res));
-    }
-
     @GetMapping
     public ResponseEntity<BaseRes<ApprovalDTO>> getApprovalInfo(@RequestParam(name = "id", defaultValue = "")String id){
         ApprovalDTO res = iApprovalService.getApprovalInfo(id);
@@ -45,7 +38,7 @@ public class ApprovalController {
             @RequestParam(name = "endDate", defaultValue = "") LocalDate endDate,
             @RequestParam(name = "status", defaultValue = "") ApprovalStatus status,
             @RequestParam(name = "categoryId", defaultValue = "") Long categoryId,
-            @PageableDefault(page = 6, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(page = 6, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
         ApprovalRes.SearchApprovalInfoRes res = iApprovalService.searchApprovalInfo(new ApprovalReq.SearchApprovalInfoReq(startDate, endDate, status, categoryId), pageable);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
@@ -58,5 +51,11 @@ public class ApprovalController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
+    @GetMapping("/status/all")
+    public ResponseEntity<BaseRes<ApprovalRes.GetExpenseProcessingStatusByCategoryRes>> getAllExpenseProcessingStatus(Principal principal){
+        UUID userId = UUID.fromString(principal.getName());
+        ApprovalRes.GetExpenseProcessingStatusByCategoryRes res = iApprovalService.getAllExpenseProcessingStatus(userId);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
 
 }

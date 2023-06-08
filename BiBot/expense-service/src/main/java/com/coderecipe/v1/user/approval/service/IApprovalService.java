@@ -12,13 +12,12 @@ public interface IApprovalService {
 
 
     ApprovalStatus autoApproval(ApprovalReq.RequestAutoApproval req);
-
-    String approvalExpense(ApprovalReq.RequestApproval req, UUID userId);
-
     ApprovalRes.SearchApprovalInfoRes searchApprovalInfo(ApprovalReq.SearchApprovalInfoReq req, Pageable pageable);
 
     ApprovalDTO getApprovalInfo(String id);
 
     ApprovalRes.GetExpenseProcessingStatusByCategoryRes getExpenseProcessingstatusByCategory(UUID userId, Long categoryId);
+
+    ApprovalRes.GetExpenseProcessingStatusByCategoryRes getAllExpenseProcessingStatus(UUID userId);
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -34,12 +35,19 @@ public class ReceiptController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
+    @GetMapping("/approval")
+    public ResponseEntity<BaseRes<BibotReceiptDTO>> getReceiptInfoByApprovalId(@RequestParam String id) {
+        BibotReceiptDTO res = ireceiptService.getReceiptByApproveId(id);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
     @PostMapping("/image")
     public ResponseEntity<BaseRes<String>> uploadReceiptImage(@RequestParam(name = "file") MultipartFile file,
                                                               @RequestParam(name = "cardId") Long cardId,
                                                               @RequestParam(name = "categoryId") Long categoryId,
                                                               @RequestParam(name = "paymentId") String paymentId,
-                                                              @RequestParam(name = "userId") UUID userId) throws IOException {
+                                                              Principal principal) throws IOException {
+        UUID userId = UUID.fromString(principal.getName());
         String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, userId), file);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }

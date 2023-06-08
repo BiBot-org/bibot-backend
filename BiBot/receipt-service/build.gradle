@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.cloud:spring-cloud-stream'
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
 
     testImplementation project(path: ':card-service')
@@ -43,7 +44,6 @@ dependencies {
 
     implementation 'org.apache.pdfbox:pdfbox:2.0.26'
     implementation('org.apache.pdfbox:pdfbox-tools:2.0.27')
-
 }
 
 ext {

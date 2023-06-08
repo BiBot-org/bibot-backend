@@ -25,4 +25,10 @@ public class CategoryController {
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
+    @GetMapping
+    public ResponseEntity<BaseRes<CategoryDTO>> getCategory(@RequestParam(name = "id", defaultValue = "") Long id) {
+        CategoryDTO result = iCategoryService.getCategory(id);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
 }

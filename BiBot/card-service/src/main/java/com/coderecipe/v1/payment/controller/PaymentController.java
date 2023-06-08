@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payment")
@@ -51,7 +50,7 @@ public class PaymentController {
             @RequestParam(name = "cardId", defaultValue = "", required = true) Long id,
             @RequestParam(name = "startDate", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
             @RequestParam(name = "endDate", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate endDate,
-            @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 3, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
         SearchPaymentHistoryRes result = iPaymentHistoryService.searchPaymentHistory(
                 new PaymentReq.SearchPaymentHistoryReq(id, startDate, endDate, pageable));
         return ResponseEntity.ok().body(BaseRes.success(result));
