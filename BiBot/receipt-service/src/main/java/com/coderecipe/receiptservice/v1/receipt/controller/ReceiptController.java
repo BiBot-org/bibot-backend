@@ -34,6 +34,12 @@ public class ReceiptController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
+    @GetMapping("/approval")
+    public ResponseEntity<BaseRes<BibotReceiptDTO>> getReceiptInfoByApprovalId(@RequestParam String id) {
+        BibotReceiptDTO res = ireceiptService.getReceiptByApproveId(id);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
+
     @PostMapping("/image")
     public ResponseEntity<BaseRes<String>> uploadReceiptImage(@RequestParam(name = "file") MultipartFile file,
                                                               @RequestParam(name = "cardId") Long cardId,

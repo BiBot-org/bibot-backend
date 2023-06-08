@@ -100,6 +100,13 @@ public class ReceiptServiceImpl implements IReceiptService {
     }
 
     @Override
+    public BibotReceiptDTO getReceiptByApproveId(String approveId) {
+        BibotReceipt receipt = bibotReceiptRepository.findByApproveId(approveId)
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        return BibotReceiptDTO.of(receipt);
+    }
+
+    @Override
     public OcrRes.OcrEndResponse ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException {
         BibotReceipt receipt = BibotReceipt.of(req);
 
