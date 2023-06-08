@@ -80,7 +80,7 @@ public class ApprovalServiceImpl implements IApprovalService {
             spec = spec.and(ApprovalSpecification.equalStatus(req.getStatus()));
         }
 
-        Page<ApprovalDTO> result = ApprovalDTO.of(iApprovalRepository.findAll(spec, pageable));
+        Page<ApprovalRes.SearchApproval> result = ApprovalRes.SearchApproval.of(iApprovalRepository.findAll(spec, pageable));
         return ApprovalRes.SearchApprovalInfoRes.of(result);
     }
 

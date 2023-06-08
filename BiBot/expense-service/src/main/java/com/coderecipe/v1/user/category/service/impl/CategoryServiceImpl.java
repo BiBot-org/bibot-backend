@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public List<CategoryDTO> getAllCategoryList() {
-        return iCategoryRepository.findAll().stream().map(CategoryDTO::of).toList();
+        return iCategoryRepository.findAllByOrderByIdAsc().stream().map(CategoryDTO::of).toList();
     }
 
     @Override
