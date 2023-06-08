@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,7 +44,8 @@ public class BibotUserServiceImpl implements BibotUserService {
     @Cacheable(key = "#userId")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
+        System.out.println("서비스 들어왔습니다.");
 
         return BibotUserDTO.of(user);
     }
@@ -56,7 +58,7 @@ public class BibotUserServiceImpl implements BibotUserService {
             .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
         Team team = user.getTeam();
         Department department = team.getDepartment();
-
+        System.out.println("서비스 들어왔습니다.");
         return BibotUserInfo.of(user, department, team);
     }
 
