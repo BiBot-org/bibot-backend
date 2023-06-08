@@ -18,4 +18,6 @@ public interface BibotUserService {
     String deleteProfile(UUID userId);
 
     String updateProfile(UUID userId, MultipartFile file) throws IOException;
+
+    boolean changePassword(String newPassword);
 }

@@ -1,0 +1,106 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: receipt-service
+  config:
+    import: vault://
+  cloud:
+    vault:
+      scheme: http
+      host: 34.64.72.125
+      port: 8200
+      authentication: token
+      token: hvs.eVPlENZ2c9vI63rKa773Detj
+#      authentication: KUBERNETES
+#      kubernetes:
+#        role: app
+#        kubernetes-path: kubernetes
+#        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kv:
+        enabled: true
+        backend: secret
+        secret:
+          default-context: bibot
+          profiles:
+            - db
+            - ocr
+            - redis
+            - cloak
+            - jwt
+        backend2: gcp
+        config:
+          enabled: true
+          path: config
+
+
+    gcp:
+      storage:
+        credentials: ${data}
+        project-id: elevated-patrol-385701
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${host_name}/receipt
+    username: ${db_name}
+    password: ${db_pwd}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+    database: postgresql
+  sql:
+    init:
+      platform: postgres
+
+  kafka:
+    bootstrap-servers: ${kafka_url}
+
+
+
+  output:
+    ansi:
+      enabled: always
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${jwk_uri}
+          issuer-uri: ${iss_uri}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+gcp:
+  bucket:
+    name: bibot_recipt
+
+ocr-api-secret: ${ocr_token}
+
+ocr-api-url: ${ocr_url}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+#  datasource:
+#    write:
+#      driver-class-name: org.postgresql.Driver
+#      jdbcUrl: jdbc:postgresql://${master_host}/users
+#      username: ${master_name}
+#      password: ${master_pwd}
+#
+#    read:
+#      driver-class-name: org.postgresql.Driver
+#      jdbcUrl: jdbc:postgresql://${slave_host}/users
+#      username: ${slave_name}
+#      password: ${slave_pwd}

@@ -29,6 +29,8 @@ public class OcrRes {
         private String totalPrice;
 
         public static OCRResponse of(OCRtoJSONRes.Result result) {
+
+
             return new OcrRes.OCRResponse(
                     OcrResult.StoreInfoRes.of(result.getStoreInfo()),
                     OcrResult.PaymentInfoRes.of(result.getPaymentInfo()),

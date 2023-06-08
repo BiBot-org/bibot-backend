@@ -1,8 +1,10 @@
 package com.coderecipe.v1.card.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
+import com.coderecipe.v1.card.dto.CardDTO;
 import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import com.coderecipe.v1.card.dto.vo.CardRes.*;
+import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.service.ICardService;
 
 import java.security.Principal;
@@ -36,6 +38,12 @@ public class CardController {
     public ResponseEntity<BaseRes<List<CardInfoRes>>> getAllCard(Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
         List<CardInfoRes> result = iCardService.getAllCard(userId);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
+    @GetMapping
+    public ResponseEntity<BaseRes<CardDTO>> getCardInfo(@RequestParam(value = "id", defaultValue = "") Long cardId) {
+        CardDTO result = iCardService.getCard(cardId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
