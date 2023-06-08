@@ -39,13 +39,13 @@ public class PaymentRes {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SearchPaymentHistoryRes {
-        private List<PaymentHistoryDTO> content;
+        private List<PaymentHistoryInfo> content;
         private Integer pageNo;
         private boolean isLast;
         private int totalPages;
         private Long totalElements;
 
-        public static SearchPaymentHistoryRes of(Page<PaymentHistoryDTO> page) {
+        public static SearchPaymentHistoryRes of(Page<PaymentHistoryInfo> page) {
             return new SearchPaymentHistoryRes(page.getContent(), page.getNumber(), page.isLast(), page.getTotalPages(), page.getTotalElements());
         }
     }

@@ -26,13 +26,6 @@ public class ApprovalController {
 
     private final IApprovalService iApprovalService;
 
-    @PutMapping
-    public ResponseEntity<BaseRes<String>> approveExpense(@RequestBody ApprovalReq.RequestApproval req, Principal principal) {
-        UUID userId = UUID.fromString(principal.getName());
-        String res = iApprovalService.approvalExpense(req, userId);
-        return ResponseEntity.ok().body(BaseRes.success(res));
-    }
-
     @GetMapping
     public ResponseEntity<BaseRes<ApprovalDTO>> getApprovalInfo(@RequestParam(name = "id", defaultValue = "")String id){
         ApprovalDTO res = iApprovalService.getApprovalInfo(id);
@@ -58,5 +51,11 @@ public class ApprovalController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
+    @GetMapping("/status/all")
+    public ResponseEntity<BaseRes<ApprovalRes.GetExpenseProcessingStatusByCategoryRes>> getAllExpenseProcessingStatus(Principal principal){
+        UUID userId = UUID.fromString(principal.getName());
+        ApprovalRes.GetExpenseProcessingStatusByCategoryRes res = iApprovalService.getAllExpenseProcessingStatus(userId);
+        return ResponseEntity.ok().body(BaseRes.success(res));
+    }
 
 }

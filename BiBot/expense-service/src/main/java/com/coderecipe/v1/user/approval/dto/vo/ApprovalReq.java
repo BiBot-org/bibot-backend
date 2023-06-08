@@ -16,15 +16,6 @@ public class ApprovalReq {
 
     @Data
     @AllArgsConstructor
-    public static class RequestApproval {
-
-        private String approvalId;
-        private ApprovalStatus status;
-        private String comment;
-    }
-
-    @Data
-    @AllArgsConstructor
     @NoArgsConstructor
     public static class RequestAutoApproval {
         private int totalPrice;

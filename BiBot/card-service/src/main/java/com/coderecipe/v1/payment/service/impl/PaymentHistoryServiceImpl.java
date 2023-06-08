@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.List;
 
 @Service
 @Data
@@ -47,7 +46,7 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
 
     @Override
     public SearchPaymentHistoryRes searchPaymentHistory(SearchPaymentHistoryReq req) {
-        Page<PaymentHistoryDTO> result = PaymentHistoryDTO.of(
+        Page<PaymentHistoryInfo> result = PaymentHistoryInfo.of(
                 iPaymentHistoryRepository.findPaymentHistoriesByCardIdAndRegTimeBetween(
                         req.getCardId(), req.getStartDate().atStartOfDay(), req.getEndDate().atTime(LocalTime.MAX), req.getPageable()));
 

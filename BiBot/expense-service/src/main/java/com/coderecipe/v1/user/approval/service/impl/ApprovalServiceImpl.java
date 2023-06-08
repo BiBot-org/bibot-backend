@@ -64,17 +64,6 @@ public class ApprovalServiceImpl implements IApprovalService {
         approvalProducer.sendMessageApproveEnd(new ApprovalRes.AutoApprovalRes(approval.getId(), req.getReceiptId()));
         return approval.getStatus();
     }
-
-    @Override
-    public String approvalExpense(ApprovalReq.RequestApproval req, UUID userId) {
-        Approval approval = iApprovalRepository.findById(req.getApprovalId())
-                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
-        approval.approvalExpense(req.getStatus(), req.getComment());
-        approval.updateManagerId(userId);
-        iApprovalRepository.save(approval);
-        return approval.getId();
-    }
-
     @Override
     public ApprovalRes.SearchApprovalInfoRes searchApprovalInfo(ApprovalReq.SearchApprovalInfoReq req, Pageable pageable) {
         Specification<Approval> spec = (root, query, cb) -> cb.isTrue(cb.literal((true)));
@@ -112,6 +101,18 @@ public class ApprovalServiceImpl implements IApprovalService {
         int amountOfApprovals = result.stream().filter(e -> e.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum();
 
         int limitation = category.getLimitation();
+        return new ApprovalRes.GetExpenseProcessingStatusByCategoryRes(limitation, amountOfApprovals);
+    }
+
+    @Override
+    public ApprovalRes.GetExpenseProcessingStatusByCategoryRes getAllExpenseProcessingStatus(UUID userId) {
+        List<Category> categories = iCategoryRepository.findAll();
+        int limitation = categories.stream().mapToInt(Category::getLimitation).sum();
+        int amountOfApprovals = categories.stream()
+                .mapToInt(category -> iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
+                    category.getStartDate().atStartOfDay(), category.getEndDate().atStartOfDay(), userId, category)
+                        .stream().filter(approval -> approval.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum()
+                    ).sum();
         return new ApprovalRes.GetExpenseProcessingStatusByCategoryRes(limitation, amountOfApprovals);
     }
 }

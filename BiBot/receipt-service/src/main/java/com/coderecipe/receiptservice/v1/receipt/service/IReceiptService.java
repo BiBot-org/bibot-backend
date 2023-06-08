@@ -19,6 +19,7 @@ public interface IReceiptService {
     String requestMockApprovalStart(ReceiptReq.MockApprovalStartReq req);
 
     BibotReceiptDTO getReceipt(String receiptId);
+    BibotReceiptDTO getReceiptByApproveId(String approveId);
 
     OcrRes.OcrEndResponse ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException;
 
