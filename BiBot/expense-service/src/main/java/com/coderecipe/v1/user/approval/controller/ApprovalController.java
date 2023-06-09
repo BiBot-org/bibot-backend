@@ -52,6 +52,7 @@ public class ApprovalController {
     }
 
     @GetMapping("/status/all")
+    @Deprecated(since = "2023-06-09, 굳이 나눌 필요가 없음 ㅇㅇ 없으면 걍 분기처리 하면되지")
     public ResponseEntity<BaseRes<ApprovalRes.GetExpenseProcessingStatusByCategoryRes>> getAllExpenseProcessingStatus(Principal principal){
         UUID userId = UUID.fromString(principal.getName());
         ApprovalRes.GetExpenseProcessingStatusByCategoryRes res = iApprovalService.getAllExpenseProcessingStatus(userId);

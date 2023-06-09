@@ -93,18 +93,31 @@ public class ApprovalServiceImpl implements IApprovalService {
 
     @Override
     public ApprovalRes.GetExpenseProcessingStatusByCategoryRes getExpenseProcessingstatusByCategory(UUID userId, Long categoryId) {
-        Category category = iCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
 
-        List<Approval> result = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(category.getStartDate().atStartOfDay(),
-                category.getEndDate().atStartOfDay(), userId, category);
-        int amountOfApprovals = result.stream().filter(e -> e.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum();
+        if(categoryId != null) {
+            Category category = iCategoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
 
-        int limitation = category.getLimitation();
-        return new ApprovalRes.GetExpenseProcessingStatusByCategoryRes(limitation, amountOfApprovals);
+            List<Approval> result = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(category.getStartDate().atStartOfDay(),
+                    category.getEndDate().atStartOfDay(), userId, category);
+            int amountOfApprovals = result.stream().filter(e -> e.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum();
+
+            int limitation = category.getLimitation();
+            return new ApprovalRes.GetExpenseProcessingStatusByCategoryRes(limitation, amountOfApprovals);
+        } else {
+            List<Category> categories = iCategoryRepository.findAll();
+            int limitation = categories.stream().mapToInt(Category::getLimitation).sum();
+            int amountOfApprovals = categories.stream()
+                    .mapToInt(category -> iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
+                                    category.getStartDate().atStartOfDay(), category.getEndDate().atStartOfDay(), userId, category)
+                            .stream().filter(approval -> approval.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum()
+                    ).sum();
+            return new ApprovalRes.GetExpenseProcessingStatusByCategoryRes(limitation, amountOfApprovals);
+        }
     }
 
     @Override
+    @Deprecated(since = "2023-06-09, 위에 친구와 리턴 타입이 같으므로 굳이 필요가 없음.")
     public ApprovalRes.GetExpenseProcessingStatusByCategoryRes getAllExpenseProcessingStatus(UUID userId) {
         List<Category> categories = iCategoryRepository.findAll();
         int limitation = categories.stream().mapToInt(Category::getLimitation).sum();

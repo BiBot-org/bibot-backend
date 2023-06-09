@@ -5,7 +5,6 @@ import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.user.bibotuser.dto.BibotUserDTO;
 import com.coderecipe.v1.user.bibotuser.dto.vo.BibotUserReq.BibotUserInfo;
-import com.coderecipe.v1.user.bibotuser.dto.vo.BibotUserReq.*;
 import com.coderecipe.v1.user.bibotuser.model.BibotUser;
 import com.coderecipe.v1.user.bibotuser.model.repository.BibotUserRepository;
 import com.coderecipe.v1.user.bibotuser.service.BibotUserService;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,14 +26,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @CacheConfig(cacheNames = "user")
 public class BibotUserServiceImpl implements BibotUserService {
-    @Value("${bucketName}")
+    @Value("${gcp.bucketName}")
     private String bucketName;
     private final Storage storage;
     private final BibotUserRepository bibotUserRepository;
@@ -93,7 +91,7 @@ public class BibotUserServiceImpl implements BibotUserService {
         MultipartFile imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
                 file.getBytes());
 
-        if (bibotUser.getProfileUrl() == null || bibotUser.getProfileUrl() == "") {
+        if (bibotUser.getProfileUrl() == null || "".equals(bibotUser.getProfileUrl())) {
             throw new CustomException(ResCode.BAD_REQUEST);
         }
 
