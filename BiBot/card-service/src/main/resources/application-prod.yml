@@ -1,0 +1,86 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: card-service
+  config:
+    import: vault://
+  cloud:
+    vault:
+      scheme: http
+      host: 34.64.72.125
+      port: 8200
+      authentication: KUBERNETES
+      kubernetes:
+        role: app
+        kubernetes-path: kubernetes
+        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kv:
+        enabled: true
+        backend: secret
+        default-context: bibot
+        profiles:
+          - db
+          - ocr
+          - redis
+          - cloak
+          - jwt
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${host_name}/card
+    username: ${db_name}
+    password: ${db_pwd}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+    database: postgresql
+  sql:
+    init:
+      platform: postgres
+
+
+  output:
+    ansi:
+      enabled: always
+  ## fetch-registry : Eureka
+  ## service-url defaultZone :
+  kafka:
+    bootstrap-servers: ${kafka_url}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${jwk_uri}
+          issuer-uri: ${iss_uri}
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+  data:
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+
+
+#  datasource:
+#    write:
+#      driver-class-name: org.postgresql.Driver
+#      jdbcUrl: jdbc:postgresql://${master_host}/users
+#      username: ${master_name}
+#      password: ${master_pwd}
+#
+#    read:
+#      driver-class-name: org.postgresql.Driver
+#      jdbcUrl: jdbc:postgresql://${slave_host}/users
+#      username: ${slave_name}
+#      password: ${slave_pwd}

@@ -80,6 +80,7 @@ public class BibotUserPublicService {
         }
     }
 
+    @Deprecated(since = "2023-06-09 이후로 삭제함. 분명 의도는 있었는데 기억이 안나고 중복코드임.")
     public Boolean verifyUserEmail(VerifyEmailReq req) {
         int verificationNum = Integer.parseInt(
                 redisUtils.getData(String.format(KEY_VERIFY, req.getEmail())));
