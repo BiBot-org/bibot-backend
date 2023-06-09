@@ -28,6 +28,12 @@ spring:
           - mail
           - jwt
 
+    gcp:
+      credentials:
+        location: ${GOOGLE_APPLICATION_CREDENTIALS}
+      storage:
+        enabled: true
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${host_name}/users

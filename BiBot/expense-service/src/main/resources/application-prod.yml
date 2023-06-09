@@ -28,7 +28,7 @@ spring:
 
 
 
-    datasource:
+  datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${host_name}/expense
     username: ${db_name}
