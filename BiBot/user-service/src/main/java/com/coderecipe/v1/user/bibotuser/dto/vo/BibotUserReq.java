@@ -51,7 +51,6 @@ public class BibotUserReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ChangeUserPassword {
-        private String password;
         private String newPassword;
     }
 }

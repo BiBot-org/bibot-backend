@@ -22,13 +22,13 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "notice")
+//@CacheConfig(cacheNames = "notice")
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
     @Override
-    @Cacheable(key ="#id")
+//    @Cacheable(key ="#id")
     public NoticeDTO getNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.NOTICE_NOT_FOUND));
@@ -52,7 +52,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Cacheable(key ="'notionMain'")
+//    @Cacheable(key ="'notionMain'")
     public List<NoticeDTO> getNoticeMain() {
         return noticeRepository.findTop5ByOrderByIdDesc()
                 .stream().map(NoticeDTO::of).toList();

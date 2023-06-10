@@ -16,6 +16,8 @@ public class ReceiptProducer {
 
     private static final String TOPIC_OCR_END = "ocr_end";
     private static final String TOPIC_OCR_START = "ocr_start";
+    private static final String TOPIC_OCR_FAIL = "ocr_fail";
+
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessageOcrStart(OcrReq.OcrStartReq request) {

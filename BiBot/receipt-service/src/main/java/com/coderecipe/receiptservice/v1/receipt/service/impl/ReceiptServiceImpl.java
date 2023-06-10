@@ -42,7 +42,7 @@ import java.util.Map;
 @Slf4j
 @PropertySource("classpath:application.yml")
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "receipt")
+//@CacheConfig(cacheNames = "receipt")
 public class ReceiptServiceImpl implements IReceiptService {
 
     private final SelectForm selectForm;
@@ -92,7 +92,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     }
 
     @Override
-    @Cacheable(key = "#receiptId")
+//    @Cacheable(key = "#receiptId")
     public BibotReceiptDTO getReceipt(String receiptId) {
         BibotReceipt receipt = bibotReceiptRepository.findById(receiptId)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

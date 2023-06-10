@@ -1,116 +1,105 @@
 version: "3.8"
 services:
-  database:
-    image: postgres:latest
-    container_name: code_recipe_db
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: code_recipe_redis
+    hostname: code_recipe_redis
+    labels:
+      - "name=redis"
+      - "mode=standalone"
     ports:
-      - "5432:5432"
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: "coderecipe_dev"
-    env_file:
-      - .env
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - "6379:6379"
     networks:
-      code_recipe:
-        aliases:
-          - "database"
-  keycloak:
-    image: jboss/keycloak
+      - code_recipe
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: code_recipe_zookeeper
     restart: always
-    environment:
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
     ports:
-      - "8080:8080"
+      - "2181:2181"
     networks:
       code_recipe:
         aliases:
-          - "keycloak"
-
-  configserver:
-    image: "junseokee/config-server:0.0.1-SNAPSHOT"
-    container_name: code_recipe_config_server
-    environment:
-      CONFIG_SERVER_ENCRYPT_KEY: ${CONFIG_SERVER_ENCRYPT_KEY}
-    env_file:
-      - .env
+          - "zookeeper"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: code_recipe_kafka
+    restart: always
     ports:
-      - "8071:8071"
-    networks:
-      code_recipe:
-        aliases:
-          - "configserver"
-
-  eurekaserver:
-    image: "junseokee/eureka-server:0.0.1-SNAPSHOT"
-    container_name: code_recipe_eureka_server
-    ports:
-      - "8761:8761"
+      - "9092:9092"
     environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: payment_success:1:1
+      KAFKA_LISTENERS: LISTENER_BOB://kafka:29092,LISTENER_FRED://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_BOB://kafka:29092,LISTENER_FRED://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_BOB:PLAINTEXT,LISTENER_FRED:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_BOB
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
+      - zookeeper
     networks:
       code_recipe:
         aliases:
-          - "eurekaserver"
-
-  gatewayserver:
-    image: "junseokee/gateway-server:0.0.1-SNAPSHOT"
-    container_name: code_recipe_gateway_server
+          - "kafka"
+  kafka-ui:
+    image: provectuslabs/kafka-ui:0.2.1
+    container_name: code_recipe_kafka_ui
     ports:
-      - "8000:8000"
+      - "8079:8080"
     environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
+      - KAFKA_CLUSTERS_0_NAME=localhost
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
     depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-      eurekaserver:
-        condition: service_started
+      - kafka
     networks:
       code_recipe:
         aliases:
-          - "gateway"
+          - "kafka-ui"
+
+  receiptservice:
+    image: "swj1265/receipt-service:0.0.1-SNAPSHOT"
+    container_name: code_recipe_receipt_service
+    ports:
+      - "8082:8082"
+    depends_on:
+      redis:
+        condition: service_started
+    networks:
+      - code_recipe
+
+  userservice:
+    image: "swj1265/user-service:0.0.1-SNAPSHOT"
+    container_name: code_recipe_user_service
+    ports:
+      - "8081:8081"
+    depends_on:
+      redis:
+        condition: service_started
 
   cardservice:
-    image: "junseokee/card-service:0.0.1-SNAPSHOT"
+    image: "swj1265/card-service:0.0.1-SNAPSHOT"
     container_name: code_recipe_card_service
-    environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
+    ports:
+      - "8084:8084"
     depends_on:
-      database:
-        condition: service_healthy
-      configserver:
+      redis:
         condition: service_started
     networks:
       - code_recipe
 
   expenseservice:
-    image: "junseokee/expense-service:0.0.1-SNAPSHOT"
+    image: "swj1265/expense-service:0.0.1-SNAPSHOT"
     container_name: code_recipe_expense_service
-    environment:
-      SPRING_PROFILE_ACTIVE: dev
-      CONFIG_SERVER_URL: http://configserver:8071
+    ports:
+      - "8083:8083"
     depends_on:
-      database:
-        condition: service_healthy
-      configserver:
+      redis:
         condition: service_started
     networks:
       - code_recipe

@@ -13,24 +13,30 @@ import com.coderecipe.v1.user.team.model.Team;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import java.io.IOException;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@CacheConfig(cacheNames = "user")
+//@CacheConfig(cacheNames = "user")
 public class BibotUserServiceImpl implements BibotUserService {
+    @Value("${keycloak.realm}")
+    private String realm;
+    @Value("${keycloak.resource}")
+    private String client;
     @Value("${gcp.bucketName}")
     private String bucketName;
     private final Storage storage;
@@ -38,56 +44,54 @@ public class BibotUserServiceImpl implements BibotUserService {
     private final Keycloak keycloak;
 
     @Override
-    @Cacheable(key = "#userId")
+//    @Cacheable(key = "#userId")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
-        System.out.println("서비스 들어왔습니다.");
+        log.info("서비스 들어왔습니다.");
 
         return BibotUserDTO.of(user);
     }
 
     @Override
     @Transactional
-    @Cacheable(key = "#userId + 'info'")
+//    @Cacheable(key = "#userId + 'info'")
     public BibotUserInfo getUserInfo(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
         Team team = user.getTeam();
         Department department = team.getDepartment();
-        System.out.println("서비스 들어왔습니다.");
+        log.info("서비스 들어왔습니다.");
         return BibotUserInfo.of(user, department, team);
     }
 
     @Override
-    @CacheEvict(key = "#userId + 'info'")
+//    @CacheEvict(key = "#userId + 'info'")
     public String addProfile(UUID userId, MultipartFile file) throws IOException {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
-            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
-
-        MultipartFile imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
-                file.getBytes());
+                .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
 
         String imagePath = String.format("USER_PROFILE/%s/%s", StringUtils.generateDateString(),
-            imageFile.getName());
+                file.getOriginalFilename());
         BlobId blobId = BlobId.of(bucketName, imagePath);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(imageFile.getContentType())
-            .build();
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType())
+                .build();
 
-        storage.create(blobInfo, imageFile.getBytes());
-        bibotUser.addProfile(imagePath);
+        storage.create(blobInfo, file.getBytes());
+        String storageUrl = StringUtils.generateCloudStorageUrl(bucketName, imagePath);
+        bibotUser.addProfile(storageUrl);
         bibotUserRepository.save(bibotUser);
 
         return StringUtils.generateCloudStorageUrl(bucketName, imagePath);
     }
 
     @Override
-    @CacheEvict(key = "#userId + 'info'")
+//    @CacheEvict(key = "#userId + 'info'")
     public String updateProfile(UUID userId, MultipartFile file) throws IOException {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
-            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
 
         MultipartFile imageFile = new MockMultipartFile(userId.toString(), userId + ".png", "image/png",
                 file.getBytes());
@@ -109,10 +113,10 @@ public class BibotUserServiceImpl implements BibotUserService {
         bibotUserRepository.save(bibotUser);
 
         String imagePath = String.format("USER_PROFILE/%s/%s", StringUtils.generateDateString(),
-            imageFile.getName());
+                imageFile.getName());
         blobId = BlobId.of(bucketName, imagePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(imageFile.getContentType())
-            .build();
+                .build();
 
         storage.create(blobInfo, imageFile.getBytes());
         bibotUser.updateProfile(imagePath);
@@ -121,11 +125,11 @@ public class BibotUserServiceImpl implements BibotUserService {
     }
 
     @Override
-    @CacheEvict(key = "#userId + 'info'")
+//    @CacheEvict(key = "#userId + 'info'")
     public String deleteProfile(UUID userId) {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
-            .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResCode.NOT_FOUND));
 
         if (bibotUser.getProfileUrl() == null) {
             throw new CustomException(ResCode.BAD_REQUEST);
@@ -146,7 +150,16 @@ public class BibotUserServiceImpl implements BibotUserService {
         return StringUtils.generateCloudStorageUrl(bucketName, profilePath);
     }
 
-    public boolean changePassword(String newPassword) {
-        return false;
+    public boolean changePassword(UUID userId, String newPassword) {
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setValue(newPassword);
+        credential.setTemporary(false);
+
+        RealmResource realmResource = keycloak.realm(realm);
+        UserResource userResource = realmResource.users().get(userId.toString());
+        userResource.resetPassword(credential);
+
+        return true;
     }
 }

@@ -30,10 +30,12 @@ public class OcrResult {
     @NoArgsConstructor
     public static class PaymentInfoRes {
         private String date;
+        private String time;
 
         public static PaymentInfoRes of(OCRtoJSONRes.PaymentInfo paymentInfo) {
             return new PaymentInfoRes(
-                    paymentInfo.getDate().getText()
+                    paymentInfo.getDate().getText(),
+                    paymentInfo.getTime().getText()
             );
         }
     }

@@ -20,13 +20,13 @@ import java.util.List;
 @Slf4j
 @Data
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "category")
+//@CacheConfig(cacheNames = "category")
 public class CategoryServiceImpl implements ICategoryService {
 
     private final ICategoryRepository iCategoryRepository;
 
     @Override
-    @Cacheable(key = "'all'")
+//    @Cacheable(key = "'all'")
     public List<CategoryDTO> getAllCategoryList() {
         return iCategoryRepository.findAllByOrderByIdAsc().stream().map(CategoryDTO::of).toList();
     }

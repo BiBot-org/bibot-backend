@@ -27,7 +27,7 @@ import java.time.LocalTime;
 @Data
 @RequiredArgsConstructor
 @Slf4j
-@CacheConfig(cacheNames = "payment")
+//@CacheConfig(cacheNames = "payment")
 public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
 
     private final IPaymentHistoryRepository iPaymentHistoryRepository;
@@ -35,7 +35,7 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     private final PaymentProducer paymentProducer;
 
     @Override
-    @Cacheable(key = "#id")
+//    @Cacheable(key = "#id")
     public PaymentHistoryDTO getPaymentHistory(String id) {
         PaymentHistory result = iPaymentHistoryRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

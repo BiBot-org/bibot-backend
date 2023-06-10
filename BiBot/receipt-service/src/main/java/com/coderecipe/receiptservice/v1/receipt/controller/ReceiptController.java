@@ -46,6 +46,7 @@ public class ReceiptController {
                                                               @RequestParam(name = "cardId") Long cardId,
                                                               @RequestParam(name = "categoryId") Long categoryId,
                                                               @RequestParam(name = "paymentId") String paymentId,
+
                                                               Principal principal) throws IOException {
         UUID userId = UUID.fromString(principal.getName());
         String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, userId), file);

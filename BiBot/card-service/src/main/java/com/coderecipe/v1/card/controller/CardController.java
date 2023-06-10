@@ -4,7 +4,6 @@ import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.card.dto.CardDTO;
 import com.coderecipe.v1.card.dto.vo.CardReq.*;
 import com.coderecipe.v1.card.dto.vo.CardRes.*;
-import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.service.ICardService;
 
 import java.security.Principal;
@@ -48,9 +47,9 @@ public class CardController {
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestParam(value = "id", defaultValue = "") Long cardId, Principal principal) {
+    public ResponseEntity<BaseRes<Long>> deleteCard(@RequestBody CardId cardId, Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
-        Long result = iCardService.deleteCard(cardId, userId);
+        Long result = iCardService.deleteCard(cardId.getId(), userId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
