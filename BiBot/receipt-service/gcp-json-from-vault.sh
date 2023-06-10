@@ -1,11 +1,10 @@
 # vault 쿠버네티스 로그인
 
-cd /var/run/secrets/kubernetes.io/serviceaccount
-export jwt_token=(cat token)
-cd
+export jwt_token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+
 curl --request POST \
          --data '{"jwt": "'$jwt_token'", "role": "app"}' \
-         http://34.64.72.125:8200/v1/auth/kubernetes/login > response.json
+         http://34.22.82.97:8200/v1/auth/kubernetes/login > response.json
 
 # vault gcp secret 요청
 gcp_credential=$(cat response.json | jq -r '.data')
