@@ -34,6 +34,7 @@ public class BibotUserPublicController {
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 
+    //비밀번호 초기화용
     @GetMapping("/verify/email")
     public ResponseEntity<BaseRes<String>> verifyUserByEmail(@RequestParam(value = "email", defaultValue = "") String email) {
         String res = bibotUserPublicService.sendUserVerification(email);
@@ -47,6 +48,7 @@ public class BibotUserPublicController {
     }
 
     @PostMapping("/verify/email")
+    @Deprecated(since = "2023-06-09 이후로 삭제. 의도는 있었는데 결국 중복코드 그 이상 그이하도 아님.")
     public ResponseEntity<BaseRes<Boolean>> verifyUserEmail(@RequestBody VerifyEmailReq req) {
         Boolean res = bibotUserPublicService.verifyUserEmail(req);
         return ResponseEntity.ok().body(BaseRes.success(res));

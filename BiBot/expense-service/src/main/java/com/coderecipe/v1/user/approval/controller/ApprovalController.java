@@ -38,7 +38,7 @@ public class ApprovalController {
             @RequestParam(name = "endDate", defaultValue = "") LocalDate endDate,
             @RequestParam(name = "status", defaultValue = "") ApprovalStatus status,
             @RequestParam(name = "categoryId", defaultValue = "") Long categoryId,
-            @PageableDefault(page = 6, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(page = 6, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
         ApprovalRes.SearchApprovalInfoRes res = iApprovalService.searchApprovalInfo(new ApprovalReq.SearchApprovalInfoReq(startDate, endDate, status, categoryId), pageable);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
@@ -52,6 +52,7 @@ public class ApprovalController {
     }
 
     @GetMapping("/status/all")
+    @Deprecated(since = "2023-06-09, 굳이 나눌 필요가 없음 ㅇㅇ 없으면 걍 분기처리 하면되지")
     public ResponseEntity<BaseRes<ApprovalRes.GetExpenseProcessingStatusByCategoryRes>> getAllExpenseProcessingStatus(Principal principal){
         UUID userId = UUID.fromString(principal.getName());
         ApprovalRes.GetExpenseProcessingStatusByCategoryRes res = iApprovalService.getAllExpenseProcessingStatus(userId);

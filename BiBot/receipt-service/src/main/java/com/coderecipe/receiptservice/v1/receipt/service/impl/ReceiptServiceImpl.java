@@ -46,10 +46,11 @@ import java.util.Map;
 public class ReceiptServiceImpl implements IReceiptService {
 
     private final SelectForm selectForm;
-    @Value("${ocr.api.secret}")
-    private  String apiSecret;
-    @Value("${ocr.api.url}")
-    private  String apiUrl;
+    @Value("${ocr-api-secret}")
+    private String apiSecret;
+    @Value("${ocr-api-url}")
+    private String apiUrl;
+
     private final ReceiptUtils receiptUtils;
     private final ReceiptProducer receiptProducer;
     private final BibotReceiptRepository bibotReceiptRepository;

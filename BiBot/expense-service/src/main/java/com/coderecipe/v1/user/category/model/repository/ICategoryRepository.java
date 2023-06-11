@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface ICategoryRepository extends JpaRepository<Category, Long> {
 
     boolean existsByCategoryName(String name);
+
+    List<Category> findAllByOrderByIdAsc();
     Optional<Category> findByIdAndIsDeletedNot(Long id, boolean isDeleted);
     List<Category> findAllByIsDeletedNot(boolean isDeleted);
 }

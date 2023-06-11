@@ -78,4 +78,19 @@ public class BibotUser extends BaseTimeEntity {
         this.profileUrl = req.getEmail();
         this.duty = req.getDuty();
     }
+
+    public BibotUser addProfile(String profileUrl) {
+        this.profileUrl = profileUrl;
+        return this;
+    }
+
+    public BibotUser updateProfile(String profileUrl) {
+        this.profileUrl = profileUrl;
+        return this;
+    }
+
+    public BibotUser deleteProfile() {
+        this.profileUrl = "";
+        return this;
+    }
 }
