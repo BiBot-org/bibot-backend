@@ -44,7 +44,7 @@ public class PaymentReq {
     @NoArgsConstructor
     public static class CreateMockReceiptReq extends MockPaymentReq {
 
-        private String cardName;
+//        private String cardName;
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;
@@ -86,5 +86,14 @@ public class PaymentReq {
         private LocalDate endDate;
         private Pageable pageable;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PaymentEndReq {
+        private String approvalId;
+        private String paymentId;
+    }
+
 
 }

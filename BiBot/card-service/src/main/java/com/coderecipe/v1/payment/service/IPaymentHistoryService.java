@@ -12,4 +12,5 @@ public interface IPaymentHistoryService {
     SearchPaymentHistoryInfoRes getAllPaymentHistoryByIsRequested(boolean isRequested, Pageable pageable);
     SearchPaymentHistoryRes searchPaymentHistory(SearchPaymentHistoryReq req);
     String addPayment(MockPaymentReq req);
+    String requestPaymentEnd(PaymentEndReq req);
 }

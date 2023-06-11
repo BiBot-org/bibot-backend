@@ -8,6 +8,7 @@ import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrRes;
 import com.coderecipe.receiptservice.v1.receipt.dto.BibotReceiptDTO;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
+import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq.paymentEndReq;
 import com.coderecipe.receiptservice.v1.receipt.model.BibotReceipt;
 import com.coderecipe.receiptservice.v1.receipt.model.repository.BibotReceiptRepository;
 import com.coderecipe.receiptservice.v1.receipt.producer.ReceiptProducer;
@@ -40,7 +41,6 @@ import java.util.Map;
 
 @Service
 @Slf4j
-@PropertySource("classpath:application.yml")
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "receipt")
 public class ReceiptServiceImpl implements IReceiptService {
@@ -50,6 +50,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     private String apiSecret;
     @Value("${ocr-api-url}")
     private String apiUrl;
+
     private final ReceiptUtils receiptUtils;
     private final ReceiptProducer receiptProducer;
     private final BibotReceiptRepository bibotReceiptRepository;
@@ -81,6 +82,7 @@ public class ReceiptServiceImpl implements IReceiptService {
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         receipt.setApproveId(req.getApprovalId());
         bibotReceiptRepository.save(receipt);
+        receiptProducer.sendMessagePaymentEnd(new ReceiptReq.paymentEndReq(receipt.getApproveId(), receipt.getPaymentId()));
         return receipt.getReceiptId();
     }
 
