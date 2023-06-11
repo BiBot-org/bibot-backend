@@ -43,6 +43,7 @@ public class ApprovalServiceImpl implements IApprovalService {
         LocalDate endDate = category.getEndDate();
         Approval approval = iApprovalRepository.findApprovalByReceiptId(req.getReceiptId())
                 .orElse(Approval.init(category, req.getUserId(), req.getTotalPrice(), req.getReceiptId()));
+        approval.updateComment("");
 
         int amountOfApprovals = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
                 startDate.atStartOfDay(), endDate.atStartOfDay(), req.getUserId(), category
@@ -70,7 +71,7 @@ public class ApprovalServiceImpl implements IApprovalService {
         Category category = iCategoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
 
-        Approval approval = Approval.init(category, req.getUserId(), req.getReceiptId());
+        Approval approval = Approval.init(category, req.getUserId(), req.getReceiptId(), req.getMessage());
         approval.updateApprovalStatus(ApprovalStatus.REJECTED);
         iApprovalRepository.save(approval);
         approvalProducer.sendMessageApproveEnd(new ApprovalRes.AutoApprovalRes(approval.getId(), req.getReceiptId()));

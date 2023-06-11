@@ -6,7 +6,6 @@ import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
-import com.coderecipe.v1.payment.dto.vo.PaymentReq;
 import com.coderecipe.v1.payment.dto.vo.PaymentReq.*;
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import com.coderecipe.v1.payment.model.PaymentHistory;
@@ -16,14 +15,12 @@ import com.coderecipe.v1.payment.service.IPaymentHistoryService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Data
@@ -45,10 +42,10 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     }
 
     @Override
-    public PaymentHistoryDTO getPaymentHistoryByApprovalId(String approvalId) {
+    public PaymentHistoryInfo getPaymentHistoryByApprovalId(String approvalId) {
         PaymentHistory result = iPaymentHistoryRepository.findPaymentHistoryByApprovalId(approvalId)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
-        return PaymentHistoryDTO.of(result);
+        return PaymentHistoryInfo.of(result);
     }
 
     @Override
@@ -74,25 +71,20 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
         PaymentHistory paymentHistory = PaymentHistory.of(req, card);
         paymentHistory.updatePaymentDate(req.getPaymentDate());
         paymentHistory.setId(StringUtils.generateDateTimeCode(StringUtils.CODE_PAYMENT));
+        paymentHistory.setRegTime(LocalDateTime.now());
         iPaymentHistoryRepository.save(paymentHistory);
-        paymentProducer.sendMessage(CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req));
+        paymentProducer.sendMessage(CreateMockReceiptReq.of(paymentHistory, card.getCardCompany(), req));
         return paymentHistory.getId();
     }
 
     @Override
-    @Transactional
-    public String requestPaymentEnd(PaymentEndReq req) {
+    public String updatePaymentFromApprovalUpdate(ApprovalEndPaymentReq req) {
         PaymentHistory paymentHistory = iPaymentHistoryRepository.findById(req.getPaymentId())
-            .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         paymentHistory.updateApprovalId(req.getApprovalId());
-
-        log.info(String.valueOf(paymentHistory));
-
+        paymentHistory.setRequested(true);
         iPaymentHistoryRepository.save(paymentHistory);
-
-        String cardCompany = paymentHistory.getCard().getCardCompany();
-        paymentProducer.sendMessage(new PaymentReq.CreateMockReceiptReq(paymentHistory.getApprovalId(), paymentHistory.getRegTime().toString(), cardCompany, paymentHistory.getAmount()));
-        return null;
+        return paymentHistory.getId();
     }
 
 }

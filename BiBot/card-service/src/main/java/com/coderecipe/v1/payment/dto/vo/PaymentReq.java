@@ -6,6 +6,7 @@ import com.coderecipe.global.utils.StringUtils;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.domain.Pageable;
@@ -43,21 +44,21 @@ public class PaymentReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CreateMockReceiptReq extends MockPaymentReq {
-
-//        private String cardName;
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;
         private Integer totalPrice;
+        private String regTime;
 
-        public static CreateMockReceiptReq of(String paymentCode, String paymentCardCompany,
+        public static CreateMockReceiptReq of(PaymentHistory paymentHistory, String paymentCardCompany,
                                               MockPaymentReq req) {
             CreateMockReceiptReq result = ModelMapperUtils.getModelMapper()
                     .map(req, CreateMockReceiptReq.class);
-            result.setPaymentCode(paymentCode);
+            result.setPaymentCode(paymentHistory.getId());
             result.setPaymentDateStr(req.getPaymentDate());
             result.setPaymentCardCompany(paymentCardCompany);
             result.setTotalPrice(req.getTotalPrice());
+            result.setRegTime(paymentHistory.getRegTime().toString());
             return result;
         }
     }
@@ -90,10 +91,9 @@ public class PaymentReq {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class PaymentEndReq {
+    public static class ApprovalEndPaymentReq {
         private String approvalId;
         private String paymentId;
     }
-
 
 }

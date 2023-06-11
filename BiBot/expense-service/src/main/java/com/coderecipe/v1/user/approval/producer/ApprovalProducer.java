@@ -14,13 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ApprovalProducer {
 
-    private static final String TOPIC_APPROVE_END = "approval_end";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessageApproveEnd(ApprovalRes.AutoApprovalRes res) {
         Message<KafkaPayload> message = MessageBuilder
                 .withPayload(KafkaPayload.of(EventCode.AUTO_APPROVAL_END, res))
-                .setHeader(KafkaHeaders.TOPIC, TOPIC_APPROVE_END)
+                .setHeader(KafkaHeaders.TOPIC, EventCode.AUTO_APPROVAL_END.getTopic())
                 .build();
         kafkaTemplate.send(message);
     }

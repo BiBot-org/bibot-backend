@@ -42,13 +42,7 @@ public class ReceiptController {
                                                               @RequestParam(name = "regTime") LocalDateTime regTime,
                                                               Principal principal) throws IOException {
         UUID userId = UUID.fromString(principal.getName());
-        String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, regTime, userId, null), file);
-        return ResponseEntity.ok().body(BaseRes.success(res));
-    }
-
-    @PostMapping("/test")
-    public ResponseEntity<BaseRes<String>> testApprovalStart(@RequestBody ReceiptReq.MockApprovalStartReq req) {
-        String res = ireceiptService.requestMockApprovalStart(req);
+        String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, regTime, userId), file);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 }

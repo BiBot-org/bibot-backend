@@ -89,11 +89,12 @@ public class Approval extends BaseTimeEntity {
                 .build();
     }
 
-    public static Approval init(Category category, UUID userId, String receiptId) {
+    public static Approval init(Category category, UUID userId, String receiptId, String message) {
         return Approval.builder()
                 .id(StringUtils.generateDateTimeCode(StringUtils.CODE_APPROVE))
                 .requesterId(userId)
                 .receiptId(receiptId)
+                .comment(message)
                 .category(category)
                 .build();
     }

@@ -15,17 +15,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReceiptProducer {
 
-    private static final String TOPIC_OCR_END = "ocr_end";
-    private static final String TOPIC_OCR_START = "ocr_start";
-    private static final String TOPIC_PAYMENT_END = "payment_end";
-    private static final String TOPIC_OCR_FAIL = "ocr_fail";
-
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessageOcrStart(OcrReq.OcrStartReq request) {
         Message<KafkaPayload> message = MessageBuilder
                 .withPayload(KafkaPayload.of(EventCode.OCR_START, request))
-                .setHeader(KafkaHeaders.TOPIC, TOPIC_OCR_START)
+                .setHeader(KafkaHeaders.TOPIC, EventCode.OCR_START.getTopic())
                 .build();
         kafkaTemplate.send(message);
     }
@@ -33,7 +28,7 @@ public class ReceiptProducer {
     public void sendMessageOcrEnd(OcrReq.RequestAutoApproval request) {
         Message<KafkaPayload> message = MessageBuilder
                 .withPayload(KafkaPayload.of(EventCode.OCR_END, request))
-                .setHeader(KafkaHeaders.TOPIC, TOPIC_OCR_END)
+                .setHeader(KafkaHeaders.TOPIC, EventCode.OCR_END.getTopic())
                 .build();
         kafkaTemplate.send(message);
     }
@@ -41,17 +36,16 @@ public class ReceiptProducer {
     public void sendMessageOcrFail(OcrReq.RequestApprovalFail request) {
         Message<KafkaPayload> message = MessageBuilder
                 .withPayload(KafkaPayload.of(EventCode.OCR_FAIL, request))
-                .setHeader(KafkaHeaders.TOPIC, TOPIC_OCR_FAIL)
+                .setHeader(KafkaHeaders.TOPIC, EventCode.OCR_FAIL.getTopic())
                 .build();
         kafkaTemplate.send(message);
     }
 
-    public void sendMessagePaymentEnd(ReceiptReq.paymentEndReq request) {
+    public void sendMessageApproveEndPayment(ReceiptReq.ApprovalEndPaymentReq request) {
         Message<KafkaPayload> message = MessageBuilder
-            .withPayload(KafkaPayload.of(EventCode.PAYMENT_END, request))
-            .setHeader(KafkaHeaders.TOPIC, TOPIC_PAYMENT_END)
-            .build();
+                .withPayload(KafkaPayload.of(EventCode.AUTO_APPROVAL_END_PAYMENT, request))
+                .setHeader(KafkaHeaders.TOPIC, EventCode.AUTO_APPROVAL_END_PAYMENT.getTopic())
+                .build();
         kafkaTemplate.send(message);
     }
-
 }

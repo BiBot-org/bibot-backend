@@ -11,14 +11,16 @@ import java.io.IOException;
 
 public interface IReceiptService {
     String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws IOException;
+
     String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile file) throws IOException;
+
     String requestApprovalEnd(ReceiptReq.ApprovalEndReq req);
 
-    String requestMockApprovalStart(ReceiptReq.MockApprovalStartReq req);
-
     BibotReceiptDTO getReceipt(String receiptId);
+
     BibotReceiptDTO getReceiptByApproveId(String approveId);
 
     boolean ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException;
+
     OcrRes.OCRResponse getOcrData(String imageUrl);
 }

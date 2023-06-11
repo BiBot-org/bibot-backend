@@ -36,7 +36,7 @@ public class ReceiptConsumer {
         OcrReq.OcrStartReq req = mapper.convertValue(message.getBody(), OcrReq.OcrStartReq.class);
         return receiptService.ocrStart(req);
     }
-    @KafkaListener(topics = "approval_end", groupId = "group-bibot", containerFactory = "concurrentListener")
+    @KafkaListener(topics = "approval_end_rcp", groupId = "group-bibot", containerFactory = "concurrentListener")
     public String autoApprovalEnd(KafkaPayload message) {
         ReceiptReq.ApprovalEndReq req = mapper.convertValue(message.getBody(), ReceiptReq.ApprovalEndReq.class);
         String result = receiptService.requestApprovalEnd(req);

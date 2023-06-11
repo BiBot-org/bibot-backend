@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentHistory extends BaseImmutableTimeEntity {
+public class PaymentHistory {
 
     @Id
     @Column(name = "id")
@@ -42,6 +42,9 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
 
     @Column(name = "is_requested")
     private boolean isRequested;
+
+    @Column(name = "reg_time")
+    private LocalDateTime regTime;
 
     public void updatePaymentDate(String paymentDate) {
         if (paymentDate.isEmpty()) {

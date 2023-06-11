@@ -14,13 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentProducer {
 
-    private static final String TOPIC = "payment_success";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessage(PaymentReq.CreateMockReceiptReq data) {
         Message<KafkaPayload> message = MessageBuilder
                 .withPayload(KafkaPayload.of(EventCode.PAYMENT_SUCCESS, data))
-                .setHeader(KafkaHeaders.TOPIC, TOPIC)
+                .setHeader(KafkaHeaders.TOPIC, EventCode.PAYMENT_SUCCESS.getTopic())
                 .build();
         kafkaTemplate.send(message);
     }

@@ -8,7 +8,6 @@ import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrRes;
 import com.coderecipe.receiptservice.v1.receipt.dto.BibotReceiptDTO;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
-import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq.paymentEndReq;
 import com.coderecipe.receiptservice.v1.receipt.model.BibotReceipt;
 import com.coderecipe.receiptservice.v1.receipt.model.repository.BibotReceiptRepository;
 import com.coderecipe.receiptservice.v1.receipt.producer.ReceiptProducer;
@@ -24,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +35,6 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -62,7 +59,8 @@ public class ReceiptServiceImpl implements IReceiptService {
     }
     @Override
     public String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile file) throws IOException {
-        String imagePath = String.format("OCR_REQUEST/%s/%s", StringUtils.generateDateString(), req.getPaymentId());
+        String originamFileName = file.getOriginalFilename().replace(" ", "");
+        String imagePath = String.format("OCR_REQUEST/%s/%s", StringUtils.generateDateString(), originamFileName);
         BlobId blobId = BlobId.of("bibot_receipt", imagePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                 .setContentType(file.getContentType()).build();
@@ -78,15 +76,9 @@ public class ReceiptServiceImpl implements IReceiptService {
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         receipt.setApproveId(req.getApprovalId());
         bibotReceiptRepository.save(receipt);
-        receiptProducer.sendMessagePaymentEnd(new ReceiptReq.paymentEndReq(receipt.getApproveId(), receipt.getPaymentId()));
+        receiptProducer.sendMessageApproveEndPayment(
+                new ReceiptReq.ApprovalEndPaymentReq(receipt.getApproveId(), receipt.getPaymentId()));
         return receipt.getReceiptId();
-    }
-
-    @Override
-    public String requestMockApprovalStart(ReceiptReq.MockApprovalStartReq req) {
-        receiptProducer.sendMessageOcrStart(new OcrReq.OcrStartReq(req.getCardId(), req.getCategoryId(),
-                req.getPaymentId(), req.getUserId(), LocalDateTime.now(), req.getImageUrl()));
-        return req.getImageUrl();
     }
 
     @Override
@@ -106,7 +98,9 @@ public class ReceiptServiceImpl implements IReceiptService {
 
     @Override
     public boolean ocrStart(OcrReq.OcrStartReq req) {
-        BibotReceipt receipt = BibotReceipt.of(req);
+        BibotReceipt receipt = bibotReceiptRepository.findBibotReceiptByPaymentId(req.getPaymentId())
+                        .orElse(BibotReceipt.of(req));
+        receipt.setImageUrl(req.getImageUrl());
         try {
             OcrRes.OCRResponse ocrResponse = getOcrData(req.getImageUrl());
             String ocrResDateTime = LocalDateTime.parse(

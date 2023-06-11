@@ -34,8 +34,8 @@ public class PaymentController {
     }
 
     @GetMapping("/approval")
-    public ResponseEntity<BaseRes<PaymentHistoryDTO>> getPaymentHistoryByApprovalId(@RequestParam(name="id", defaultValue = "") String approvalId) {
-        PaymentHistoryDTO result = iPaymentHistoryService.getPaymentHistoryByApprovalId(approvalId);
+    public ResponseEntity<BaseRes<PaymentRes.PaymentHistoryInfo>> getPaymentHistoryByApprovalId(@RequestParam(name="id", defaultValue = "") String approvalId) {
+        PaymentRes.PaymentHistoryInfo result = iPaymentHistoryService.getPaymentHistoryByApprovalId(approvalId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
