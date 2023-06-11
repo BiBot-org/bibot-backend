@@ -43,6 +43,13 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     }
 
     @Override
+    public PaymentHistoryDTO getPaymentHistoryByApprovalId(String approvalId) {
+        PaymentHistory result = iPaymentHistoryRepository.findPaymentHistoryByApprovalId(approvalId)
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        return PaymentHistoryDTO.of(result);
+    }
+
+    @Override
     public SearchPaymentHistoryInfoRes getAllPaymentHistoryByIsRequested(boolean isRequested, Pageable pageable) {
         Page<PaymentHistoryInfo> result = PaymentHistoryInfo.of(iPaymentHistoryRepository.findAllByIsRequested(isRequested, pageable));
         return SearchPaymentHistoryInfoRes.of(result);

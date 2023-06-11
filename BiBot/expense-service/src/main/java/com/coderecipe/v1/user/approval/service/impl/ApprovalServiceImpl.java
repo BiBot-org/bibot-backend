@@ -41,8 +41,8 @@ public class ApprovalServiceImpl implements IApprovalService {
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         LocalDate startDate = category.getStartDate();
         LocalDate endDate = category.getEndDate();
-
-        Approval approval = Approval.init(category, req.getUserId(), req.getTotalPrice(), req.getReceiptId());
+        Approval approval = iApprovalRepository.findApprovalByReceiptId(req.getReceiptId())
+                .orElse(Approval.init(category, req.getUserId(), req.getTotalPrice(), req.getReceiptId()));
 
         int amountOfApprovals = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
                 startDate.atStartOfDay(), endDate.atStartOfDay(), req.getUserId(), category
@@ -64,6 +64,19 @@ public class ApprovalServiceImpl implements IApprovalService {
         approvalProducer.sendMessageApproveEnd(new ApprovalRes.AutoApprovalRes(approval.getId(), req.getReceiptId()));
         return approval.getStatus();
     }
+
+    @Override
+    public ApprovalStatus autoApprovalFail(ApprovalReq.RequestApprovalFail req) {
+        Category category = iCategoryRepository.findById(req.getCategoryId())
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+
+        Approval approval = Approval.init(category, req.getUserId(), req.getReceiptId());
+        approval.updateApprovalStatus(ApprovalStatus.REJECTED);
+        iApprovalRepository.save(approval);
+        approvalProducer.sendMessageApproveEnd(new ApprovalRes.AutoApprovalRes(approval.getId(), req.getReceiptId()));
+        return ApprovalStatus.REJECTED;
+    }
+
     @Override
     public ApprovalRes.SearchApprovalInfoRes searchApprovalInfo(ApprovalReq.SearchApprovalInfoReq req, Pageable pageable) {
         Specification<Approval> spec = (root, query, cb) -> cb.isTrue(cb.literal((true)));
@@ -94,7 +107,7 @@ public class ApprovalServiceImpl implements IApprovalService {
     @Override
     public ApprovalRes.GetExpenseProcessingStatusByCategoryRes getExpenseProcessingstatusByCategory(UUID userId, Long categoryId) {
 
-        if(categoryId != null) {
+        if (categoryId != null) {
             Category category = iCategoryRepository.findById(categoryId)
                     .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
 
@@ -123,9 +136,9 @@ public class ApprovalServiceImpl implements IApprovalService {
         int limitation = categories.stream().mapToInt(Category::getLimitation).sum();
         int amountOfApprovals = categories.stream()
                 .mapToInt(category -> iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
-                    category.getStartDate().atStartOfDay(), category.getEndDate().atStartOfDay(), userId, category)
+                                category.getStartDate().atStartOfDay(), category.getEndDate().atStartOfDay(), userId, category)
                         .stream().filter(approval -> approval.getStatus() == ApprovalStatus.APPROVED).mapToInt(Approval::getAmount).sum()
-                    ).sum();
+                ).sum();
         return new ApprovalRes.GetExpenseProcessingStatusByCategoryRes(limitation, amountOfApprovals);
     }
 }

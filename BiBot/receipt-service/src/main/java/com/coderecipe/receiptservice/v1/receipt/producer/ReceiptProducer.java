@@ -36,4 +36,12 @@ public class ReceiptProducer {
         kafkaTemplate.send(message);
     }
 
+    public void sendMessageOcrFail(OcrReq.RequestApprovalFail request) {
+        Message<KafkaPayload> message = MessageBuilder
+                .withPayload(KafkaPayload.of(EventCode.OCR_FAIL, request))
+                .setHeader(KafkaHeaders.TOPIC, TOPIC_OCR_FAIL)
+                .build();
+        kafkaTemplate.send(message);
+    }
+
 }

@@ -11,9 +11,7 @@ import java.io.IOException;
 
 public interface IReceiptService {
     String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws IOException;
-
     String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile file) throws IOException;
-
     String requestApprovalEnd(ReceiptReq.ApprovalEndReq req);
 
     String requestMockApprovalStart(ReceiptReq.MockApprovalStartReq req);
@@ -21,7 +19,6 @@ public interface IReceiptService {
     BibotReceiptDTO getReceipt(String receiptId);
     BibotReceiptDTO getReceiptByApproveId(String approveId);
 
-    OcrRes.OcrEndResponse ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException;
-
+    boolean ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException;
     OcrRes.OCRResponse getOcrData(String imageUrl);
 }

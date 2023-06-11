@@ -17,7 +17,7 @@ public enum ResCode {
     DUPLICATE_TEAM_NAME(HttpStatus.BAD_REQUEST, "해당 팀 이름이 존재합니다.", "ERROR-BR-004"),
     DUPLICATE_RANK_NAME(HttpStatus.BAD_REQUEST, "해당 직급 이름이 존재합니다.", "ERROR-BR-005"),
     DUPLICATE_USER_EMAIL(HttpStatus.BAD_REQUEST, "해당 유저 이메일이 존재합니다.", "ERROR-BR-006"),
-
+    OCR_FAIL(HttpStatus.BAD_REQUEST, "OCR 이미지 데이터 처리에 실패했습니다.","ERROR-BR-007"),
     //UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다.", "ERROR-UA-000"),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "Token Expired", "ERROR-UA-001"),

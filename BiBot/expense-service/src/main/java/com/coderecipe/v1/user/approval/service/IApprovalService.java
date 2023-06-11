@@ -12,6 +12,9 @@ public interface IApprovalService {
 
 
     ApprovalStatus autoApproval(ApprovalReq.RequestAutoApproval req);
+
+    ApprovalStatus autoApprovalFail(ApprovalReq.RequestApprovalFail req);
+
     ApprovalRes.SearchApprovalInfoRes searchApprovalInfo(ApprovalReq.SearchApprovalInfoReq req, Pageable pageable);
 
     ApprovalDTO getApprovalInfo(String id);

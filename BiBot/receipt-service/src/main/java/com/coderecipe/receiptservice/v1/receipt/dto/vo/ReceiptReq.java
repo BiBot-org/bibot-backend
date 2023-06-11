@@ -1,8 +1,10 @@
 package com.coderecipe.receiptservice.v1.receipt.dto.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.annotation.Nullable;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +21,22 @@ public class ReceiptReq {
         private Long cardId;
         private Long categoryId;
         private String paymentId;
+        private LocalDateTime regTime;
         private UUID userId;
+        @Nullable
+        private String approvalId;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApprovalErrorReq {
+        private Long cardId;
+        private Long categoryId;
+        private String paymentId;
+        private LocalDateTime regTime;
+        private UUID userId;
+
     }
 
     @Data

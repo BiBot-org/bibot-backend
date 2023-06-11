@@ -9,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -22,13 +22,6 @@ import java.util.UUID;
 public class ReceiptController {
 
     private final IReceiptService ireceiptService;
-    private final SseEmitter emitter = new SseEmitter();
-
-    @GetMapping("/sse")
-    public SseEmitter getReceiptInfoEndPoint() {
-        return emitter;
-    }
-
     @GetMapping
     public ResponseEntity<BaseRes<BibotReceiptDTO>> getReceiptInfo(@RequestParam String id) {
         BibotReceiptDTO res = ireceiptService.getReceipt(id);
@@ -46,10 +39,10 @@ public class ReceiptController {
                                                               @RequestParam(name = "cardId") Long cardId,
                                                               @RequestParam(name = "categoryId") Long categoryId,
                                                               @RequestParam(name = "paymentId") String paymentId,
-
+                                                              @RequestParam(name = "regTime") LocalDateTime regTime,
                                                               Principal principal) throws IOException {
         UUID userId = UUID.fromString(principal.getName());
-        String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, userId), file);
+        String res = ireceiptService.requestApprovalStart(new ReceiptReq.ApprovalStartReq(cardId, categoryId, paymentId, regTime, userId, null), file);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 

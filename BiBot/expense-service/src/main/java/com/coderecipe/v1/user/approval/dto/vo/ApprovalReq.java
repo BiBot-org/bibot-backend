@@ -28,6 +28,17 @@ public class ApprovalReq {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class RequestApprovalFail {
+        private Long categoryId;
+        private String receiptId;
+        private Long cardId;
+        private UUID userId;
+        private String message;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class SearchApprovalInfoReq {
         private LocalDate startDate;
         private LocalDate endDate;

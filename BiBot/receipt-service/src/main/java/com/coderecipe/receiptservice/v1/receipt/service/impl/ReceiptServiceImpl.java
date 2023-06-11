@@ -14,7 +14,6 @@ import com.coderecipe.receiptservice.v1.receipt.producer.ReceiptProducer;
 import com.coderecipe.receiptservice.v1.receipt.receiptsform.worker.SelectForm;
 import com.coderecipe.receiptservice.v1.receipt.service.IReceiptService;
 import com.coderecipe.receiptservice.v1.receipt.utils.ReceiptUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -24,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +33,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -56,22 +56,18 @@ public class ReceiptServiceImpl implements IReceiptService {
     private final ObjectMapper mapper;
     private final Storage storage;
 
-
     public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws IOException {
         return selectForm.createReceiptImage(req);
     }
-
     @Override
-    public String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile imageFile) throws IOException {
+    public String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile file) throws IOException {
         String imagePath = String.format("OCR_REQUEST/%s/%s", StringUtils.generateDateString(), req.getPaymentId());
         BlobId blobId = BlobId.of("bibot_receipt", imagePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                .setContentType(imageFile.getContentType()).build();
-        log.info("image uploaded : " + storage.create(blobInfo, imageFile.getBytes()).toString());
-
+                .setContentType(file.getContentType()).build();
+        log.info("image uploaded : " + storage.create(blobInfo, file.getBytes()).toString());
         String storageUrl = StringUtils.generateCloudStorageUrl("bibot_receipt", imagePath);
-        receiptProducer.sendMessageOcrStart(new OcrReq.OcrStartReq(req.getCardId(), req.getCategoryId(),
-                req.getPaymentId(), req.getUserId(), storageUrl));
+        receiptProducer.sendMessageOcrStart(OcrReq.OcrStartReq.of(req, storageUrl));
         return storageUrl;
     }
 
@@ -87,7 +83,7 @@ public class ReceiptServiceImpl implements IReceiptService {
     @Override
     public String requestMockApprovalStart(ReceiptReq.MockApprovalStartReq req) {
         receiptProducer.sendMessageOcrStart(new OcrReq.OcrStartReq(req.getCardId(), req.getCategoryId(),
-                req.getPaymentId(), req.getUserId(), req.getImageUrl()));
+                req.getPaymentId(), req.getUserId(), LocalDateTime.now(), req.getImageUrl()));
         return req.getImageUrl();
     }
 
@@ -107,24 +103,39 @@ public class ReceiptServiceImpl implements IReceiptService {
     }
 
     @Override
-    public OcrRes.OcrEndResponse ocrStart(OcrReq.OcrStartReq req) throws JsonProcessingException {
+    public boolean ocrStart(OcrReq.OcrStartReq req) {
         BibotReceipt receipt = BibotReceipt.of(req);
+        try {
+            OcrRes.OCRResponse ocrResponse = getOcrData(req.getImageUrl());
+            String ocrResDateTime = LocalDateTime.parse(
+                    ocrResponse.getPaymentInfo().getDate() + ocrResponse.getPaymentInfo().getTime().replace(" ", ""))
+                    .format(DateTimeFormatter.ofPattern(StringUtils.DATE_TIME_FORMAT));
+            String regTimeStr = req.getRegTime().format(DateTimeFormatter.ofPattern(StringUtils.DATE_TIME_FORMAT));
+            if(regTimeStr.equals(ocrResDateTime)) {
+                Map res = mapper.convertValue(ocrResponse, Map.class);
+                receipt.setOcrResult(res);
+                log.info("OCR Result : " + res.toString());
+                bibotReceiptRepository.save(receipt);
+                OcrReq.RequestAutoApproval request = OcrReq.RequestAutoApproval.of(Integer.parseInt(ocrResponse.getTotalPrice()), receipt.getReceiptId(), req);
+                receiptProducer.sendMessageOcrEnd(request);
+                return true;
+            } else {
+                OcrReq.RequestApprovalFail request = OcrReq.RequestApprovalFail.of(req, "영수증의 날짜가 맞지 않습니다.", receipt.getReceiptId());
+                bibotReceiptRepository.save(receipt);
+                receiptProducer.sendMessageOcrFail(request);
+                return false;
+            }
 
-        OcrRes.OCRResponse ocrResponse = getOcrData(req.getImageUrl());
-        Map<String, Object> res = mapper.convertValue(ocrResponse, Map.class);
-        receipt.setOcrResult(res);
-        log.info("OCR Result : " + res.toString());
-        bibotReceiptRepository.save(receipt);
-        OcrReq.RequestAutoApproval request = new OcrReq.RequestAutoApproval(
-                Integer.parseInt(ocrResponse.getTotalPrice()),
-                req.getCategoryId(),
-                receipt.getReceiptId(),
-                req.getCardId(),
-                req.getUserId()
-        );
-        receiptProducer.sendMessageOcrEnd(request);
-        return new OcrRes.OcrEndResponse(ocrResponse, receipt.getReceiptId());
+        } catch (Exception e) {
+            String errorMsg = "OCR 인식에 실패하였습니다. 이미지를 확인 해 주세요.";
+            OcrReq.RequestApprovalFail request = OcrReq.RequestApprovalFail.of(req, errorMsg, receipt.getReceiptId());
+            bibotReceiptRepository.save(receipt);
+            receiptProducer.sendMessageOcrFail(request);
+            return false;
+        }
+
     }
+
 
     @Override
     public OcrRes.OCRResponse getOcrData(String imageUrl) {
@@ -166,12 +177,9 @@ public class ReceiptServiceImpl implements IReceiptService {
 
             jsonText = response.toString();
 
-            log.info("data : " + jsonText);
-
-        } catch (IOException e) {
+        } catch (IOException | JSONException e ) {
             log.error(e.toString());
-        } catch (JSONException e) {
-            log.error(e.toString());
+            throw new CustomException(ResCode.OCR_FAIL);
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -180,7 +188,7 @@ public class ReceiptServiceImpl implements IReceiptService {
                     Receipt.class);
             return OcrRes.OCRResponse.of(receipt.getResult());
         } else {
-            throw new CustomException(ResCode.BAD_REQUEST);
+            throw new CustomException(ResCode.OCR_FAIL);
         }
     }
 

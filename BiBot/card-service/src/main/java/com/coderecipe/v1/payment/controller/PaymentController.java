@@ -33,6 +33,12 @@ public class PaymentController {
         return ResponseEntity.ok().body(BaseRes.success(result));
     }
 
+    @GetMapping("/approval")
+    public ResponseEntity<BaseRes<PaymentHistoryDTO>> getPaymentHistoryByApprovalId(@RequestParam(name="id", defaultValue = "") String approvalId) {
+        PaymentHistoryDTO result = iPaymentHistoryService.getPaymentHistoryByApprovalId(approvalId);
+        return ResponseEntity.ok().body(BaseRes.success(result));
+    }
+
     @GetMapping("/requested/not")
     public ResponseEntity<BaseRes<PaymentRes.SearchPaymentHistoryInfoRes>> getAllPaymentHistoryIsRequestedNot(@PageableDefault(page = 5, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
         PaymentRes.SearchPaymentHistoryInfoRes res = iPaymentHistoryService.getAllPaymentHistoryByIsRequested(false, pageable);
@@ -47,10 +53,10 @@ public class PaymentController {
 
     @GetMapping("/search")
     public ResponseEntity<BaseRes<SearchPaymentHistoryRes>> searchPaymentHistory(
-            @RequestParam(name = "cardId", defaultValue = "", required = true) Long id,
+            @RequestParam(name = "cardId", defaultValue = "") Long id,
             @RequestParam(name = "startDate", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
             @RequestParam(name = "endDate", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate endDate,
-            @PageableDefault(size = 6, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "regTime", direction = Sort.Direction.DESC) Pageable pageable) {
         SearchPaymentHistoryRes result = iPaymentHistoryService.searchPaymentHistory(
                 new PaymentReq.SearchPaymentHistoryReq(id, startDate, endDate, pageable));
         return ResponseEntity.ok().body(BaseRes.success(result));

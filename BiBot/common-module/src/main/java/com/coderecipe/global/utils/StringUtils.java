@@ -13,7 +13,7 @@ public class StringUtils {
     public static final String CODE_APPROVE = "APR";
     public static final String CODE_RECEIPT = "CRP";
     public static final String CODE_PAYMENT = "PAY";
-    public static final String CODE_RECEIPT_IMAGE = "RCP";
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     private StringUtils() {
         throw new IllegalStateException("Utility class");

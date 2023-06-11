@@ -23,4 +23,11 @@ public class ApprovalConsumer {
         log.info(request.toString());
         approvalService.autoApproval(request);
     }
+
+    @KafkaListener(topics = "ocr_fail", groupId = "group-bibot", containerFactory = "concurrentListener")
+    public void autoApprovalFail(KafkaPayload message) {
+        ApprovalReq.RequestApprovalFail request = mapper.convertValue(message.getBody(), ApprovalReq.RequestApprovalFail.class);
+        log.error(String.format("auto approval fail (ocr error) : %s", request.toString()));
+        approvalService.autoApprovalFail(request);
+    }
 }

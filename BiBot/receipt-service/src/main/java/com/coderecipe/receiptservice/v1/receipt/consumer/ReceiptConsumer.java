@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -30,19 +32,16 @@ public class ReceiptConsumer {
     }
 
     @KafkaListener(topics = "ocr_start", groupId = "group-bibot", containerFactory = "concurrentListener")
-    public String ocrRequest(KafkaPayload message) throws JsonProcessingException {
+    public boolean ocrRequest(KafkaPayload message) throws JsonProcessingException {
         OcrReq.OcrStartReq req = mapper.convertValue(message.getBody(), OcrReq.OcrStartReq.class);
-        OcrRes.OcrEndResponse res = receiptService.ocrStart(req);
-        log.info(String.format("ocr success : %s", res.getReceiptId()));
-        return res.getReceiptId();
+        return receiptService.ocrStart(req);
     }
-
     @KafkaListener(topics = "approval_end", groupId = "group-bibot", containerFactory = "concurrentListener")
     public String autoApprovalEnd(KafkaPayload message) {
         ReceiptReq.ApprovalEndReq req = mapper.convertValue(message.getBody(), ReceiptReq.ApprovalEndReq.class);
         String result = receiptService.requestApprovalEnd(req);
         log.info(String.format("approval end : %s -> %s", result, req.getApprovalId()));
-        return null;
+        return result;
     }
 
 }
