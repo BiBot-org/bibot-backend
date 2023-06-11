@@ -1,5 +1,6 @@
 package com.coderecipe.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class CachingConfig {
 
+    private final ObjectMapper objectMapper;
     /**
      * Spring Boot 가 기본적으로 RedisCacheManager 를 자동 설정해줘서 RedisCacheConfiguration 없어도 사용 가능
      * Bean 을 새로 선언하면 직접 설정한 RedisCacheConfiguration 이 적용됨
@@ -37,7 +39,7 @@ public class CachingConfig {
                 RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
             )
             .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())
+                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
             );
     }
 
@@ -49,27 +51,18 @@ public class CachingConfig {
         return (builder) -> builder
             .withCacheConfiguration("cache1",
                 RedisCacheConfiguration.defaultCacheConfig()
-                    .computePrefixWith(cacheName -> "prefix::" + cacheName + "::")
-                    .entryTtl(Duration.ofSeconds(120))
+                    .computePrefixWith(cacheName -> "prefix" + cacheName + "::")
+                    .entryTtl(Duration.ofSeconds(600))
                     .disableCachingNullValues()
                     .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
                     )
                     .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())
+                        RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
                     ))
             .withCacheConfiguration("cache2",
                 RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofHours(2))
+                    .entryTtl(Duration.ofHours(600))
                     .disableCachingNullValues());
     }
-//    @Bean
-//    public CacheManager cacheManager() {
-//        ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
-//
-//        cacheManager.setAllowNullValues(false);
-//        cacheManager.setCacheNames(List.of("user","notice","category","receipt","payment","card"));
-//        return cacheManager;
-//    }
-
 }

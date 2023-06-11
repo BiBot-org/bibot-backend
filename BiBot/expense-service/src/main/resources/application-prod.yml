@@ -8,7 +8,7 @@ spring:
   cloud:
     vault:
       scheme: http
-      host: 34.64.72.125
+      host: 34.22.82.97
       port: 8200
       authentication: KUBERNETES
       kubernetes:
@@ -22,12 +22,9 @@ spring:
         profiles:
           - db
           - ocr
-          - redis
           - cloak
           - jwt
-
-
-
+          -
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${host_name}/expense

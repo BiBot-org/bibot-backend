@@ -6,6 +6,7 @@ import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq;
 import com.coderecipe.v1.payment.dto.vo.PaymentReq.*;
 import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
 import com.coderecipe.v1.payment.model.PaymentHistory;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Data
@@ -75,6 +77,22 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
         iPaymentHistoryRepository.save(paymentHistory);
         paymentProducer.sendMessage(CreateMockReceiptReq.of(paymentHistory.getId(), card.getCardCompany(), req));
         return paymentHistory.getId();
+    }
+
+    @Override
+    @Transactional
+    public String requestPaymentEnd(PaymentEndReq req) {
+        PaymentHistory paymentHistory = iPaymentHistoryRepository.findById(req.getPaymentId())
+            .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+        paymentHistory.updateApprovalId(req.getApprovalId());
+
+        log.info(String.valueOf(paymentHistory));
+
+        iPaymentHistoryRepository.save(paymentHistory);
+
+        String cardCompany = paymentHistory.getCard().getCardCompany();
+        paymentProducer.sendMessage(new PaymentReq.CreateMockReceiptReq(paymentHistory.getApprovalId(), paymentHistory.getRegTime().toString(), cardCompany, paymentHistory.getAmount()));
+        return null;
     }
 
 }

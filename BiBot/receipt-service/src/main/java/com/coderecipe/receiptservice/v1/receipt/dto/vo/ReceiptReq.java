@@ -47,6 +47,14 @@ public class ReceiptReq {
         private String receiptId;
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class paymentEndReq {
+        private String approvalId;
+        private String paymentId;
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @AllArgsConstructor
@@ -78,7 +86,7 @@ public class ReceiptReq {
     @NoArgsConstructor
     public static class CreateMockReceiptReq extends MockPaymentReq {
 
-        private String cardName;
+//        private String cardName;
         private String paymentCode;
         private String paymentDateStr;
         private String paymentCardCompany;

@@ -44,6 +44,7 @@ dependencies {
 
     implementation 'org.apache.pdfbox:pdfbox:2.0.26'
     implementation('org.apache.pdfbox:pdfbox-tools:2.0.27')
+
 }
 
 ext {

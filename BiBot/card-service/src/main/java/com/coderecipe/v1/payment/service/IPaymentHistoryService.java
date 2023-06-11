@@ -17,4 +17,5 @@ public interface IPaymentHistoryService {
     SearchPaymentHistoryRes searchPaymentHistory(SearchPaymentHistoryReq req);
 
     String addPayment(MockPaymentReq req);
+    String requestPaymentEnd(PaymentEndReq req);
 }

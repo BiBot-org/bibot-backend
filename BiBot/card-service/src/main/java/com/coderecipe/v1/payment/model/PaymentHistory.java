@@ -65,4 +65,8 @@ public class PaymentHistory extends BaseImmutableTimeEntity {
                 .isRequested(false)
                 .build();
     }
+
+    public void updateApprovalId(String id) {
+        this.approvalId = id;
+    }
 }
