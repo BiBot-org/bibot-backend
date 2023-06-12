@@ -90,6 +90,10 @@ keycloak:
   public-client: true
   cors: true
 
+gcp:
+  bucket:
+    name: bibot_user
+
 management:
   endpoints:
     web:
