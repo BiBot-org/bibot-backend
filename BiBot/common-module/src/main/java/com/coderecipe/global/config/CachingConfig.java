@@ -31,13 +31,12 @@ public class CachingConfig {
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return (builder) -> {
-            configureCache(builder, "notice", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer(objectMapper));
-            configureCache(builder, "user", Duration.ofHours(800), new GenericJackson2JsonRedisSerializer());
-            configureCache(builder, "receipt", Duration.ofHours(400), new GenericJackson2JsonRedisSerializer());
-            configureCache(builder, "approval", Duration.ofHours(400), new GenericJackson2JsonRedisSerializer());
-            configureCache(builder, "category", Duration.ofHours(400), new GenericJackson2JsonRedisSerializer());
-            configureCache(builder, "payment", Duration.ofHours(600), new GenericJackson2JsonRedisSerializer());
-            configureCache(builder, "card", Duration.ofHours(600), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "notice", Duration.ofSeconds(1200), new GenericJackson2JsonRedisSerializer(objectMapper));
+            configureCache(builder, "user", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "approval", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "category", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "payment", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "card", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
         };
     }
 
