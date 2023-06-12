@@ -24,11 +24,7 @@ public class BibotUserController {
 
     @GetMapping
     public ResponseEntity<BaseRes<BibotUserDTO>> getUser(@RequestParam(name = "id", defaultValue = "") UUID userId) {
-        log.info("getUser 메서드 실행");
-        long StartTime = System.currentTimeMillis();
         BibotUserDTO res = bibotUserService.getUser(userId);
-        long estimatedTime = System.currentTimeMillis() -StartTime;
-        log.info("getUser 메서드 종료, 소요시간 : " + estimatedTime);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
 

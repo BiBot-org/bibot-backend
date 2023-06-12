@@ -31,15 +31,13 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 @Slf4j
-//@CacheConfig(cacheNames = "card")
+@CacheConfig(cacheNames = "card")
 public class CardServiceImpl implements ICardService {
 
     private final ICardRepository iCardRepository;
     private final IPaymentHistoryRepository iPaymentHistoryRepository;
 
     @Override
-//    @CachePut(key = "#cardId")
-//    @CacheEvict(key = "#userId")
     public Long addCard(CreateCard req, UUID userId) {
         Card card = Card.of(req, userId);
         iCardRepository.save(card);
@@ -47,7 +45,7 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-//    @Cacheable(key = "#cardId")
+    @Cacheable(key = "#cardId")
     public CardDTO getCard(Long cardId) {
         Card card = iCardRepository.findById(cardId)
             .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
@@ -55,17 +53,12 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-//    @Cacheable(key = "#userId")
     public List<CardInfoRes> getAllCard(UUID userId) {
         return iCardRepository.findCardsByUserIdOrderById(userId)
                 .stream().map(CardInfoRes::of).toList();
     }
 
     @Override
-//    @Caching(evict = {
-//        @CacheEvict(key = "#cardId"),
-//        @CacheEvict(key = "#userId"),
-//    })
     public Long deleteCard(Long cardId, UUID userId) {
         Card card = iCardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
