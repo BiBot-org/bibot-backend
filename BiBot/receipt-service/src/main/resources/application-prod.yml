@@ -25,8 +25,6 @@ spring:
           - ocr
           - cloak
           - jwt
-
-
     gcp:
       credentials:
         location: ${GOOGLE_APPLICATION_CREDENTIALS}
@@ -55,14 +53,9 @@ spring:
 
   kafka:
     bootstrap-servers: ${kafka_url}
-
-
-
   output:
     ansi:
       enabled: always
-
-
   security:
     oauth2:
       resourceserver:
@@ -75,7 +68,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-
   data:
     redis:
       host: ${redis_host}
@@ -84,7 +76,6 @@ spring:
 gcp:
   bucket:
     name: bibot_receipt
-
 
 ocr-api-secret: ${ocr_token}
 

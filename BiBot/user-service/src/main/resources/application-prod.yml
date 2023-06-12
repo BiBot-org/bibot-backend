@@ -91,8 +91,7 @@ keycloak:
   cors: true
 
 gcp:
-  bucket:
-    name: bibot_user
+  bucketName: bibot-user
 
 management:
   endpoints:
