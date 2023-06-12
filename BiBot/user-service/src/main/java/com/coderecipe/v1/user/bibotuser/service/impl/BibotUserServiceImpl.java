@@ -20,6 +20,10 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +35,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-//@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "user")
 public class BibotUserServiceImpl implements BibotUserService {
     @Value("${keycloak.realm}")
     private String realm;
@@ -44,29 +48,27 @@ public class BibotUserServiceImpl implements BibotUserService {
     private final Keycloak keycloak;
 
     @Override
-//    @Cacheable(key = "#userId")
+    @Cacheable(key = "#userId")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
-        log.info("서비스 들어왔습니다.");
 
         return BibotUserDTO.of(user);
     }
 
     @Override
     @Transactional
-//    @Cacheable(key = "#userId + 'info'")
+    @Cacheable(key = "#userId + '::info'")
     public BibotUserInfo getUserInfo(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
         Team team = user.getTeam();
         Department department = team.getDepartment();
-        log.info("서비스 들어왔습니다.");
         return BibotUserInfo.of(user, department, team);
     }
 
     @Override
-//    @CacheEvict(key = "#userId + 'info'")
+    @CachePut(key = "#userId + '::info'")
     public String addProfile(UUID userId, MultipartFile file) throws IOException {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
@@ -87,7 +89,7 @@ public class BibotUserServiceImpl implements BibotUserService {
     }
 
     @Override
-//    @CacheEvict(key = "#userId + 'info'")
+    @CachePut(key = "#userId + '::info'")
     public String updateProfile(UUID userId, MultipartFile file) throws IOException {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
@@ -125,7 +127,7 @@ public class BibotUserServiceImpl implements BibotUserService {
     }
 
     @Override
-//    @CacheEvict(key = "#userId + 'info'")
+    @CacheEvict(key = "#userId + '::info'")
     public String deleteProfile(UUID userId) {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)

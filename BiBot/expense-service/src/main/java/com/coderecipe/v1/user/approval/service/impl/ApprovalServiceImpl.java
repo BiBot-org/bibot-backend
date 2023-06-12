@@ -16,6 +16,8 @@ import com.coderecipe.v1.user.category.model.repository.ICategoryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +31,7 @@ import java.util.UUID;
 @Data
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = "approval")
 public class ApprovalServiceImpl implements IApprovalService {
 
     private final IApprovalRepository iApprovalRepository;
@@ -99,6 +102,7 @@ public class ApprovalServiceImpl implements IApprovalService {
     }
 
     @Override
+    @Cacheable(key = "#id")
     public ApprovalDTO getApprovalInfo(String id) {
         Approval approval = iApprovalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

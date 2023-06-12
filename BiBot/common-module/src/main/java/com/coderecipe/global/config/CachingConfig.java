@@ -18,6 +18,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @EnableCaching
@@ -26,43 +27,28 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class CachingConfig {
 
     private final ObjectMapper objectMapper;
-    /**
-     * Spring Boot 가 기본적으로 RedisCacheManager 를 자동 설정해줘서 RedisCacheConfiguration 없어도 사용 가능
-     * Bean 을 새로 선언하면 직접 설정한 RedisCacheConfiguration 이 적용됨
-     */
-    @Bean
-    public RedisCacheConfiguration redisCacheConfiguration() {
-        return RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofSeconds(60))
-            .disableCachingNullValues()
-            .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
-            )
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
-            );
-    }
 
-    /**
-     * 여러 Redis Cache 에 관한 설정을 하고 싶다면 RedisCacheManagerBuilderCustomizer 를 사용할 수 있음
-     */
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-        return (builder) -> builder
-            .withCacheConfiguration("cache1",
-                RedisCacheConfiguration.defaultCacheConfig()
-                    .computePrefixWith(cacheName -> "prefix" + cacheName + "::")
-                    .entryTtl(Duration.ofSeconds(600))
-                    .disableCachingNullValues()
-                    .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
-                    )
-                    .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
-                    ))
-            .withCacheConfiguration("cache2",
-                RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofHours(600))
-                    .disableCachingNullValues());
+        return (builder) -> {
+            configureCache(builder, "notice", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer(objectMapper));
+            configureCache(builder, "user", Duration.ofHours(800), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "receipt", Duration.ofHours(400), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "approval", Duration.ofHours(400), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "category", Duration.ofHours(400), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "payment", Duration.ofHours(600), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "card", Duration.ofHours(600), new GenericJackson2JsonRedisSerializer());
+        };
+    }
+
+    private void configureCache(RedisCacheManager.RedisCacheManagerBuilder builder, String cacheName, Duration ttl, RedisSerializer<Object> valueSerializer) {
+        RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
+            .computePrefixWith(cacheNameStr -> cacheNameStr + "::")
+            .entryTtl(ttl)
+            .disableCachingNullValues()
+            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer));
+
+        builder.withCacheConfiguration(cacheName, configuration);
     }
 }
