@@ -17,14 +17,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "notice")
 public class NoticeAdminServiceImpl implements NoticeAdminService {
 
     private final NoticeRepository noticeRepository;
     private final BibotUserRepository bibotUserRepository;
 
     @Override
-    @CacheEvict(key = "'notionMain'")
     public Long createNotice(NoticeReq.CreateNoticeReq req, UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -35,7 +33,6 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     }
 
     @Override
-    @CacheEvict(key = "'notionMain'")
     public Long updateNotice(NoticeReq.UpdateNoticeReq req, UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -48,7 +45,6 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     }
 
     @Override
-    @CacheEvict(key = "'notionMain'")
     public Long deleteNotice(Long id) {
         noticeRepository.deleteById(id);
         return id;

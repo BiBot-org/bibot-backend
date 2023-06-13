@@ -31,7 +31,8 @@ public class CachingConfig {
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return (builder) -> {
-            configureCache(builder, "notice", Duration.ofSeconds(1200), new GenericJackson2JsonRedisSerializer(objectMapper));
+            configureCache(builder, "notice", Duration.ofSeconds(1200), new GenericJackson2JsonRedisSerializer());
+            configureCache(builder, "noticeMain", Duration.ofSeconds(1200), new GenericJackson2JsonRedisSerializer(objectMapper));
             configureCache(builder, "user", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
             configureCache(builder, "approval", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
             configureCache(builder, "category", Duration.ofSeconds(600), new GenericJackson2JsonRedisSerializer());
