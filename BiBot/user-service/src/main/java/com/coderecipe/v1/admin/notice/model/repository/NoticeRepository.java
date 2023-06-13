@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long>, JpaSpecificationExecutor<Notice> {
-    List<Notice> findTop5ByOrderByIdDesc();
+    List<Notice> findTop3ByOrderByIdDesc();
 
     Page<Notice> findAll(Specification<Notice> spec, Pageable pageable);
 }

@@ -68,6 +68,14 @@ public class Approval extends BaseTimeEntity {
         this.comment = comment;
     }
 
+    public void updateAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void updateIsAutomated(boolean isAutomated) {
+        this.isAutomated = isAutomated;
+    }
+
     public static Approval of(ApprovalDTO dto) {
         return Approval.builder()
                 .id(dto.getId())

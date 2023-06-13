@@ -47,6 +47,7 @@ public class ApprovalServiceImpl implements IApprovalService {
         Approval approval = iApprovalRepository.findApprovalByReceiptId(req.getReceiptId())
                 .orElse(Approval.init(category, req.getUserId(), req.getTotalPrice(), req.getReceiptId()));
         approval.updateComment("");
+        approval.updateAmount(req.getTotalPrice());
 
         int amountOfApprovals = iApprovalRepository.findApprovalsByRegTimeBetweenAndRequesterIdAndCategory(
                 startDate.atStartOfDay(), endDate.atStartOfDay(), req.getUserId(), category
@@ -60,6 +61,7 @@ public class ApprovalServiceImpl implements IApprovalService {
             } else {
                 approval.updateComment("자동 결재");
                 approval.updateApprovalStatus(ApprovalStatus.APPROVED);
+                approval.updateIsAutomated(true);
             }
         }
         log.info(String.format("Auto Approval end : %s -> %s", approval.getId(), approval.getStatus()));
