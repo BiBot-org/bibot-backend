@@ -24,7 +24,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     private final BibotUserRepository bibotUserRepository;
 
     @Override
-    @CacheEvict(key = "'notionMain'")
+    @CacheEvict(key = "'noticeMain'")
     public Long createNotice(NoticeReq.CreateNoticeReq req, UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -35,7 +35,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     }
 
     @Override
-    @CacheEvict(key = "'notionMain'")
+    @CacheEvict(key = "'noticeMain'")
     public Long updateNotice(NoticeReq.UpdateNoticeReq req, UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -48,7 +48,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
     }
 
     @Override
-    @CacheEvict(key = "'notionMain'")
+    @CacheEvict(key = "'noticeMain'")
     public Long deleteNotice(Long id) {
         noticeRepository.deleteById(id);
         return id;
