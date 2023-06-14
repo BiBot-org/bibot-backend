@@ -1,15 +1,14 @@
 package com.coderecipe.receiptservice.v1.clovaocr.dto.vo;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.UUID;
-
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class OcrReq {
@@ -39,7 +38,7 @@ public class OcrReq {
         private LocalDateTime regTime;
         private String imageUrl;
 
-        public static OcrStartReq of (ReceiptReq.ApprovalStartReq req, String imageUrl) {
+        public static OcrStartReq of(ReceiptReq.ApprovalStartReq req, String imageUrl) {
             return OcrStartReq.builder()
                     .cardId(req.getCardId())
                     .categoryId(req.getCategoryId())
@@ -50,6 +49,7 @@ public class OcrReq {
                     .build();
         }
     }
+
     @Data
     @Builder
     @AllArgsConstructor
@@ -61,7 +61,7 @@ public class OcrReq {
         private Long cardId;
         private UUID userId;
 
-        public static RequestAutoApproval of (int totalPrice, String receiptId, OcrStartReq req) {
+        public static RequestAutoApproval of(int totalPrice, String receiptId, OcrStartReq req) {
             return RequestAutoApproval.builder()
                     .totalPrice(totalPrice)
                     .categoryId(req.getCategoryId())
@@ -83,7 +83,7 @@ public class OcrReq {
         private UUID userId;
         private String message;
 
-        public static RequestApprovalFail of (OcrStartReq req, String message, String receiptId) {
+        public static RequestApprovalFail of(OcrStartReq req, String message, String receiptId) {
             return RequestApprovalFail.builder()
                     .categoryId(req.getCategoryId())
                     .receiptId(receiptId)

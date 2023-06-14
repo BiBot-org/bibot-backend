@@ -33,11 +33,7 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -54,14 +50,14 @@ import java.util.UUID;
 @CacheConfig(cacheNames = "user")
 public class UserAdminServiceImpl implements IUserAdminService {
 
-    @Value("${keycloak.realm}")
-    private String realm;
-    @Value("${keycloak.resource}")
-    private String client;
     private final BibotUserRepository bibotUserRepository;
     private final TeamRepository teamRepository;
     private final Keycloak keycloak;
     private final EmailService emailService;
+    @Value("${keycloak.realm}")
+    private String realm;
+    @Value("${keycloak.resource}")
+    private String client;
 
     @Override
     public CreateUserRes createUser(CreateUserReq req) throws CustomException, NoSuchAlgorithmException {
@@ -126,7 +122,7 @@ public class UserAdminServiceImpl implements IUserAdminService {
     }
 
     @Override
-    @Cacheable(key = "#userId")
+    @Cacheable(key = "#userId", unless = "#result == null")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -134,14 +130,14 @@ public class UserAdminServiceImpl implements IUserAdminService {
     }
 
     @Override
-    @Cacheable(key = "'admin'" )
+    @Cacheable(key = "'admin'", unless = "#result == null")
     public List<GetAdminInfo> getAdminInfoList() {
         return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.ADMIN, UserRole.SUPER_ADMIN))
                 .stream().map(GetAdminInfo::of).toList();
     }
 
     @Override
-    @CachePut(key = "#req.userId + 'info'")
+    @CachePut(key = "#req.userId + 'info'", unless = "#result == null")
     public UUID updateUserInfo(UpdateUserReq req) {
 
         BibotUser user = bibotUserRepository.findById(req.getId())
@@ -173,9 +169,9 @@ public class UserAdminServiceImpl implements IUserAdminService {
     @Override
     @Transactional
     @Caching(evict = {
-        @CacheEvict(key = "#req.userId + 'info'"),
-        @CacheEvict(key = "#userId"),
-        @CacheEvict(key = "'admin'")
+            @CacheEvict(key = "#req.userId + 'info'"),
+            @CacheEvict(key = "#userId"),
+            @CacheEvict(key = "'admin'")
     })
     public UUID changeUserRole(ChangeUserRole req) {
 
@@ -204,9 +200,9 @@ public class UserAdminServiceImpl implements IUserAdminService {
 
     @Override
     @Caching(evict = {
-        @CacheEvict(key = "#req.userId + 'info'"),
-        @CacheEvict(key = "#userId"),
-        @CacheEvict(key = "'admin'")
+            @CacheEvict(key = "#req.userId + 'info'"),
+            @CacheEvict(key = "#userId"),
+            @CacheEvict(key = "'admin'")
     })
     public UUID deleteUser(UUID userId) {
 

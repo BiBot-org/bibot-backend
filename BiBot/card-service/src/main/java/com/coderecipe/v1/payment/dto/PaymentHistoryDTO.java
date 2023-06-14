@@ -1,6 +1,5 @@
 package com.coderecipe.v1.payment.dto;
 
-import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.v1.payment.model.PaymentHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

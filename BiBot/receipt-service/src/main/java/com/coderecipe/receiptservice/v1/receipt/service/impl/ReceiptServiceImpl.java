@@ -23,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,20 +42,20 @@ import java.util.Map;
 public class ReceiptServiceImpl implements IReceiptService {
 
     private final SelectForm selectForm;
-    @Value("${ocr-api-secret}")
-    private String apiSecret;
-    @Value("${ocr-api-url}")
-    private String apiUrl;
-
     private final ReceiptUtils receiptUtils;
     private final ReceiptProducer receiptProducer;
     private final BibotReceiptRepository bibotReceiptRepository;
     private final ObjectMapper mapper;
     private final Storage storage;
+    @Value("${ocr-api-secret}")
+    private String apiSecret;
+    @Value("${ocr-api-url}")
+    private String apiUrl;
 
     public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws IOException {
         return selectForm.createReceiptImage(req);
     }
+
     @Override
     public String requestApprovalStart(ReceiptReq.ApprovalStartReq req, MultipartFile file) throws IOException {
         String originamFileName = file.getOriginalFilename().replace(" ", "");
@@ -99,15 +97,15 @@ public class ReceiptServiceImpl implements IReceiptService {
     @Override
     public boolean ocrStart(OcrReq.OcrStartReq req) {
         BibotReceipt receipt = bibotReceiptRepository.findBibotReceiptByPaymentId(req.getPaymentId())
-                        .orElse(BibotReceipt.of(req));
+                .orElse(BibotReceipt.of(req));
         receipt.setImageUrl(req.getImageUrl());
         try {
             OcrRes.OCRResponse ocrResponse = getOcrData(req.getImageUrl());
             String ocrResDateTime = LocalDateTime.parse(
-                    ocrResponse.getPaymentInfo().getDate() + ocrResponse.getPaymentInfo().getTime().replace(" ", ""))
+                            ocrResponse.getPaymentInfo().getDate() + ocrResponse.getPaymentInfo().getTime().replace(" ", ""))
                     .format(DateTimeFormatter.ofPattern(StringUtils.DATE_TIME_FORMAT));
             String regTimeStr = req.getRegTime().format(DateTimeFormatter.ofPattern(StringUtils.DATE_TIME_FORMAT));
-            if(regTimeStr.equals(ocrResDateTime)) {
+            if (regTimeStr.equals(ocrResDateTime)) {
                 Map res = mapper.convertValue(ocrResponse, Map.class);
                 receipt.setOcrResult(res);
                 log.info("OCR Result : " + res.toString());
@@ -173,7 +171,7 @@ public class ReceiptServiceImpl implements IReceiptService {
 
             jsonText = response.toString();
 
-        } catch (IOException | JSONException e ) {
+        } catch (IOException | JSONException e) {
             log.error(e.toString());
             throw new CustomException(ResCode.OCR_FAIL);
         }

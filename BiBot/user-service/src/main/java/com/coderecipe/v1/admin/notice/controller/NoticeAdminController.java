@@ -33,6 +33,7 @@ public class NoticeAdminController {
     }
 
     @Operation(summary = "공지사항 업데이트", description = "공지사항 업데이트 API 입니다.")
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
     @PutMapping
     public ResponseEntity<BaseRes<Long>> updateNotice(@RequestBody UpdateNoticeReq req, Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
@@ -41,6 +42,7 @@ public class NoticeAdminController {
     }
 
     @Operation(summary = "공지사항 삭제", description = "공지사항 삭제 API 입니다.")
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
     @DeleteMapping
     public ResponseEntity<BaseRes<Long>> deleteNotice(@RequestParam(name = "id", defaultValue = "") Long id) {
         Long result = noticeAdminService.deleteNotice(id);

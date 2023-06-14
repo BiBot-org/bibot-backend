@@ -14,7 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -31,7 +34,7 @@ public class ApprovalController {
 
     @Operation(summary = "경비 요청 내역 단건 조회", description = "경비 요청 내역 단건 조회 API 입니다.")
     @GetMapping
-    public ResponseEntity<BaseRes<ApprovalDTO>> getApprovalInfo(@RequestParam(name = "id", defaultValue = "")String id){
+    public ResponseEntity<BaseRes<ApprovalDTO>> getApprovalInfo(@RequestParam(name = "id", defaultValue = "") String id) {
         ApprovalDTO res = iApprovalService.getApprovalInfo(id);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
@@ -60,7 +63,7 @@ public class ApprovalController {
     @Operation(summary = "경비 요청 현황 조회")
     @GetMapping("/status/all")
     @Deprecated(since = "2023-06-09, 굳이 나눌 필요가 없어서 곧 삭제 예정")
-    public ResponseEntity<BaseRes<ApprovalRes.GetExpenseProcessingStatusByCategoryRes>> getAllExpenseProcessingStatus(Principal principal){
+    public ResponseEntity<BaseRes<ApprovalRes.GetExpenseProcessingStatusByCategoryRes>> getAllExpenseProcessingStatus(Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
         ApprovalRes.GetExpenseProcessingStatusByCategoryRes res = iApprovalService.getAllExpenseProcessingStatus(userId);
         return ResponseEntity.ok().body(BaseRes.success(res));

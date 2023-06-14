@@ -3,6 +3,7 @@ package com.coderecipe.v1.admin.category.init.controller;
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.category.init.service.CategoryInitAdminService;
 import com.coderecipe.v1.admin.category.init.vo.CategoryInitReq;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ public class CategoryInitAdminController {
 
     private final CategoryInitAdminService categoryInitAdminService;
 
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
     @PostMapping
     public ResponseEntity<BaseRes<Boolean>> addCategoryInit(@RequestBody CategoryInitReq.AddCategoryInit req) {
         Boolean res = categoryInitAdminService.initCategory(req);

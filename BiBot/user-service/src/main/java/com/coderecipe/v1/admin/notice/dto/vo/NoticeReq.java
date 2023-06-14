@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 public class NoticeReq {
-    private NoticeReq () {
+    private NoticeReq() {
         throw new IllegalStateException("VO class");
     }
 

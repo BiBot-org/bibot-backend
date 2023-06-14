@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.ClientResource;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.RoleResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -35,14 +34,14 @@ import java.util.UUID;
 @Slf4j
 public class InitAdminServiceImpl implements InitAdminService {
 
-    @Value("${keycloak.realm}")
-    private String realm;
-    @Value("${keycloak.resource}")
-    private String client;
     private final BibotUserRepository bibotUserRepository;
     private final Keycloak keycloak;
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
+    @Value("${keycloak.realm}")
+    private String realm;
+    @Value("${keycloak.resource}")
+    private String client;
 
     @PostConstruct
     public void initialize() {

@@ -11,11 +11,12 @@ import com.coderecipe.v1.user.department.model.repository.DepartmentRepository;
 import com.coderecipe.v1.user.team.dto.TeamDTO;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.team.model.repository.TeamRepository;
-import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Data
@@ -25,6 +26,7 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
 
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
+
     @Override
     public Long addDepartment(AddDepartmentReq req) {
         if (departmentRepository.existsByName(req.getName())) {
@@ -55,7 +57,7 @@ public class DepartAdminServiceImpl implements IDepartmentAdminService {
 
     @Override
     public Long updateDepartment(DepartmentDTO req) {
-        if(departmentRepository.existsByName(req.getName())) {
+        if (departmentRepository.existsByName(req.getName())) {
             throw new CustomException(ResCode.DUPLICATE_DEPARTMENT_NAME);
         } else {
             Department department = departmentRepository.findById(req.getId())

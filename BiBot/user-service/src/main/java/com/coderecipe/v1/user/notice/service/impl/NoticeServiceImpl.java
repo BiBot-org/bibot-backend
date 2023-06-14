@@ -7,7 +7,7 @@ import com.coderecipe.v1.admin.notice.enums.NoticeType;
 import com.coderecipe.v1.admin.notice.model.Notice;
 import com.coderecipe.v1.admin.notice.model.repository.NoticeRepository;
 import com.coderecipe.v1.admin.notice.model.repository.NoticeSpecification;
-import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
+import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.SearchNoticeRes;
 import com.coderecipe.v1.user.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,7 +26,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
 
     @Override
-    @Cacheable(cacheNames="notice", key ="#id")
+    @Cacheable(cacheNames = "notice", key = "#id", unless = "#result == null")
     public NoticeDTO getNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.NOTICE_NOT_FOUND));
@@ -50,7 +50,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Cacheable(cacheNames="noticeMain", key ="'noticeMain'")
+    @Cacheable(cacheNames = "noticeMain", key = "'noticeMain'", unless = "#result == null")
     public List<NoticeDTO> getNoticeMain() {
         return noticeRepository.findTop3ByOrderByIdDesc()
                 .stream().map(NoticeDTO::of).toList();

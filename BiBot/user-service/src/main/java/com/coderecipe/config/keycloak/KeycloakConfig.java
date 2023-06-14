@@ -27,6 +27,7 @@ public class KeycloakConfig {
     public KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
     }
+
     @Bean
     public Keycloak keycloak() {
 

@@ -2,7 +2,7 @@ package com.coderecipe.v1.open.user.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.open.user.service.BibotUserPublicService;
-import com.coderecipe.v1.open.user.vo.UserReq.*;
+import com.coderecipe.v1.open.user.vo.UserReq.VerifyEmailReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +54,7 @@ public class BibotUserPublicController {
         Boolean res = bibotUserPublicService.verifyEmail(req);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
+
     @Operation(summary = "이메일 검증 API")
     @PostMapping("/verify/email")
     @Deprecated(since = "2023-06-14 이후로 삭제. 의도는 있었는데 결국 중복코드 그 이상 그이하도 아님.")

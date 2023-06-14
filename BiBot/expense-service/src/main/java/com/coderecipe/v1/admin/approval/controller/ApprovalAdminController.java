@@ -9,6 +9,7 @@ import com.coderecipe.v1.user.approval.dto.vo.ApprovalRes;
 import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,6 +31,7 @@ public class ApprovalAdminController {
     private final ApprovalAdminService approvalAdminService;
 
     @Operation(summary = "경비 요청 내역 썸네일", description = "어드민 페이지에서 경비 요청내역 썸네일 페이지 출력에 사용되는 API 입니다.")
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
     @GetMapping("/thumbnail")
     public ResponseEntity<BaseRes<List<ApprovalRes.ApprovalInfo>>> getApprovalThumbnailList() {
         List<ApprovalRes.ApprovalInfo> result = approvalAdminService.getApprovalThumbnail();
@@ -37,8 +39,9 @@ public class ApprovalAdminController {
     }
 
     @Operation(summary = "경비 요청 내역 검색", description = "경비 요청 내역 검색 API 입니다. 검색 조건으로는 날짜, 상태, 경비 카테고리, 페이지 번호가 있습니다.")
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
     @GetMapping("/search")
-    public ResponseEntity<BaseRes<ApprovalAdminRes.SearchAdminApprovalRes >> searchApproval(
+    public ResponseEntity<BaseRes<ApprovalAdminRes.SearchAdminApprovalRes>> searchApproval(
             @RequestParam(name = "startDate", defaultValue = "") LocalDate startDate,
             @RequestParam(name = "endDate", defaultValue = "") LocalDate endDate,
             @RequestParam(name = "status", defaultValue = "") ApprovalStatus status,
@@ -49,6 +52,7 @@ public class ApprovalAdminController {
     }
 
     @Operation(summary = "경비 요청 처리", description = "자동 결재 처리가 되지 않은 (자동 결재 한도 초과) 처리 요청을 처리해주는 API 입니다.")
+    @RolesAllowed({"SUPER_ADMIN", "ADMIN"})
     @PutMapping
     public ResponseEntity<BaseRes<String>> approveExpense(@RequestBody ApprovalAdminReq.RequestApproval req, Principal principal) {
         UUID userId = UUID.fromString(principal.getName());

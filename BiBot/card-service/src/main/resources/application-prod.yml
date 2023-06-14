@@ -59,17 +59,21 @@ spring:
         jwt:
           jwk-set-uri: ${jwk_uri}
           issuer-uri: ${iss_uri}
-
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
   data:
     redis:
       host: ${redis_host}
       port: ${redis_port}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
+jwt:
+  auth:
+    converter:
+      resource-id: bibot
+      principal-attribute: preferred_username
 
 #  datasource:
 #    write:

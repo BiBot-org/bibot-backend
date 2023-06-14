@@ -2,7 +2,6 @@ package com.coderecipe.receiptservice.v1.receipt.consumer;
 
 import com.coderecipe.global.constant.dto.KafkaPayload;
 import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrReq;
-import com.coderecipe.receiptservice.v1.clovaocr.dto.vo.OcrRes;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq.CreateMockReceiptReq;
 import com.coderecipe.receiptservice.v1.receipt.service.IReceiptService;
@@ -12,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 @Slf4j
@@ -36,6 +33,7 @@ public class ReceiptConsumer {
         OcrReq.OcrStartReq req = mapper.convertValue(message.getBody(), OcrReq.OcrStartReq.class);
         return receiptService.ocrStart(req);
     }
+
     @KafkaListener(topics = "approval_end_rcp", groupId = "group-bibot", containerFactory = "concurrentListener")
     public String autoApprovalEnd(KafkaPayload message) {
         ReceiptReq.ApprovalEndReq req = mapper.convertValue(message.getBody(), ReceiptReq.ApprovalEndReq.class);

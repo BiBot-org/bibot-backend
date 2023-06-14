@@ -1,11 +1,11 @@
 package com.coderecipe.v1.card.dto.vo;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class CardReq {
 

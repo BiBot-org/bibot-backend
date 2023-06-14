@@ -2,7 +2,8 @@ package com.coderecipe.v1.user.bibotuser.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.user.bibotuser.dto.BibotUserDTO;
-import com.coderecipe.v1.user.bibotuser.dto.vo.BibotUserReq.*;
+import com.coderecipe.v1.user.bibotuser.dto.vo.BibotUserReq.BibotUserInfo;
+import com.coderecipe.v1.user.bibotuser.dto.vo.BibotUserReq.ChangeUserPassword;
 import com.coderecipe.v1.user.bibotuser.service.BibotUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.UUID;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "유저 Service API", description = "유저 Service API 문서 입니다.")
 @RestController
@@ -31,6 +32,7 @@ public class BibotUserController {
         BibotUserDTO res = bibotUserService.getUser(userId);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
+
     @Operation(summary = "내 정보 조회", description = "요청자의 토큰 정보에 맞는 유저 정보를 리턴 해 주는 API 입니다.")
     @GetMapping("/myInfo")
     public ResponseEntity<BaseRes<BibotUserInfo>> getMyUserInfo(Principal principal) {
@@ -49,7 +51,7 @@ public class BibotUserController {
     @Operation(summary = "유저 프로필 업데이트 API", description = "유저 프로필 이미지를 업데이트 하는 API 입니다.")
     @PostMapping("/profile")
     public ResponseEntity<BaseRes<String>> addProfile(@RequestParam(name = "profile_url")
-        MultipartFile file, Principal principal) throws IOException {
+                                                      MultipartFile file, Principal principal) throws IOException {
         UUID userId = UUID.fromString(principal.getName());
         String res = bibotUserService.addProfile(userId, file);
         return ResponseEntity.ok().body(BaseRes.success(res));
@@ -57,7 +59,7 @@ public class BibotUserController {
 
     @Operation(summary = "유저 프로필 삭제 API", description = "유저 프로필 이미지 삭제 API 입니다.")
     @DeleteMapping("/profile")
-    public ResponseEntity<BaseRes<String>> deleteProfile(@RequestParam UUID userId){
+    public ResponseEntity<BaseRes<String>> deleteProfile(@RequestParam UUID userId) {
         String res = bibotUserService.deleteProfile(userId);
         return ResponseEntity.ok().body(BaseRes.success(res));
     }
@@ -66,7 +68,7 @@ public class BibotUserController {
     @Deprecated(since = "2023-06-14, POST API와 구별되는 특징이 없어서 삭제 될 예정")
     @PutMapping("/profile")
     public ResponseEntity<BaseRes<String>> updateProfile(@RequestParam(name = "profile_url")
-    MultipartFile file, Principal principal) throws IOException {
+                                                         MultipartFile file, Principal principal) throws IOException {
         UUID userId = UUID.fromString(principal.getName());
         String res = bibotUserService.updateProfile(userId, file);
         return ResponseEntity.ok().body(BaseRes.success(res));

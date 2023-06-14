@@ -37,18 +37,18 @@ import java.util.UUID;
 @Slf4j
 @CacheConfig(cacheNames = "user")
 public class BibotUserServiceImpl implements BibotUserService {
+    private final Storage storage;
+    private final BibotUserRepository bibotUserRepository;
+    private final Keycloak keycloak;
     @Value("${keycloak.realm}")
     private String realm;
     @Value("${keycloak.resource}")
     private String client;
     @Value("${gcp.bucketName}")
     private String bucketName;
-    private final Storage storage;
-    private final BibotUserRepository bibotUserRepository;
-    private final Keycloak keycloak;
 
     @Override
-    @Cacheable(key = "#userId")
+    @Cacheable(key = "#userId", unless = "#result == null")
     public BibotUserDTO getUser(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -58,7 +58,7 @@ public class BibotUserServiceImpl implements BibotUserService {
 
     @Override
     @Transactional
-    @Cacheable(key = "#userId + '::info'")
+    @Cacheable(key = "#userId + '::info'", unless = "#result == null")
     public BibotUserInfo getUserInfo(UUID userId) {
         BibotUser user = bibotUserRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ResCode.USER_NOT_FOUND));
@@ -68,7 +68,7 @@ public class BibotUserServiceImpl implements BibotUserService {
     }
 
     @Override
-    @CachePut(key = "#userId + '::info'")
+    @CachePut(key = "#userId + '::info'", unless = "#result == null")
     public String addProfile(UUID userId, MultipartFile file) throws IOException {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)
@@ -89,7 +89,7 @@ public class BibotUserServiceImpl implements BibotUserService {
     }
 
     @Override
-    @CachePut(key = "#userId + '::info'")
+    @CachePut(key = "#userId + '::info'", unless = "#result == null")
     public String updateProfile(UUID userId, MultipartFile file) throws IOException {
 
         BibotUser bibotUser = bibotUserRepository.findByIdAndIsDeletedFalse(userId)

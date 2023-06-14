@@ -1,12 +1,10 @@
 package com.coderecipe.v1.payment.model;
 
-import com.coderecipe.global.constant.entity.BaseImmutableTimeEntity;
 import com.coderecipe.global.utils.ModelMapperUtils;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
 import com.coderecipe.v1.payment.dto.vo.PaymentReq.MockPaymentReq;
-import com.coderecipe.v1.payment.dto.vo.PaymentReq.ProductOrderList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,15 +44,6 @@ public class PaymentHistory {
     @Column(name = "reg_time")
     private LocalDateTime regTime;
 
-    public void updatePaymentDate(String paymentDate) {
-        if (paymentDate.isEmpty()) {
-            this.setRegTime(LocalDateTime.now());
-        } else {
-            this.setRegTime(LocalDateTime.parse(paymentDate));
-        }
-        this.setRegTime(LocalDateTime.parse(paymentDate));
-    }
-
     public static PaymentHistory of(PaymentHistoryDTO dto) {
         return ModelMapperUtils.getModelMapper().map(dto, PaymentHistory.class);
     }
@@ -67,6 +56,15 @@ public class PaymentHistory {
                 .amount(req.getTotalPrice())
                 .isRequested(false)
                 .build();
+    }
+
+    public void updatePaymentDate(String paymentDate) {
+        if (paymentDate.isEmpty()) {
+            this.setRegTime(LocalDateTime.now());
+        } else {
+            this.setRegTime(LocalDateTime.parse(paymentDate));
+        }
+        this.setRegTime(LocalDateTime.parse(paymentDate));
     }
 
     public void updateApprovalId(String id) {

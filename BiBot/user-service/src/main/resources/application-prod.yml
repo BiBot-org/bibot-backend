@@ -1,5 +1,6 @@
 server:
   port: 8081
+  max-http-request-header-size: 40000
 
 spring:
   application:
@@ -32,6 +33,7 @@ spring:
         location: ${GOOGLE_APPLICATION_CREDENTIALS}
       storage:
         enabled: true
+        project-id: elevated-patrol-385701
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -46,7 +48,6 @@ spring:
         format_sql: 'true'
     hibernate:
       ddl-auto: update
-    show-sql: 'true'
     database: postgresql
   sql:
     init:
@@ -89,6 +90,12 @@ keycloak:
   bearer-only: true
   public-client: true
   cors: true
+
+jwt:
+  auth:
+    converter:
+      resource-id: bibot
+      principal-attribute: preferred_username
 
 gcp:
   bucketName: bibot-user

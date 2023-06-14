@@ -45,7 +45,6 @@ spring:
         format_sql: 'true'
     hibernate:
       ddl-auto: update
-    show-sql: 'true'
     database: postgresql
   sql:
     init:
@@ -76,6 +75,12 @@ spring:
 gcp:
   bucket:
     name: bibot_receipt
+
+jwt:
+  auth:
+    converter:
+      resource-id: bibot
+      principal-attribute: preferred_username
 
 ocr-api-secret: ${ocr_token}
 

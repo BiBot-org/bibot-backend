@@ -1,7 +1,7 @@
-package com.coderecipe.config.security;
+package com.coderecipe.global.config.security;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,10 +19,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-@RequiredArgsConstructor
+@Slf4j
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
-    private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    private JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter;
     private final JwtAuthConverterProperties properties;
+
+    public JwtAuthConverter(JwtAuthConverterProperties properties) {
+        this.jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        this.properties = properties;
+    }
 
     @Override
     public AbstractAuthenticationToken convert(@NotNull Jwt source) {
@@ -34,9 +39,6 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private String getPrincipalClaimName(Jwt jwt) {
         String claimName = JwtClaimNames.SUB;
-        if (properties.getPrincipalAttribute() != null) {
-            claimName = properties.getPrincipalAttribute();
-        }
         return jwt.getClaim(claimName);
     }
 

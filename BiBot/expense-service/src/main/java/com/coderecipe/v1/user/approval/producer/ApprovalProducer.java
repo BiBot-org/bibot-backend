@@ -4,9 +4,9 @@ import com.coderecipe.global.constant.dto.KafkaPayload;
 import com.coderecipe.global.constant.enums.EventCode;
 import com.coderecipe.v1.user.approval.dto.vo.ApprovalRes;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.Message;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 

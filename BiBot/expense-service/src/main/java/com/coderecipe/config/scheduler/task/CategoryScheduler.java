@@ -21,7 +21,7 @@ public class CategoryScheduler {
     @SchedulerLock(name = "category_recycle", lockAtLeastFor = "5S", lockAtMostFor = "30S")
     public void recycle() {
         for (Category category : iCategoryRepository.findAllByIsDeletedNot(true)) {
-            if(category.getEndDate().isBefore(LocalDate.now())){
+            if (category.getEndDate().isBefore(LocalDate.now())) {
                 if (category.isWillBeUpdated()) {
                     category.updateNextValue();
                 }
@@ -29,8 +29,8 @@ public class CategoryScheduler {
                 iCategoryRepository.save(category);
             }
             log.info(
-                String.format("%s category updated ! start : %s , end : %s", category.getCategoryName(),
-                    category.getStartDate(), category.getEndDate()));
+                    String.format("%s category updated ! start : %s , end : %s", category.getCategoryName(),
+                            category.getStartDate(), category.getEndDate()));
         }
     }
 }

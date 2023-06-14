@@ -1,6 +1,5 @@
 package com.coderecipe.receiptservice.v1.receipt.receiptsform.worker;
 
-import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.global.constant.enums.CustomLogFormat;
 import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.receiptservice.v1.receipt.dto.vo.ReceiptReq;
@@ -23,11 +22,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -42,11 +39,10 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class SelectForm {
+    private final Storage storage;
+    private final TemplateEngine templateEngine;
     @Value("${gcp.bucket.name}")
     private String bucketName;
-    private final Storage storage;
-
-    private final TemplateEngine templateEngine;
 
     public String createReceiptImage(ReceiptReq.CreateMockReceiptReq req) throws IOException {
 

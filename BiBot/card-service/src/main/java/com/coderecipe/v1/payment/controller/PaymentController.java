@@ -39,7 +39,7 @@ public class PaymentController {
 
     @Operation(summary = "경비 처리 번호 기반 가상 결제 내역 상세 정보 단건 조회", description = "경비 처리 별 가상 결제 내역 단건 조회 API 입니다.")
     @GetMapping("/approval")
-    public ResponseEntity<BaseRes<PaymentRes.PaymentHistoryInfo>> getPaymentHistoryByApprovalId(@RequestParam(name="id", defaultValue = "") String approvalId) {
+    public ResponseEntity<BaseRes<PaymentRes.PaymentHistoryInfo>> getPaymentHistoryByApprovalId(@RequestParam(name = "id", defaultValue = "") String approvalId) {
         PaymentRes.PaymentHistoryInfo result = iPaymentHistoryService.getPaymentHistoryByApprovalId(approvalId);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }

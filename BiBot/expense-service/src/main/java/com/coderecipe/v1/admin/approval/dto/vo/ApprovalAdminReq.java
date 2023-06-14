@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class ApprovalAdminReq {
-    private ApprovalAdminReq () {
+    private ApprovalAdminReq() {
         throw new IllegalStateException("VO Class");
     }
 

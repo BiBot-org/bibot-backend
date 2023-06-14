@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    @Cacheable(key = "#id")
+    @Cacheable(key = "#id", unless = "#result == null")
     public CategoryDTO getCategory(Long id) {
         Category category = iCategoryRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

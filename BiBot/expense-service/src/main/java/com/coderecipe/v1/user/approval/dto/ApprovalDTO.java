@@ -23,7 +23,7 @@ public class ApprovalDTO {
     private String comment;
     private boolean isAutomated;
 
-    public static ApprovalDTO of (Approval entity) {
+    public static ApprovalDTO of(Approval entity) {
         return ApprovalDTO.builder()
                 .id(entity.getId())
                 .managerId(entity.getManagerId())
@@ -34,7 +34,7 @@ public class ApprovalDTO {
                 .build();
     }
 
-    public static Page<ApprovalDTO> of (Page<Approval> entities) {
+    public static Page<ApprovalDTO> of(Page<Approval> entities) {
         return entities.map(ApprovalDTO::of);
     }
 

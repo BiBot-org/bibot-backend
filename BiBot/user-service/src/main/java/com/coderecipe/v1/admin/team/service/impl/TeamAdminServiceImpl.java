@@ -3,7 +3,7 @@ package com.coderecipe.v1.admin.team.service.impl;
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.admin.team.service.ITeamAdminService;
-import com.coderecipe.v1.admin.team.vo.TeamAdminReq.*;
+import com.coderecipe.v1.admin.team.vo.TeamAdminReq.CreateTeamReq;
 import com.coderecipe.v1.user.team.dto.TeamDTO;
 import com.coderecipe.v1.user.team.model.Team;
 import com.coderecipe.v1.user.team.model.repository.TeamRepository;

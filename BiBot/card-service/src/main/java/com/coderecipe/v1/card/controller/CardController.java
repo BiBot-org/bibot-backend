@@ -2,14 +2,10 @@ package com.coderecipe.v1.card.controller;
 
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.card.dto.CardDTO;
-import com.coderecipe.v1.card.dto.vo.CardReq.*;
-import com.coderecipe.v1.card.dto.vo.CardRes.*;
+import com.coderecipe.v1.card.dto.vo.CardReq.CardId;
+import com.coderecipe.v1.card.dto.vo.CardReq.CreateCard;
+import com.coderecipe.v1.card.dto.vo.CardRes.CardInfoRes;
 import com.coderecipe.v1.card.service.ICardService;
-
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "카드 Service API", description = "카드 Service API 문서 입니다.")
 @RestController
@@ -63,7 +62,7 @@ public class CardController {
     @Operation(summary = "기간 별 카드 사용 총 합 조회", description = "기간 별 카드 사용 총 합계 조회 API 입니다.")
     @GetMapping("/amount")
     public ResponseEntity<BaseRes<Integer>> getAmount(
-        @RequestParam(value = "cardId", defaultValue="")Long cardId, @RequestParam(value = "startDateTime", defaultValue="") LocalDateTime startDateTime,  @RequestParam(value = "endDateTime", defaultValue="") LocalDateTime endDateTime ) {
+            @RequestParam(value = "cardId", defaultValue = "") Long cardId, @RequestParam(value = "startDateTime", defaultValue = "") LocalDateTime startDateTime, @RequestParam(value = "endDateTime", defaultValue = "") LocalDateTime endDateTime) {
         Integer result = iCardService.getAmount(cardId, startDateTime, endDateTime);
         return ResponseEntity.ok().body(BaseRes.success(result));
     }

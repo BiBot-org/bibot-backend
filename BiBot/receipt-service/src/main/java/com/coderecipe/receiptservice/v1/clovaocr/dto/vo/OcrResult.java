@@ -18,6 +18,7 @@ public class OcrResult {
         private String storeName;
         private String bizNum;
         private List<String> address;
+
         public static StoreInfoRes of(OCRtoJSONRes.StoreInfo storeInfo) {
             return new StoreInfoRes(storeInfo.getName().getText(),
                     storeInfo.getBizNum().getText(),
