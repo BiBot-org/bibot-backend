@@ -1,5 +1,4 @@
-package com.coderecipe.config.security;
-
+package com.coderecipe.global.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -14,8 +13,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openApi() {
         Info info = new Info()
-                .title("Bibot API Server Docs").version("v1.0.0")
-                .description("Bibot API 문서 페이지");
+                .title("BIBOT API Server Docs").version("v1.0.0")
+                .description("BIBOT API Server API 문서 페이지");
 
         String jwtSchemeName = "jwtAuth";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);

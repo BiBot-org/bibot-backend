@@ -10,7 +10,6 @@ import com.coderecipe.v1.admin.notice.model.repository.NoticeSpecification;
 import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
 import com.coderecipe.v1.user.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,7 +50,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    @Cacheable(cacheNames="noticeMain", key ="'notionMain'")
+    @Cacheable(cacheNames="noticeMain", key ="'noticeMain'")
     public List<NoticeDTO> getNoticeMain() {
         return noticeRepository.findTop3ByOrderByIdDesc()
                 .stream().map(NoticeDTO::of).toList();
