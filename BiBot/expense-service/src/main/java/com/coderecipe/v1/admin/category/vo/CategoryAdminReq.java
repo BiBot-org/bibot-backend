@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class CategoryAdminReq {
-    private CategoryAdminReq ()  {
+    private CategoryAdminReq() {
         throw new IllegalStateException("VO Class");
     }
 

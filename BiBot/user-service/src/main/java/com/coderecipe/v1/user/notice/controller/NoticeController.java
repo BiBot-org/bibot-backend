@@ -3,7 +3,7 @@ package com.coderecipe.v1.user.notice.controller;
 import com.coderecipe.global.constant.dto.BaseRes;
 import com.coderecipe.v1.admin.notice.dto.NoticeDTO;
 import com.coderecipe.v1.admin.notice.enums.NoticeType;
-import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.*;
+import com.coderecipe.v1.user.notice.dto.vo.NoticeRes.SearchNoticeRes;
 import com.coderecipe.v1.user.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "공지사항 Service API", description = "공지사항 Service API 문서 입니다.")
@@ -47,7 +48,7 @@ public class NoticeController {
 
     @Operation(summary = "공지사항 썸네일 출력", description = "메인 화면 공지사항 썸네일 출력 API 입니다.")
     @GetMapping("/main")
-    public ResponseEntity<BaseRes<List<NoticeDTO>>> getNoticeMain() {
+    public ResponseEntity<BaseRes<List<NoticeDTO>>> getNoticeMain(Principal principal) {
         List<NoticeDTO> result = noticeService.getNoticeMain();
         return ResponseEntity.ok().body(BaseRes.success(result));
     }

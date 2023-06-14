@@ -13,6 +13,15 @@ import java.io.IOException;
 
 @Configuration
 public class JsonCustomConfigure {
+    @Bean
+    public MappingJackson2HttpMessageConverter converter() {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        CustomObjectMapper mapper = new CustomObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        converter.setObjectMapper(mapper);
+        return converter;
+    }
+
     static class NullToEmptyStringSerializer extends JsonSerializer<Object> {
         @Override
         public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
@@ -26,14 +35,5 @@ public class JsonCustomConfigure {
         public CustomObjectMapper() {
             getSerializerProvider().setNullValueSerializer(new NullToEmptyStringSerializer());
         }
-    }
-
-    @Bean
-    public MappingJackson2HttpMessageConverter converter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        CustomObjectMapper mapper = new CustomObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        converter.setObjectMapper(mapper);
-        return converter;
     }
 }

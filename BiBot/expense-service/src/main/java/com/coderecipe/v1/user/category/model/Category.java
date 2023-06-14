@@ -22,28 +22,22 @@ import java.time.LocalDate;
 @Table(name = "category")
 public class Category extends BaseEntity {
 
+    @Column(name = "next_limitaion", columnDefinition = "INT4")
+    public Integer nextLimitation;
+    @Column(name = "reset_cycle")
+    @Enumerated(EnumType.STRING)
+    public ResetCycle resetCycle;
+    @Column(name = "next_cycle")
+    @Enumerated(EnumType.STRING)
+    public ResetCycle nextCycle;
     @Id
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "category_name", columnDefinition = "VARCHAR(20) NOT NULL", unique = true)
     private String categoryName;
-
     @Column(name = "limitaion", columnDefinition = "INT4")
     private Integer limitation;
-
-    @Column(name = "next_limitaion", columnDefinition = "INT4")
-    public Integer nextLimitation;
-
-    @Column(name = "reset_cycle")
-    @Enumerated(EnumType.STRING)
-    public ResetCycle resetCycle;
-
-    @Column(name = "next_cycle")
-    @Enumerated(EnumType.STRING)
-    public ResetCycle nextCycle;
-
     @Column(name = "automated_cost", columnDefinition = "INT4")
     private Integer automatedCost;
 
@@ -58,6 +52,30 @@ public class Category extends BaseEntity {
 
     @Column(name = "will_be_updated")
     private boolean willBeUpdated = false;
+
+    public static Category of(CategoryDTO dto) {
+        return ModelMapperUtils.getModelMapper().map(dto, Category.class);
+    }
+
+    public static Category of(AddCategory req) {
+
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now()
+                .plusDays(ResetCycle.getResetCycleDay(req.getResetCycle().toString()));
+
+        return Category.builder()
+                .categoryName(req.getCategoryName())
+                .limitation(req.getLimitation())
+                .nextLimitation(req.getLimitation())
+                .automatedCost(req.getAutomatedCost())
+                .nextAutomatedCost(req.getAutomatedCost())
+                .resetCycle(req.getResetCycle())
+                .nextCycle(req.getResetCycle())
+                .startDate(startDate)
+                .endDate(endDate)
+                .willBeUpdated(false)
+                .build();
+    }
 
     public void updateCategory(UpdateCategory req) {
         boolean check = false;
@@ -96,30 +114,6 @@ public class Category extends BaseEntity {
 
     public void deleteCategory() {
         super.setDeleted(true);
-    }
-
-    public static Category of(CategoryDTO dto) {
-        return ModelMapperUtils.getModelMapper().map(dto, Category.class);
-    }
-
-    public static Category of(AddCategory req) {
-
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = LocalDate.now()
-                .plusDays(ResetCycle.getResetCycleDay(req.getResetCycle().toString()));
-
-        return Category.builder()
-                .categoryName(req.getCategoryName())
-                .limitation(req.getLimitation())
-                .nextLimitation(req.getLimitation())
-                .automatedCost(req.getAutomatedCost())
-                .nextAutomatedCost(req.getAutomatedCost())
-                .resetCycle(req.getResetCycle())
-                .nextCycle(req.getResetCycle())
-                .startDate(startDate)
-                .endDate(endDate)
-                .willBeUpdated(false)
-                .build();
     }
 
 }

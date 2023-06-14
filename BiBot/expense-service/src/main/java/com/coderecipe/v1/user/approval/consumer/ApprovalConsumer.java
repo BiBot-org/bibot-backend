@@ -2,7 +2,6 @@ package com.coderecipe.v1.user.approval.consumer;
 
 import com.coderecipe.global.constant.dto.KafkaPayload;
 import com.coderecipe.v1.user.approval.dto.vo.ApprovalReq;
-import com.coderecipe.v1.user.approval.enums.ApprovalStatus;
 import com.coderecipe.v1.user.approval.service.IApprovalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

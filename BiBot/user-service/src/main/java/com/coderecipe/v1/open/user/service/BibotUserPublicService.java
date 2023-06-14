@@ -22,16 +22,16 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class BibotUserPublicService {
-    @Value("${keycloak.realm}")
-    private String realm;
-    @Value("${keycloak.resource}")
-    private String client;
+    private static final String KEY_FORMAT = "check:%s";
+    private static final String KEY_VERIFY = "verify:%s";
     private final Keycloak keycloak;
     private final BibotUserRepository bibotUserRepository;
     private final EmailService emailService;
     private final RedisUtils redisUtils;
-    private static final String KEY_FORMAT = "check:%s";
-    private static final String KEY_VERIFY = "verify:%s";
+    @Value("${keycloak.realm}")
+    private String realm;
+    @Value("${keycloak.resource}")
+    private String client;
 
     public Boolean isInit() {
         return bibotUserRepository.findAllByUserRoleInOrderByUserRole(List.of(UserRole.SUPER_ADMIN)).isEmpty();

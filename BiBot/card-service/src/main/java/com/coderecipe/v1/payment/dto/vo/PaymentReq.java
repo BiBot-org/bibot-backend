@@ -1,16 +1,13 @@
 package com.coderecipe.v1.payment.dto.vo;
 
 import com.coderecipe.global.utils.ModelMapperUtils;
-import com.coderecipe.global.utils.StringUtils;
-
-import java.time.LocalDate;
-import java.util.List;
-
 import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class PaymentReq {
 
@@ -39,7 +36,7 @@ public class PaymentReq {
     }
 
     @EqualsAndHashCode(callSuper = true)
-    @JsonIgnoreProperties(ignoreUnknown =true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

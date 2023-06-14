@@ -58,11 +58,17 @@ spring:
       host: ${redis_host}
       port: ${redis_port}
 
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
+jwt:
+  auth:
+    converter:
+      resource-id: bibot
+      principal-attribute: preferred_username
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 #keycloak:
 #  realm: bibot-org

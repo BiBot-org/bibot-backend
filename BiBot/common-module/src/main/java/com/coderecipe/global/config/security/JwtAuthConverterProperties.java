@@ -1,4 +1,4 @@
-package com.coderecipe.config.security;
+package com.coderecipe.global.config.security;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

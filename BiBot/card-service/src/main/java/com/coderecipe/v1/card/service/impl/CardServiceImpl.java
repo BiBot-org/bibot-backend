@@ -3,29 +3,23 @@ package com.coderecipe.v1.card.service.impl;
 import com.coderecipe.global.constant.enums.ResCode;
 import com.coderecipe.global.constant.error.CustomException;
 import com.coderecipe.v1.card.dto.CardDTO;
-import com.coderecipe.v1.card.dto.vo.CardReq.*;
-import com.coderecipe.v1.card.dto.vo.CardRes.*;
+import com.coderecipe.v1.card.dto.vo.CardReq.CreateCard;
+import com.coderecipe.v1.card.dto.vo.CardRes.CardInfoRes;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.card.service.ICardService;
-import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
-
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.PaymentInfo;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Data
@@ -45,10 +39,10 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    @Cacheable(key = "#cardId")
+    @Cacheable(key = "#cardId", unless = "#result == null")
     public CardDTO getCard(Long cardId) {
         Card card = iCardRepository.findById(cardId)
-            .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResCode.CARD_NOT_FOUND));
         return CardDTO.of(card);
     }
 
@@ -73,16 +67,16 @@ public class CardServiceImpl implements ICardService {
     @Override
     public List<PaymentInfo> getPayments(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return iPaymentHistoryRepository.findAllByRegTimeBetweenAndCardIdOrderByRegTimeDesc(
-                startDateTime, endDateTime, cardId).stream()
-            .map(PaymentInfo::of).toList();
+                        startDateTime, endDateTime, cardId).stream()
+                .map(PaymentInfo::of).toList();
     }
 
 
     @Override
     public Integer getAmount(Long cardId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return iPaymentHistoryRepository.findAndSumAllByRegTimeBetweenAndCardId(
-            startDateTime, endDateTime,
-            iCardRepository.getReferenceById(cardId));
+                startDateTime, endDateTime,
+                iCardRepository.getReferenceById(cardId));
     }
 
 }

@@ -1,15 +1,13 @@
 package com.coderecipe.v1.card.model;
 
-import com.coderecipe.v1.card.dto.vo.CardReq.*;
+import com.coderecipe.v1.card.dto.vo.CardReq.CreateCard;
 import jakarta.persistence.*;
-
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
+
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor

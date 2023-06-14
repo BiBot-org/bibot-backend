@@ -51,31 +51,6 @@ public class Approval extends BaseTimeEntity {
     @Column(name = "is_automated")
     private boolean isAutomated;
 
-    public void updateApprovalStatus(ApprovalStatus status) {
-        this.status = status;
-    }
-
-    public void updateManagerId(UUID userId) {
-        this.managerId = userId;
-    }
-
-    public void updateComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void approvalExpense(ApprovalStatus status, String comment) {
-        this.status = status;
-        this.comment = comment;
-    }
-
-    public void updateAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void updateIsAutomated(boolean isAutomated) {
-        this.isAutomated = isAutomated;
-    }
-
     public static Approval of(ApprovalDTO dto) {
         return Approval.builder()
                 .id(dto.getId())
@@ -105,6 +80,31 @@ public class Approval extends BaseTimeEntity {
                 .comment(message)
                 .category(category)
                 .build();
+    }
+
+    public void updateApprovalStatus(ApprovalStatus status) {
+        this.status = status;
+    }
+
+    public void updateManagerId(UUID userId) {
+        this.managerId = userId;
+    }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void approvalExpense(ApprovalStatus status, String comment) {
+        this.status = status;
+        this.comment = comment;
+    }
+
+    public void updateAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void updateIsAutomated(boolean isAutomated) {
+        this.isAutomated = isAutomated;
     }
 
 }

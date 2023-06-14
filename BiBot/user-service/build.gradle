@@ -12,12 +12,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.keycloak:keycloak-spring-boot-starter:21.1.1'
     implementation 'org.keycloak:keycloak-admin-client:21.1.1'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
 
 }

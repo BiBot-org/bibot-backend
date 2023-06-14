@@ -37,7 +37,7 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     @CacheEvict(key = "'all'")
     public Long updateCategory(UpdateCategory req) {
         Category category = categoryRepository.findByIdAndIsDeletedNot(req.getId(), true)
-            .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         category.updateCategory(req);
         categoryRepository.save(category);
         return category.getId();
@@ -47,7 +47,7 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     @CacheEvict(key = "'all'")
     public Long deleteCategory(DeleteCategory req) {
         Category category = categoryRepository.findByIdAndIsDeletedNot(req.getId(), true)
-            .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
+                .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
         category.deleteCategory();
         categoryRepository.save(category);
         return category.getId();

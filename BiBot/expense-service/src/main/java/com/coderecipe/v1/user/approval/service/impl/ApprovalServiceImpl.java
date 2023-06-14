@@ -104,7 +104,7 @@ public class ApprovalServiceImpl implements IApprovalService {
     }
 
     @Override
-    @Cacheable(key = "#id")
+    @Cacheable(key = "#id", unless = "#result == null")
     public ApprovalDTO getApprovalInfo(String id) {
         Approval approval = iApprovalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

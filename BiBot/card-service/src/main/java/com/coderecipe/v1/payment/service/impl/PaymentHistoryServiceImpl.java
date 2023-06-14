@@ -6,8 +6,13 @@ import com.coderecipe.global.utils.StringUtils;
 import com.coderecipe.v1.card.model.Card;
 import com.coderecipe.v1.card.model.repository.ICardRepository;
 import com.coderecipe.v1.payment.dto.PaymentHistoryDTO;
-import com.coderecipe.v1.payment.dto.vo.PaymentReq.*;
-import com.coderecipe.v1.payment.dto.vo.PaymentRes.*;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq.ApprovalEndPaymentReq;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq.CreateMockReceiptReq;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq.MockPaymentReq;
+import com.coderecipe.v1.payment.dto.vo.PaymentReq.SearchPaymentHistoryReq;
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.PaymentHistoryInfo;
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.SearchPaymentHistoryInfoRes;
+import com.coderecipe.v1.payment.dto.vo.PaymentRes.SearchPaymentHistoryRes;
 import com.coderecipe.v1.payment.model.PaymentHistory;
 import com.coderecipe.v1.payment.model.repository.IPaymentHistoryRepository;
 import com.coderecipe.v1.payment.producer.PaymentProducer;
@@ -16,7 +21,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +41,7 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     private final PaymentProducer paymentProducer;
 
     @Override
-    @Cacheable(key = "#id")
+    @Cacheable(key = "#id", unless = "#result == null")
     public PaymentHistoryDTO getPaymentHistory(String id) {
         PaymentHistory result = iPaymentHistoryRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));
@@ -45,7 +49,7 @@ public class PaymentHistoryServiceImpl implements IPaymentHistoryService {
     }
 
     @Override
-    @Cacheable(key = "#approvalId")
+    @Cacheable(key = "#approvalId", unless = "#result == null")
     public PaymentHistoryInfo getPaymentHistoryByApprovalId(String approvalId) {
         PaymentHistory result = iPaymentHistoryRepository.findPaymentHistoryByApprovalId(approvalId)
                 .orElseThrow(() -> new CustomException(ResCode.BAD_REQUEST));

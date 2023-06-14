@@ -11,7 +11,8 @@ import java.util.UUID;
 
 public interface ApprovalAdminService {
     List<ApprovalRes.ApprovalInfo> getApprovalThumbnail();
+
     ApprovalAdminRes.SearchAdminApprovalRes searchApprovalInfo(ApprovalReq.SearchApprovalInfoReq req, Pageable pageable);
 
-    String approveExpense (ApprovalAdminReq.RequestApproval req, UUID userId);
+    String approveExpense(ApprovalAdminReq.RequestApproval req, UUID userId);
 }

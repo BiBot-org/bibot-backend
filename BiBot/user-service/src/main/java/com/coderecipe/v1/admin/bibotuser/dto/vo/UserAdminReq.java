@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class UserAdminReq {
 
-    private UserAdminReq () {
+    private UserAdminReq() {
         throw new IllegalStateException("VO Class");
     }
 

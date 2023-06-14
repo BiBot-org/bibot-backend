@@ -3,11 +3,12 @@ package com.coderecipe.v1.user.department.model;
 import com.coderecipe.v1.user.department.dto.DepartmentDTO;
 import com.coderecipe.v1.user.team.model.Team;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -29,12 +30,12 @@ public class Department {
 
     public static Department of(DepartmentDTO dto) {
         return Department.builder()
-            .id(dto.getId())
-            .name(dto.getName())
-            .build();
+                .id(dto.getId())
+                .name(dto.getName())
+                .build();
     }
 
-    public static Department of (String departmentName) {
+    public static Department of(String departmentName) {
         return Department.builder()
                 .name(departmentName)
                 .build();
