@@ -1,0 +1,120 @@
+server:
+  port: 80
+  max-http-request-header-size: 40000
+
+spring:
+  application:
+    name: user-service
+  config:
+    import: vault://
+  cloud:
+    vault:
+      scheme: http
+      host: 34.22.82.97
+      port: 8200
+      authentication: KUBERNETES
+      kubernetes:
+        role: app
+        kubernetes-path: kubernetes
+        service-account-token-file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kv:
+        enabled: true
+        backend: secret
+        default-context: bibot
+        profiles:
+          - db
+          - ocr
+          - cloak
+          - mail
+          - jwt
+
+    gcp:
+      credentials:
+        location: ${GOOGLE_APPLICATION_CREDENTIALS}
+      storage:
+        enabled: true
+        project-id: elevated-patrol-385701
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${host_name}/users
+    username: ${db_name}
+    password: ${db_pwd}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+  sql:
+    init:
+      platform: postgres
+  data:
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail_id}
+    password: ${mail_pwd}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  kafka:
+    bootstrap-servers: ${kafka_url}
+  output:
+    ansi:
+      enabled: always
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${jwk_uri}
+          issuer-uri: ${iss_uri}
+  jackson:
+    default-property-inclusion: non_null
+
+keycloak:
+  realm: bibot-org
+  auth-server-url: ${cloak_host}
+  ssl-required: none
+  resource: bibot
+  credentials:
+    secret: ${cloak_token}
+  use-resource-role-mappings: true
+  bearer-only: true
+  public-client: true
+  cors: true
+
+jwt:
+  auth:
+    converter:
+      resource-id: bibot
+      principal-attribute: preferred_username
+
+gcp:
+  bucketName: bibot-user
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#  datasource:
+#    write:
+#      driver-class-name: org.postgresql.Driver
+#      jdbcUrl: jdbc:postgresql://${master_host}/users
+#      username: ${master_name}
+#      password: ${master_pwd}
+#
+#    read:
+#      driver-class-name: org.postgresql.Driver
+#      jdbcUrl: jdbc:postgresql://${slave_host}/users
+#      username: ${slave_name}
+#      password: ${slave_pwd}

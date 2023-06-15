@@ -1,10 +1,8 @@
 rootProject.name = 'BiBot'
-include 'module-common'
-include 'module-infra'
-include 'user'
-include 'card'
-include 'approval'
-include 'user'
-include 'approval'
-include 'card'
 
+// 서비스 모듈
+include 'user-service'
+include 'expense-service'
+include 'card-service'
+include 'receipt-service'
+include 'common-module'
