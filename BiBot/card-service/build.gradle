@@ -8,13 +8,11 @@ sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
-    maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
 }
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-stream'
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
     implementation 'com.itextpdf:html2pdf:3.0.3'

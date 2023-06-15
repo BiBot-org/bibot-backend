@@ -1,6 +1,7 @@
-package com.coderecipe.global.config.security;
+package com.coderecipe.config.security;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 @Component
 @Slf4j
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
-    private JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter;
+    private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter;
     private final JwtAuthConverterProperties properties;
 
     public JwtAuthConverter(JwtAuthConverterProperties properties) {

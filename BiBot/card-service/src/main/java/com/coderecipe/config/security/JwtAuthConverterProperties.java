@@ -1,4 +1,4 @@
-package com.coderecipe.global.config.security;
+package com.coderecipe.config.security;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,3 +14,4 @@ public class JwtAuthConverterProperties {
     private String resourceId;
     private String principalAttribute;
 }
+

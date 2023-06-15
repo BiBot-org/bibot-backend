@@ -6,11 +6,6 @@ group = 'com.coderecipe'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 repositories {
     mavenCentral()
@@ -22,16 +17,12 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
     implementation 'com.vladmihalcea:hibernate-types-60:2.20.0'
 
-    testImplementation project(path: ':card-service')
     implementation 'com.google.cloud:spring-cloud-gcp-starter'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.jayway.jsonpath:json-path:2.7.0'
 
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'com.itextpdf:html2pdf:3.0.3'
     implementation 'ognl:ognl:3.3.4'
 

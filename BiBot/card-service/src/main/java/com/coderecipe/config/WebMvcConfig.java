@@ -1,4 +1,4 @@
-package com.coderecipe.global.config;
+package com.coderecipe.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
